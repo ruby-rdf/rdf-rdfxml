@@ -22,7 +22,11 @@ module RDF
   module RDFa
     require 'rdfxml/format'
     require 'rdfxml/vocab'
+    require 'n3/patches/array_hacks'
+    require 'n3/patches/nokogiri_hacks'
+    require 'n3/patches/rdf_escape'
     autoload :Reader,  'rdf/rdfxml/reader'
+    autoload :Writer,  'rdf/rdfxml/writer'
     autoload :VERSION, 'rdf/rdfxml/version'
   end
 end

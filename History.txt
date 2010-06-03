@@ -1,2 +1,6 @@
+=== 0.0.2
+* Added specs from RdfContext
+* Added array_hacks, nokogiri_hacks, and rdf_escape
+
 === 0.0.1
 * First port from RdfContext version 0.5.4

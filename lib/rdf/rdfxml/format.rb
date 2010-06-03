@@ -23,7 +23,7 @@ module RDF::RDFXML
     content_type     'application/rdf+xml', :extension => :rdf
     content_encoding 'utf-8'
 
-    reader { RDF::RDFa::RDFXML }
-    writer { RDF::RDFa::RDFXML }
+    reader { RDF::RDFXML::Reader }
+    writer { RDF::RDFXML::Writer }
   end
 end
