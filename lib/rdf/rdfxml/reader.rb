@@ -170,6 +170,16 @@ module RDF::RDFXML
 
     private
 
+    # Keep track of allocated BNodes
+    def bnode(value = nil)
+      if value
+        @bnode_cache ||= {}
+        @bnode_cache[value.to_s] ||= RDF::Node.new(value)
+      else
+        RDF::Node.new
+      end
+    end
+    
     # Figure out the document path, if it is a Nokogiri::XML::Element or Attribute
     def node_path(node)
       case node
@@ -423,9 +433,9 @@ module RDF::RDFXML
             if resourceAttr
               resource = ec.base.join(resourceAttr)
             elsif nodeID
-              resource = RDF::Node.new(nodeID)
+              resource = bnode(nodeID)
             else
-              resource = RDF::Node.new
+              resource = bnode
             end
 
             # produce triples for attributes
@@ -491,14 +501,14 @@ module RDF::RDFXML
         # The value of rdf:nodeID must match the XML Name production
         nodeID = nodeID_check(el, nodeID.value.rdf_escape)
         add_debug(el, "parse_subject, nodeID: '#{nodeID}")
-        RDF::Node.new(nodeID, @named_bnodes)
+        bnode(nodeID)
       when about
         about = about.value.rdf_escape
         add_debug(el, "parse_subject, about: '#{about}'")
         ec.base.join(about)
       else
         add_debug(el, "parse_subject, BNode")
-        RDF::Node.new
+        bnode
       end
     end
     
