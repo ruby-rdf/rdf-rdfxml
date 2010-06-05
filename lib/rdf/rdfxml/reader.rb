@@ -7,6 +7,7 @@ module RDF::RDFXML
   # @author [Gregg Kellogg](http://kellogg-assoc.com/)
   class Reader < RDF::Reader
     format Format
+    attr_reader :debug
 
     CORE_SYNTAX_TERMS = %w(RDF ID about parseType resource nodeID datatype).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
     OLD_TERMS = %w(aboutEach aboutEachPrefix bagID).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
@@ -72,8 +73,8 @@ module RDF::RDFXML
 
       # Extract Evaluation Context from an element
       def extract_from_element(el)
-        b = el.attribute_with_ns("base", XML_NS.uri.to_s)
-        lang = el.attribute_with_ns("lang", XML_NS.uri.to_s)
+        b = el.attribute_with_ns("base", RDF::XML.to_s)
+        lang = el.attribute_with_ns("lang", RDF::XML.to_s)
         self.base = self.base.join(b) if b
         self.language = lang if lang
         self.uri_mappings.merge!(extract_mappings(el))
@@ -88,8 +89,7 @@ module RDF::RDFXML
           abbr, suffix = attr_name.to_s.split(":")
           if abbr == "xmlns"
             attr_value = self.base.to_s + attr_value if attr_value.match(/^\#/)
-            mappings[suffix] = Namespace.new(attr_value, suffix)
-            @graph.bind(mappings[suffix])
+            mappings[suffix] = attr_value
           end
         end
         mappings
@@ -98,7 +98,7 @@ module RDF::RDFXML
       # Produce the next list entry for this context
       def li_next
         @li_counter += 1
-        predicate = URIRef.new(RDF["_#{@li_counter}"])
+        predicate = RDF["_#{@li_counter}"]
       end
 
       # Set XML base. Ignore any fragment
@@ -133,17 +133,20 @@ module RDF::RDFXML
         @strict = options[:strict]
         @base_uri = options[:base_uri]
         @base_uri = RDF::URI.parse(@base_uri) if @base_uri.is_a?(String)
+        @id_mapping = Hash.new
 
-        @doc = case stream
-        when Nokogiri::XML::Document then stream
-        else Nokogiri::XML.parse(stream, uri.to_s)
+        @doc = case input
+        when Nokogiri::XML::Document then input
+        else Nokogiri::XML.parse(input, @base_uri.to_s)
         end
         
-        raise RDF::ReaderError, "Empty document" if @doc.nil? && @strict
+        raise RDF::ReaderError, "Synax errors:\n#{@doc.errors}" if !@doc.errors.empty? && @strict
+        raise RDF::ReaderError, "Empty document" if (@doc.nil? || @doc.root.nil?) && @strict
         @callback = block
+        root = @doc.root
   
         # Look for rdf:RDF elements and process each.
-        rdf_nodes = root.xpath("//rdf:RDF", RDF.prefix => RDF.uri.to_s)
+        rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF_NS)
         if rdf_nodes.length == 0
           # If none found, root element may be processed as an RDF Node
 
@@ -168,6 +171,29 @@ module RDF::RDFXML
       end
     end
 
+    # XXX Invoke the parser, and allow add_triple to make the callback?
+    ##
+    # Iterates the given block for each RDF statement in the input.
+    #
+    # @yield  [statement]
+    # @yieldparam [RDF::Statement] statement
+    # @return [void]
+    def each_statement(&block)
+      @graph.each_statement(&block)
+    end
+
+    ##
+    # Iterates the given block for each RDF triple in the input.
+    #
+    # @yield  [subject, predicate, object]
+    # @yieldparam [RDF::Resource] subject
+    # @yieldparam [RDF::URI]      predicate
+    # @yieldparam [RDF::Value]    object
+    # @return [void]
+    def each_triple(&block)
+      @graph.each_triple(&block)
+    end
+    
     private
 
     # Keep track of allocated BNodes
@@ -231,14 +257,14 @@ module RDF::RDFXML
       add_debug(el, "nodeElement, el: #{el.uri}")
       add_debug(el, "nodeElement, subject: #{subject.nil? ? 'nil' : subject.to_s}")
 
-      unless el.uri == RDF.Description.to_s
+      unless el.uri.to_s == RDF.Description.to_s
         add_triple(el, subject, RDF.type, el.uri)
       end
 
       # produce triples for attributes
       el.attribute_nodes.each do |attr|
         add_debug(el, "propertyAttr: #{attr.uri}='#{attr.value}'")
-        if attr.uri == RDF.type
+        if attr.uri == RDF.type.to_s
           # If there is an attribute a in propertyAttr with a.URI == rdf:type
           # then u:=uri(identifier:=resolve(a.string-value))
           # and the following triple is added to the graph:
@@ -247,7 +273,7 @@ module RDF::RDFXML
         elsif is_propertyAttr?(attr)
           # Attributes not RDF.type
           predicate = attr.uri
-          lit = Literal.untyped(attr.value, ec.language)
+          lit = RDF::Literal.new(attr.value, :language => ec.language)
           add_triple(attr, subject, predicate, lit)
         end
       end
@@ -293,9 +319,9 @@ module RDF::RDFXML
             # MAY choose to warn when the unqualified form is seen in a document.
             add_debug(el, "Unqualified attribute '#{attr}'")
             #attrs[attr.to_s] = attr.value unless attr.to_s.match?(/^xml/)
-          elsif attr.namespace.href == XML_NS.uri.to_s
+          elsif attr.namespace.href == RDF::XML.to_s
             # No production. Lang and base elements already extracted
-          elsif attr.namespace.href == RDF.uri.to_s
+          elsif attr.namespace.href == RDF_NS
             case attr.name
             when "ID"         then id = attr.value
             when "datatype"   then datatype = attr.value
@@ -442,7 +468,7 @@ module RDF::RDFXML
             attrs.each_pair do |attr, val|
               add_debug(el, "attr: #{attr.name}='#{val}'")
               
-              if attr.uri.to_s == RDF.type
+              if attr.uri.to_s == RDF.type.to_s
                 add_triple(child, resource, RDF.type, val)
               else
                 # Check for illegal attributes
@@ -558,7 +584,7 @@ module RDF::RDFXML
         raise RDF::ReaderError.new(warn) if @strict
         return false
       end
-      !CORE_SYNTAX_TERMS.include?(attr.uri.to_s) && attr.namespace && attr.namespace.href != XML_NS.uri.to_s
+      !CORE_SYNTAX_TERMS.include?(attr.uri.to_s) && attr.namespace && attr.namespace.href != RDF::XML.uri.to_s
     end
     
     # Check Node Element name
