@@ -3,7 +3,7 @@ $:.unshift File.dirname(__FILE__)
 
 require 'rubygems'
 require 'spec'
-require 'rdf/rdfa'
+require 'rdf/rdfxml'
 require 'rdf/spec'
 
 Spec::Runner.configure do |config|

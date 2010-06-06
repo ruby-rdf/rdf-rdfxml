@@ -19,12 +19,12 @@ module RDF
   # @see http://www.w3.org/TR/REC-rdf-syntax/
   #
   # @author [Gregg Kellogg](http://kellogg-assoc.com/)
-  module RDFa
+  module RDFXML
     require 'rdfxml/format'
     require 'rdfxml/vocab'
-    require 'n3/patches/array_hacks'
-    require 'n3/patches/nokogiri_hacks'
-    require 'n3/patches/rdf_escape'
+    require 'rdfxml/patches/array_hacks'
+    require 'rdfxml/patches/nokogiri_hacks'
+    require 'rdfxml/patches/rdf_escape'
     autoload :Reader,  'rdf/rdfxml/reader'
     autoload :Writer,  'rdf/rdfxml/writer'
     autoload :VERSION, 'rdf/rdfxml/version'
