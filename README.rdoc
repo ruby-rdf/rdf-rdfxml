@@ -1,4 +1,4 @@
-= RDF::RDFa reader/writer
+= RDF::RDFXML reader/writer
 
 RDF/XML parser for RDF.rb.
 
@@ -35,7 +35,7 @@ Instantiate a parser and parse source, specifying type and base-URL
 * Distiller[http://kellogg-assoc/distiller]
 * RDoc[http://rdoc.info/projects/gkellogg/rdf-rdfxml]
 * History[http://github.com/gkellogg/rdf-rdfxml/blob/master/History.txt]
-* "XHTML+RDFa 1.1 Core"[http://www.w3.org/TR/2010/WD-xhtml-rdfa-20100422/]
+* "XHTML+RDFXML 1.1 Core"[http://www.w3.org/TR/2010/WD-xhtml-rdfa-20100422/]
 * "RDF Tests"[http://www.w3.org/2000/10/rdf-tests/rdfcore/allTestCases.html]
 
 == LICENSE:

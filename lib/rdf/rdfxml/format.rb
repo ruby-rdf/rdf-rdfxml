@@ -1,9 +1,10 @@
 module RDF::RDFXML
   ##
-  # RDFa format specification.
+  # RDFXML format specification.
   #
-  # @example Obtaining an RDFa format class
-  #   RDF::Format.for(:rdfxml)     #=> RDF::RDFXML::Format
+  # @example Obtaining an RDFXML format class
+  #   RDF::Format.for(:rdf)        # RDF::RDFXML::Format
+  #   RDF::Format.for(:xml)        # RDF::RDFXML::Format
   #   RDF::Format.for("etc/foaf.xml")
   #   RDF::Format.for(:file_name      => "etc/foaf.xml")
   #   RDF::Format.for(:file_extension => "xml")
