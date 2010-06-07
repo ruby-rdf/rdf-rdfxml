@@ -85,7 +85,7 @@ xmlns:ex="http://www.example.org/" xml:lang="en" xml:base="http://www.example.or
       EOF
 
       graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
-      #puts @reader.debug
+      #puts @debug
       graph.size.should == 10
       # print graph.to_ntriples
       # TODO: add datatype parsing
@@ -189,7 +189,7 @@ EOF
 EOF
 
       graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
-      graph.should be_equivalent_graph(triples, :about => "http://example.com/", :trace => @reader.debug)
+      graph.should be_equivalent_graph(triples, :about => "http://example.com/", :trace => @debug)
     end
   
     it "should make sure that the value of rdf:ID attributes match the XML Name production (data attribute version)" do
@@ -236,7 +236,7 @@ EOF
     
       lambda do
         graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
-        puts @reader.debug
+        puts @debug
       end.should raise_error(RDF::ReaderError, /Obsolete attribute .*bagID/)
     end
 
@@ -282,7 +282,7 @@ EOF
       uri = "http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/Manifest.rdf#test001"
 
       graph = parse(sampledoc, :base_uri => uri, :strict => true)
-      graph.should be_equivalent_graph(triples, :about => uri, :trace => @reader.debug)
+      graph.should be_equivalent_graph(triples, :about => uri, :trace => @debug)
     end
   
     context "parsing rdf files" do
@@ -291,9 +291,10 @@ EOF
         graph = parse(rdf_string, :base_uri => uri, :strict => true)
 
         nt_string = File.read(filepath.sub('.rdf', '.nt'))
-        nt_graph = N3Parser.parse(nt_string, uri)
+        nt_graph = RDF::Graph.new
+        nt_graph.load(filepath.sub('.rdf', '.nt'))
 
-        graph.should be_equivalent_graph(nt_graph, :about => uri, :trace => @reader.debug)
+        graph.should be_equivalent_graph(nt_graph, :about => uri, :trace => @debug)
       end
 
       before(:all) do
@@ -315,10 +316,10 @@ EOF
 
   # W3C Test suite from http://www.w3.org/2000/10/rdf-tests/rdfcore/
   describe "w3c rdfcore tests" do
-    #require 'rdf_helper'
+    require 'rdf_helper'
     
     def self.positive_tests
-      [] #RdfHelper::TestCase.positive_parser_tests(RDFCORE_TEST, RDFCORE_DIR) rescue []
+      RdfHelper::TestCase.positive_parser_tests(RDFCORE_TEST, RDFCORE_DIR)
     end
 
     def self.negative_tests
@@ -328,12 +329,17 @@ EOF
     # Negative parser tests should raise errors.
     describe "positive parser tests" do
       positive_tests.each do |t|
-        #next unless t.about.uri.to_s =~ /rdfms-rdf-names-use/
+        #next unless t.about =~ /rdfms-rdf-names-use/
         #next unless t.name =~ /11/
         #puts t.inspect
-        specify "test #{t.name}: " + (t.description || "#{t.inputDocument} against #{t.outputDocument}") do
-          t.run_test do |rdf_string, parser|
-            parser.parse(rdf_string, t.about.uri.to_s, :strict => true, :debug => [])
+        specify "#{t.name}: " + (t.description || "#{t.inputDocument} against #{t.outputDocument}") do
+          t.run_test do |rdf_string|
+            t.debug = []
+            g = RDF::Graph.new
+            RDF::RDFXML::Reader.new(rdf_string, :base_uri => t.about, :strict => true, :debug => t.debug).each do |statement|
+              g << statement
+            end
+            g
           end
         end
       end
@@ -341,14 +347,14 @@ EOF
     
     describe "negative parser tests" do
       negative_tests.each do |t|
-        #next unless t.about.uri.to_s =~ /rdfms-empty-property-elements/
+        #next unless t.about =~ /rdfms-empty-property-elements/
         #next unless t.name =~ /1/
         #puts t.inspect
         specify "test #{t.name}: " + (t.description || t.inputDocument) do
           t.run_test do |rdf_string, parser|
             lambda do
-              parser.parse(rdf_string, t.about.uri.to_s, :strict => true, :debug => [])
-              parser.graph.should be_equivalent_graph("", t)
+              parser.parse(rdf_string, :base_uri => t.about, :strict => true, :debug => [])
+              parser.graph.should be_empty
             end.should raise_error(RDF::ReaderError)
           end
         end
@@ -357,9 +363,9 @@ EOF
   end
   
   def parse(input, options)
+    @debug = []
     graph = RDF::Graph.new
-    @reader = RDF::RDFXML::Reader.new(input, options)
-    @reader.each_statement do |statement|
+    RDF::RDFXML::Reader.new(input, options.merge(:debug => @debug)).each do |statement|
       graph << statement
     end
     graph

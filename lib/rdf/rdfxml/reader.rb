@@ -7,7 +7,6 @@ module RDF::RDFXML
   # @author [Gregg Kellogg](http://kellogg-assoc.com/)
   class Reader < RDF::Reader
     format Format
-    attr_reader :debug
 
     CORE_SYNTAX_TERMS = %w(RDF ID about parseType resource nodeID datatype).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
     OLD_TERMS = %w(aboutEach aboutEachPrefix bagID).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
@@ -131,8 +130,8 @@ module RDF::RDFXML
         @graph = RDF::Graph.new
         @debug = options[:debug]
         @strict = options[:strict]
-        @base_uri = options[:base_uri]
-        @base_uri = RDF::URI.parse(@base_uri) if @base_uri.is_a?(String)
+        @base_uri = RDF::URI.parse(options[:base_uri]) if options[:base_uri]
+            
         @id_mapping = Hash.new
 
         @doc = case input
@@ -145,19 +144,21 @@ module RDF::RDFXML
         @callback = block
         root = @doc.root
   
+        add_debug(root, "base_uri = #{@base_uri}") if @base_uri
+
         # Look for rdf:RDF elements and process each.
         rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF_NS)
         if rdf_nodes.length == 0
           # If none found, root element may be processed as an RDF Node
 
-          ec = EvaluationContext.new(@uri, root, @graph)
+          ec = EvaluationContext.new(@base_uri, root, @graph)
           nodeElement(root, ec)
         else
           rdf_nodes.each do |node|
             # XXX Skip this element if it's contained within another rdf:RDF element
 
             # Extract base, lang and namespaces from parents to create proper evaluation context
-            ec = EvaluationContext.new(@uri, nil, @graph)
+            ec = EvaluationContext.new(@base_uri, nil, @graph)
             ec.extract_from_ancestors(node)
             node.children.each {|el|
               next unless el.elem?
@@ -499,7 +500,7 @@ module RDF::RDFXML
       add_triple(el, rsubject, RDF.subject, subject)
       add_triple(el, rsubject, RDF.predicate, predicate)
       add_triple(el, rsubject, RDF.object, object)
-      add_triple(el, rsubject, RDF.type, RDF.Statement)
+      add_triple(el, rsubject, RDF.type, RDF["Statement"])
     end
 
     # Figure out the subject from the element.

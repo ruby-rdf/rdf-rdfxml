@@ -1,4 +1,4 @@
-$:.unshift(File.dirname(__FILE__)) unless $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
+$:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..')))
 require 'rdf'
 
 module RDF
@@ -20,14 +20,15 @@ module RDF
   #
   # @author [Gregg Kellogg](http://kellogg-assoc.com/)
   module RDFXML
-    require 'rdfxml/format'
-    require 'rdfxml/vocab'
-    require 'rdfxml/patches/array_hacks'
-    require 'rdfxml/patches/nokogiri_hacks'
-    require 'rdfxml/patches/rdf_escape'
-    autoload :Reader,  'rdfxml/reader'
-    autoload :Writer,  'rdfxml/writer'
-    autoload :VERSION, 'rdfxml/version'
+    require 'rdf/rdfxml/format'
+    require 'rdf/rdfxml/vocab'
+    require 'rdf/rdfxml/patches/array_hacks'
+    require 'rdf/rdfxml/patches/nokogiri_hacks'
+    require 'rdf/rdfxml/patches/rdf_escape'
+    autoload :Reader,  'rdf/rdfxml/reader'
+    autoload :Writer,  'rdf/rdfxml/writer'
+    autoload :VERSION, 'rdf/rdfxml/version'
+    autoload :XML,     'rdf/rdfxml/vocab'
     
     # Fixme: RDF.to_s should generate this, but it doesn't
     RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
