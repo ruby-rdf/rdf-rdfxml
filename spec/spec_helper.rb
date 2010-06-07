@@ -26,9 +26,6 @@ module RDF
   end
 end
 
-RDFCORE_DIR = File.join(File.dirname(__FILE__), 'rdfcore')
-RDFCORE_TEST = "http://www.w3.org/2000/10/rdf-tests/rdfcore/Manifest.rdf"
-
 Spec::Runner.configure do |config|
   config.include(RDF::Spec::Matchers)
 end

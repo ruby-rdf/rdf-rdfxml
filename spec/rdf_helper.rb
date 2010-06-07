@@ -1,9 +1,12 @@
+autoload :YAML, "yaml"
+
+RDFCORE_DIR = File.join(File.dirname(__FILE__), 'rdfcore')
+RDFCORE_TEST = "http://www.w3.org/2000/10/rdf-tests/rdfcore/Manifest.rdf"
+
 module RdfHelper
   # Class representing test cases in format http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema#
+
   class TestCase
-    include Matchers
-    
-    class MF < RDF::Vocabulary("http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#"); end
     class QT < RDF::Vocabulary("http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#"); end
     
     attr_accessor :about
@@ -94,11 +97,11 @@ module RdfHelper
       when :none
         # Don't check output, just parse to graph
       when :array
-        graph.should be_equivalent_graph(self.output, self)
+        graph.should Matchers::be_equivalent_graph(self.output, self)
       else
         output_graph = RDF::Graph.load(self.outputDocument)
 
-        graph.should be_equivalent_graph(output_graph, self)
+        graph.should Matchers::be_equivalent_graph(output_graph, self)
       end
     end
 
@@ -120,28 +123,29 @@ module RdfHelper
       @positive_entailment_tests = []
       @negative_entailment_tests = []
 
-      #puts "parse #{File.join(test_dir, test)} @#{Time.now}"
-      graph = RDF::Graph.load(File.join(test_dir, test), :base_uri => test_uri)
-      #puts "parsed #{graph.size} statements @#{Time.now}"
-      uri_base = Addressable::URI.join(test_uri, ".").to_s
+      unless File.file?(File.join(test_dir, test.sub("rdf", "yml")))
+        puts "parse #{File.join(test_dir, test)} @#{Time.now}"
+        graph = RDF::Graph.load(File.join(test_dir, test), :base_uri => test_uri)
+        puts "parsed #{graph.size} statements @#{Time.now}"
+        uri_base = Addressable::URI.join(test_uri, ".").to_s
 
-      # One of:
-      #   http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema
-      #   http://www.w3.org/2000/10/swap/test.n3#
-      #   http://www.w3.org/2004/11/n3test#
-      # Group by subject
-      #$DEBUG = true
-      @test_cases = graph.subjects.map do |subj|
-        t = TestCase.new(graph.query(:subject => subj), uri_base, test_dir)
-        #puts t.inspect
-        #$DEBUG = false
-        t.name ? t : nil
-      end.
-        compact.
-        sort_by{|t| t.name.to_s}
-        #$DEBUG = false
+        # One of:
+        #   http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema
+        #   http://www.w3.org/2000/10/swap/test.n3#
+        #   http://www.w3.org/2004/11/n3test#
+        # Group by subject
+        @test_cases = graph.subjects.map do |subj|
+          t = TestCase.new(graph.query(:subject => subj), uri_base, test_dir)
+          t.name ? t : nil
+        end.
+          compact.
+          sort_by{|t| t.name.to_s}
+      else
+        # Read tests from Manifest.yml
+        self.from_yaml(File.join(test_dir, test.sub("rdf", "yml")))
+      end
 
-      #puts "identified #{@test_cases.size} test cases @#{Time.now}"
+      puts "identified #{@test_cases.size} test cases @#{Time.now}"
 
      @test_cases.each do |tc|
        next if tc.status && tc.status != "APPROVED"
@@ -159,5 +163,21 @@ module RdfHelper
     def self.negative_parser_tests(test_uri = nil, test_dir = nil);     parse_test_cases(test_uri, test_dir); @negative_parser_tests; end
     def self.positive_entailment_tests(test_uri = nil, test_dir = nil); parse_test_cases(test_uri, test_dir); @positive_entailment_tests; end
     def self.negative_entailment_tests(test_uri = nil, test_dir = nil); parse_test_cases(test_uri, test_dir); @negative_entailment_tests; end
+    
+    def self.to_yaml(test_uri, test_dir, file)
+      test_cases = self.test_cases(test_uri, test_dir)
+      File.open(file, 'w') do |out|
+        YAML.dump(test_cases, out )
+      end
+    end
+    
+    def self.from_yaml(file)
+      YAML::add_private_type("RdfHelper::TestCase") do |type, val|
+        TestCase.new( val )
+      end
+      File.open(file, 'r') do |input|
+        @test_cases = YAML.load(input)
+      end
+    end
   end
 end
