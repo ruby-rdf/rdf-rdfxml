@@ -1,6 +1,8 @@
 === 0.0.2
 * Added specs from RdfContext
 * Added array_hacks, nokogiri_hacks, and rdf_escape
+* Fixed most bugs that are not related to the underlying framework.
+  * Specific failing testcases for rdf-isomorphic, RDF::Literaland others need to be constructed and added as issues against those gems.
 
 === 0.0.1
 * First port from RdfContext version 0.5.4

@@ -35,13 +35,13 @@ module Matchers
     end
 
     def failure_message_for_should
-      info = @info.respond_to?(:information) ? @info.information : ""
+      info = @info.respond_to?(:information) ? @info.information : @info.inspect
       if @expected.is_a?(RDF::Graph) && @actual.size != @expected.size
         "Graph entry count differs:\nexpected: #{@expected.size}\nactual:   #{@actual.size}"
       elsif @expected.is_a?(Array) && @actual.size != @expected.length
         "Graph entry count differs:\nexpected: #{@expected.length}\nactual:   #{@actual.size}"
       else
-        "Graph differs#{@info.compare == :array ? '(array)' : ''}\n"
+        "Graph differs"
       end +
       "\n#{info + "\n" unless info.empty?}" +
       (@info.inputDocument ? "Input file: #{@info.inputDocument}\n" : "") +

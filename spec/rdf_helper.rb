@@ -34,18 +34,19 @@ module RdfHelper
         next if statement.subject.is_a?(RDF::Node)
         pred = statement.predicate.to_s.split(/[\#\/]/).last
         obj  = statement.object.is_a?(RDF::Literal) ? statement.object.value : statement.object.to_s
-        
+
         puts "#{pred}: #{obj}" if $DEBUG
         if statement.predicate == RDF.type
           self.rdf_type = obj.to_s.split(/[\#\/]/).last
           #puts statement.subject.to_s
         elsif pred =~ /Document\Z/i
           puts "sub #{uri_prefix} in #{obj} for #{test_dir}" if $DEBUG
+          about = obj.dup
           obj.sub!(uri_prefix, test_dir)
           puts " => #{obj}" if $DEBUG
           self.send("#{pred}=", obj)
           if pred == "inputDocument"
-            self.about ||= obj
+            self.about ||= about
             self.name ||= statement.subject.to_s.split(/[\#\/]/).last
           end
         elsif pred == "referenceOutput"

@@ -45,15 +45,17 @@ Spec::Rake::SpecTask.new("doc:spec") do |spec|
 end
 
 desc "Generate RDF Core Manifest.yml"
-Spec::Rake::SpecTask.new("spec:prepare") do |spec|
-  $:.unshift(File.join(File.dirname(__FILE__), 'lib'))
-  require 'rdf/rdfxml'
-  require 'spec/rdf_helper'
-  require 'fileutils'
+namespace :spec do
+  task :prepare do
+    $:.unshift(File.join(File.dirname(__FILE__), 'lib'))
+    require 'rdf/rdfxml'
+    require 'spec/rdf_helper'
+    require 'fileutils'
 
-  yaml = File.join(RDFCORE_DIR, "Manifest.yml")
-  FileUtils.rm_f(yaml)
-  RdfHelper::TestCase.to_yaml(RDFCORE_TEST, RDFCORE_DIR, yaml)
+    yaml = File.join(RDFCORE_DIR, "Manifest.yml")
+    FileUtils.rm_f(yaml)
+    RdfHelper::TestCase.to_yaml(RDFCORE_TEST, RDFCORE_DIR, yaml)
+  end
 end
 
 task :default => :spec

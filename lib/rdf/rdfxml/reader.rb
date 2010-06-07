@@ -143,6 +143,8 @@ module RDF::RDFXML
         @callback = block
         root = @doc.root
   
+        add_debug(root, "base_uri: #{@base_uri || 'nil'}")
+        
         rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF_NS)
         if rdf_nodes.length == 0
           # If none found, root element may be processed as an RDF Node
@@ -261,7 +263,7 @@ module RDF::RDFXML
       # produce triples for attributes
       el.attribute_nodes.each do |attr|
         add_debug(el, "propertyAttr: #{attr.uri}='#{attr.value}'")
-        if attr.uri == RDF.type.to_s
+        if attr.uri.to_s == RDF.type.to_s
           # If there is an attribute a in propertyAttr with a.URI == rdf:type
           # then u:=uri(identifier:=resolve(a.string-value))
           # and the following triple is added to the graph:
@@ -375,7 +377,7 @@ module RDF::RDFXML
           end
 
           # For element e with possibly empty element content c.
-          n = BNode.new
+          n = self.bnode
           add_triple(child, subject, predicate, n)
 
           # Reification
@@ -540,7 +542,8 @@ module RDF::RDFXML
       if NC_REGEXP.match(id)
         # ID may only be specified once for the same URI
         if base
-          uri = base.join("##{id}", base)
+          # FIXME: Known bug in RDF::URI#join
+          uri = base.join("##{id}")
           if @id_mapping[id] && @id_mapping[id] == uri
             warn = "ID addtribute '#{id}' may only be defined once for the same URI"
             add_debug(el, warn)

@@ -1,6 +1,6 @@
 --- 
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -8,7 +8,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -16,7 +16,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -24,7 +24,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -32,7 +32,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-005.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-005.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -40,7 +40,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-006.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-006.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -48,7 +48,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-007.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-007.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-007.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -56,7 +56,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-008.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-008.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-008.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -64,7 +64,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-009.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-009.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-009.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -72,7 +72,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-010.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-010.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-010.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -80,7 +80,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-011.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-011.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-011.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -88,7 +88,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-012.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-012.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-012.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -96,7 +96,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-013.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-013.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-013.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -104,7 +104,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-014.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-014.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-014.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -112,7 +112,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-015.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-015.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-015.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -120,7 +120,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-016.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-016.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-016.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -128,7 +128,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-017.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-017.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-017.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -136,7 +136,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-018.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-018.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-018.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -144,7 +144,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-019.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-019.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-019.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -152,7 +152,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-020.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/error-020.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/error-020.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -160,7 +160,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/error0001.rdf
   description: "\n\
     \tThis is again legal RDF\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0001.rdf
@@ -169,7 +169,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/error0002.rdf
   description: "\n\
     \tThis is again legal RDF\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0002.rdf
@@ -178,7 +178,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/error0003.rdf
   description: "\n\
     \tThis is again legal RDF\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0003.rdf
@@ -187,7 +187,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/error0004.rdf
   description: "\n\
     \tThis is again legal RDF\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0004.rdf
@@ -196,7 +196,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/error0005.rdf
   description: "\n\
     \tThis is again legal RDF\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0005.rdf
@@ -205,7 +205,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/error0006.rdf
   description: "\n\
     \tThis is again legal RDF\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0006.rdf
@@ -214,7 +214,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0007.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/error0007.rdf
   description: "\n\
     \tThis is again legal RDF\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0007.rdf
@@ -223,7 +223,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0008.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/error0008.rdf
   description: "\n\
     \tThis is again legal RDF\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0008.rdf
@@ -232,7 +232,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0009.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/error0009.rdf
   description: "\n\
     \tThis is again legal RDF\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/error0009.rdf
@@ -241,7 +241,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/error001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/error001.rdf
   description: "\n\
     \tThis test case concerns URIs relative to a non-relative URI scheme base.\n\
     \tIt's beyond the scope of the WG to deal with this; it has therefore not\n\
@@ -252,7 +252,7 @@
   rdf_type: NegativeParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/error001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-syntax-incomplete/error001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  The value of rdf:nodeID must match the XML Name production,\n        (as modified by XML Namespaces). \n   "
@@ -262,7 +262,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/error001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/error001.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/error001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -270,13 +270,13 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-parseType/error001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-parseType/error001.rdf
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-parseType/error001.rdf
   name: error001
   rdf_type: NegativeParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/error001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/error001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/error001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema
@@ -284,7 +284,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-charmod-uris/error001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-charmod-uris/error001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Apr/0474.html
   description: "\n\
     \tTest for failure for uriref not in Normal Form C.\n   "
@@ -295,7 +295,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-charmod-literals/error001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-charmod-literals/error001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Nov/0063.html
   description: "\n\
     \tDoes the treatment of literals conform to charmod ?\n\
@@ -309,7 +309,7 @@
   rdf_type: NegativeParserTest
   status: WITHDRAWN
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-id/error001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-id/error001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  The value of rdf:ID must match the XML Name production,\n        (as modified by XML Namespaces). \n   "
@@ -318,14 +318,14 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-abouteach/error001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-abouteach/error001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-abouteach/error001.rdf
   name: error001
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-charmod-literals/error002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-charmod-literals/error002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Nov/0063.html
   description: "\n\
     \tDoes the treatment of literals conform to charmod ?\n\
@@ -339,7 +339,7 @@
   rdf_type: NegativeParserTest
   status: WITHDRAWN
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/error002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/error002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/error002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema
@@ -347,7 +347,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/error002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-syntax-incomplete/error002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  The value of rdf:nodeID must match the XML Name production,\n        (as modified by XML Namespaces). \n   "
@@ -357,7 +357,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/error002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/error002.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/error002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -365,14 +365,14 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-abouteach/error002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-abouteach/error002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-abouteach/error002.rdf
   name: error002
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-id/error002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-id/error002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  The value of rdf:ID must match the XML Name production,\n        (as modified by XML Namespaces). \n   "
@@ -381,13 +381,13 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-parseType/error002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-parseType/error002.rdf
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-parseType/error002.rdf
   name: error002
   rdf_type: NegativeParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/error003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-syntax-incomplete/error003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  The value of rdf:nodeID must match the XML Name production,\n        (as modified by XML Namespaces). \n   "
@@ -397,13 +397,13 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-parseType/error003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-parseType/error003.rdf
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-parseType/error003.rdf
   name: error003
   rdf_type: NegativeParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-id/error003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-id/error003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  The value of rdf:ID must match the XML Name production,\n        (as modified by XML Namespaces). \n   "
@@ -412,7 +412,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/error003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/error003.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/error003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -420,7 +420,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-id/error004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-id/error004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  The value of rdf:ID must match the XML Name production,\n        (as modified by XML Namespaces). \n   "
@@ -429,7 +429,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/error004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-syntax-incomplete/error004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  Cannot have rdf:nodeID and rdf:ID.\n   "
@@ -439,7 +439,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/error005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-syntax-incomplete/error005.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  Cannot have rdf:nodeID and rdf:about.\n   "
@@ -449,7 +449,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-id/error005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-id/error005.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  The value of rdf:ID must match the XML Name production,\n        (as modified by XML Namespaces). \n   "
@@ -458,7 +458,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/error006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-syntax-incomplete/error006.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  Cannot have rdf:nodeID and rdf:resource.\n   "
@@ -468,7 +468,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-id/error006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-id/error006.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  The value of rdf:bagID must match the XML Name production,\n        (as modified by XML Namespaces). \n   "
@@ -477,7 +477,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-id/error007.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-id/error007.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \t  The value of rdf:bagID must match the XML Name production,\n        (as modified by XML Namespaces). \n   "
@@ -486,7 +486,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-difference-between-ID-and-about/error1.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/error1.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Dec/0108.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-difference-between-ID-and-about/error1.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-difference-between-ID-and-about
@@ -494,7 +494,7 @@
   rdf_type: NegativeParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -503,7 +503,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -512,7 +512,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -521,7 +521,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -530,7 +530,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-005.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-005.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -539,7 +539,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-006.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-006.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -548,7 +548,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-007.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-007.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-007.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -557,7 +557,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-008.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-008.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-008.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -566,7 +566,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-009.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-009.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-009.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -575,7 +575,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-010.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-010.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-010.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -584,7 +584,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-011.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-011.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-011.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -593,7 +593,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-012.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-012.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-012.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -602,7 +602,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-013.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-013.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-013.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -611,7 +611,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-014.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-014.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-014.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -620,7 +620,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-015.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-015.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-015.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -629,7 +629,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-016.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-016.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-016.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -638,7 +638,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-017.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-017.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-017.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -647,7 +647,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-018.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-018.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-018.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -656,7 +656,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-019.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-019.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-019.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -665,7 +665,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-020.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-020.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-020.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -674,7 +674,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-021.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-021.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-021.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -683,7 +683,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-022.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-022.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-022.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -692,7 +692,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-023.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-023.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-023.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -701,7 +701,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-024.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-024.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-024.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -710,7 +710,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-025.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-025.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-025.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -719,7 +719,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-026.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-026.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-026.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -728,7 +728,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-027.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-027.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-027.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -737,7 +737,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-028.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-028.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-028.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -746,7 +746,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-029.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-029.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-029.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -755,7 +755,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-030.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-030.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-030.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -764,7 +764,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-031.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-031.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-031.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -773,7 +773,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-032.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-032.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-032.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -782,7 +782,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-033.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-033.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-033.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -791,7 +791,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-034.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-034.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-034.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -800,7 +800,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-035.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-035.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-035.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -809,7 +809,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-036.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-036.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-036.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -818,7 +818,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-037.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/test-037.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/test-037.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -827,7 +827,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0001.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -836,7 +836,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0002.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -845,7 +845,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0003.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -854,7 +854,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0004.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -863,7 +863,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0005.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0005.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -872,7 +872,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0006.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0006.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -881,7 +881,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0007.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0007.rdf
   description: "\n\
     \trdf:aboutEach no longer valid.\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0007.rdf
@@ -891,7 +891,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0008.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0008.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jun/0008.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0008.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -900,7 +900,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0009.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0009.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0009.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -909,7 +909,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/amp-in-url/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Sep/0326.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/amp-in-url/test001.rdf
   name: test001
@@ -917,7 +917,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema
@@ -926,7 +926,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-para196/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-para196/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0095.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-para196/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-para196
@@ -935,7 +935,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-reification-required/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-reification-required/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-reification-required/test001.rdf
   name: test001
@@ -943,7 +943,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-charmod-uris/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-charmod-uris/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Apr/0474.html
   description: "\n\
     \tA uriref is allowed to match non-US ASCII forms \n        conforming to Unicode Normal Form C.\n        No escaping algorithm is applied.\n   "
@@ -955,7 +955,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-not-id-and-resource-attr/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-not-id-and-resource-attr/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-not-id-and-resource-attr/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-not-id-and-resource-attr
@@ -964,7 +964,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-element-not-mandatory/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-element-not-mandatory/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Oct/0071.html
   description: "\n    A surrounding rdf:RDF element is no longer mandatory.\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-element-not-mandatory/test001.rdf
@@ -973,7 +973,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-charmod-literals/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-charmod-literals/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Apr/0056.html
   description: "\n\
     \tDoes the treatment of literals conform to charmod ?\n\
@@ -986,7 +986,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-uri-substructure/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-uri-substructure/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-uri-substructure/test001.rdf
   name: test001
@@ -994,7 +994,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1003,7 +1003,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/datatypes/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/datatypes/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Nov/0611.html
   description: "\n\
     \tA simple datatype production; a language+datatype production. Simply duplicate the\n\
@@ -1014,7 +1014,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xml-canon/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xml-canon/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Aug/0138.html
   description: "\n\
     Demonstrating the canonicalisation of XMLLiterals.\n   "
@@ -1024,7 +1024,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xml-literal-namespaces/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-xml-literal-namespaces/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xml-literal-namespaces/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-literal-namespaces
@@ -1033,7 +1033,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/unrecognised-xml-attributes/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/unrecognised-xml-attributes/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0152.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/unrecognised-xml-attributes/test001.rdf
   name: test001
@@ -1041,7 +1041,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-xmllang/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jun/0034.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test001.rdf
   name: test001
@@ -1049,7 +1049,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-identity-anon-resources/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-identity-anon-resources/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0405.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-identity-anon-resources/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-identity-anon-resources
@@ -1058,7 +1058,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test001.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1067,7 +1067,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-duplicate-member-props/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-duplicate-member-props/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002May/0028.html
   description: "\n\
     The question posed to the RDF WG was: should an RDF document containing\n\
@@ -1081,7 +1081,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-literal-is-xml-structure/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-literal-is-xml-structure/test001.rdf
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-literal-is-xml-structure/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-literal-is-xml-structure
   name: test001
@@ -1089,7 +1089,7 @@
   rdf_type: PositiveParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-syntax-incomplete/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \trdf:nodeID can be used to label a blank node.\n   "
@@ -1100,7 +1100,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-nested-bagIDs
@@ -1109,7 +1109,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-seq-representation/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-seq-representation/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002May/0159.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-seq-representation/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-seq-representation
@@ -1118,7 +1118,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfs-domain-and-range/test001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfs-domain-and-range/test001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0405.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfs-domain-and-range/test001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfs-domain-and-range
@@ -1127,7 +1127,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0010.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0010.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0010.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -1136,7 +1136,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0011.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0011.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0011.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -1145,7 +1145,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0012.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0012.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0012.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -1154,7 +1154,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0013.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0013.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0013.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -1163,7 +1163,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0014.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-ns-prefix-confusion/test0014.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-ns-prefix-confusion/test0014.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-ns-prefix-confusion
@@ -1172,7 +1172,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-nested-bagIDs
@@ -1181,7 +1181,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema
@@ -1190,7 +1190,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-syntax-incomplete/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \trdf:nodeID can be used to label a blank node.\n      These have file scope and are distinct from any\n      unlabelled blank nodes.\n   "
@@ -1201,7 +1201,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-xmllang/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jun/0034.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test002.rdf
   name: test002
@@ -1209,7 +1209,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfs-domain-and-range/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfs-domain-and-range/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0405.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfs-domain-and-range/test002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfs-domain-and-range
@@ -1218,7 +1218,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xml-literal-namespaces/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-xml-literal-namespaces/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xml-literal-namespaces/test002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-literal-namespaces
@@ -1227,7 +1227,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/unrecognised-xml-attributes/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/unrecognised-xml-attributes/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jan/0152.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/unrecognised-xml-attributes/test002.rdf
   name: test002
@@ -1235,7 +1235,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1244,7 +1244,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/datatypes/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/datatypes/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Nov/0611.html
   description: "\n\
     \tA parser is not required to know about well-formed datatyped literals.\n   "
@@ -1254,7 +1254,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-literal-is-xml-structure/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-literal-is-xml-structure/test002.rdf
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-literal-is-xml-structure/test002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-literal-is-xml-structure
   name: test002
@@ -1262,7 +1262,7 @@
   rdf_type: PositiveParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-not-id-and-resource-attr/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-not-id-and-resource-attr/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-not-id-and-resource-attr/test002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-not-id-and-resource-attr
@@ -1271,7 +1271,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-charmod-uris/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-charmod-uris/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Apr/0474.html
   description: "\n\
     \tA uriref which already has % escaping is permitted.\n        No unescaping algorithm is applied.\n   "
@@ -1283,7 +1283,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-identity-anon-resources/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-identity-anon-resources/test002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0405.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-identity-anon-resources/test002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-identity-anon-resources
@@ -1292,7 +1292,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test002.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1301,7 +1301,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-nested-bagIDs
@@ -1310,7 +1310,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/test003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-syntax-incomplete/test003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n     On an rdf:Description or typed node rdf:nodeID behaves\n     similarly to an rdf:about.\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/test003.rdf
@@ -1320,7 +1320,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema
@@ -1329,7 +1329,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test003.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1338,7 +1338,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-xmllang/test003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jun/0034.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test003.rdf
   name: test003
@@ -1346,7 +1346,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-identity-anon-resources/test003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-identity-anon-resources/test003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0405.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-identity-anon-resources/test003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-identity-anon-resources
@@ -1355,7 +1355,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-not-id-and-resource-attr/test003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-not-id-and-resource-attr/test003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-not-id-and-resource-attr/test003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-not-id-and-resource-attr
@@ -1364,7 +1364,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1373,7 +1373,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-literal-is-xml-structure/test003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-literal-is-xml-structure/test003.rdf
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-literal-is-xml-structure/test003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-literal-is-xml-structure
   name: test003
@@ -1381,7 +1381,7 @@
   rdf_type: PositiveParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfs-domain-and-range/test003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfs-domain-and-range/test003.rdf
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfs-domain-and-range/test003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfs-domain-and-range
   name: test003
@@ -1389,7 +1389,7 @@
   rdf_type: PositiveParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/test004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-syntax-incomplete/test004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n     On a property element rdf:nodeID behaves\n     similarly to rdf:resource.\n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-syntax-incomplete/test004.rdf
@@ -1399,7 +1399,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-nested-bagIDs
@@ -1408,7 +1408,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-literal-is-xml-structure/test004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-literal-is-xml-structure/test004.rdf
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-literal-is-xml-structure/test004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-literal-is-xml-structure
   name: test004
@@ -1416,7 +1416,7 @@
   rdf_type: PositiveParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfs-domain-and-range/test004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfs-domain-and-range/test004.rdf
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfs-domain-and-range/test004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfs-domain-and-range
   name: test004
@@ -1424,7 +1424,7 @@
   rdf_type: PositiveParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-xmllang/test004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jun/0034.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test004.rdf
   name: test004
@@ -1432,7 +1432,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1441,7 +1441,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-identity-anon-resources/test004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-identity-anon-resources/test004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0405.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-identity-anon-resources/test004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-identity-anon-resources
@@ -1450,7 +1450,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-not-id-and-resource-attr/test004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-not-id-and-resource-attr/test004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-not-id-and-resource-attr/test004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-not-id-and-resource-attr
@@ -1459,7 +1459,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test004.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1468,7 +1468,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test004.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test004.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test004.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema
@@ -1477,7 +1477,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-not-id-and-resource-attr/test005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-not-id-and-resource-attr/test005.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-not-id-and-resource-attr/test005.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-not-id-and-resource-attr
@@ -1486,7 +1486,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-literal-is-xml-structure/test005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-literal-is-xml-structure/test005.rdf
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-literal-is-xml-structure/test005.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-literal-is-xml-structure
   name: test005
@@ -1494,7 +1494,7 @@
   rdf_type: PositiveParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test005.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test005.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1503,7 +1503,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test005.rdf
   description: "\n\
     This is not valid rdf/xml. The embedding of RDF/XML in other XML formats is\n\
     beyond the scope of these test cases. Test case withdrawn.\n   "
@@ -1514,7 +1514,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-identity-anon-resources/test005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-identity-anon-resources/test005.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Oct/0405.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-identity-anon-resources/test005.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-identity-anon-resources
@@ -1523,7 +1523,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test005.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test005.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-nested-bagIDs
@@ -1532,7 +1532,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-xmllang/test005.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Jun/0034.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test005.rdf
   name: test005
@@ -1540,7 +1540,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test005.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test005.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test005.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema
@@ -1549,7 +1549,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test006.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test006.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema
@@ -1558,7 +1558,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test006.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test006.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-nested-bagIDs
@@ -1567,7 +1567,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test006.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test006.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1576,7 +1576,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test006.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test006.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1585,7 +1585,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test006.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-xmllang/test006.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-xmllang/test006.rdf
   name: test006
@@ -1593,7 +1593,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test007.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test007.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test007.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema
@@ -1602,7 +1602,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test007.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test007.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     rdf:bagID is forbidden on property element prop with an rdf:resource or\n\
@@ -1613,7 +1613,7 @@
   rdf_type: NegativeParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test007.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test007.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test007.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1622,7 +1622,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test007.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test007.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test007.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1631,7 +1631,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test008.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test008.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test008.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1640,7 +1640,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test008.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test008.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test008.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1649,7 +1649,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test008.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdf-containers-syntax-vs-schema/test008.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Jul/0000.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdf-containers-syntax-vs-schema/test008.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdf-containers-syntax-vs-schema
@@ -1658,7 +1658,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test008.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test008.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test008.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-nested-bagIDs
@@ -1667,7 +1667,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test009.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test009.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test009.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1676,7 +1676,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test009.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test009.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test009.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1685,7 +1685,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test009.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test009.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test009.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-nested-bagIDs
@@ -1694,7 +1694,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test010.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test010.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test010.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1703,7 +1703,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test010.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test010.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test010.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1712,7 +1712,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test010.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test010.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   description: "\n        Two property attributes and a property element on an rdf:Description.\n        Since the property attributes are not ordered under document\n        order, two different n-triples files corresponding to both\n        possible orderings are permitted. \n\
     \t\tOne of test010a and test010b SHOULD pass, at least.\n   "
@@ -1723,7 +1723,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test010.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test010.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   description: "\n        Two property attributes and a property element on an rdf:Description.\n        Since the property attributes are not ordered under document\n        order, two different n-triples files corresponding to both\n        possible orderings are permitted. \n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test010.rdf
@@ -1733,7 +1733,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test011.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test011.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test011.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1742,7 +1742,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test011.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test011.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test011.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1751,7 +1751,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test011.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test011.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   description: "\n        Two property attributes and a property element on an rdf:Description.\n        Since the property attributes are not ordered under document\n        order, two different n-triples files corresponding to both\n        possible orderings are permitted. \n\
     \t\tOne of test011a and test011b SHOULD pass, at least.\n   "
@@ -1762,7 +1762,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test011.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test011.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   description: "\n        Two property attributes and a property element on an rdf:Description.\n        Since the property attributes are not ordered under document\n        order, two different n-triples files corresponding to both\n        possible orderings are permitted. \n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test011.rdf
@@ -1772,7 +1772,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test012.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test012.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test012.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1781,7 +1781,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test012.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test012.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Oct/0217.html
   description: "\n\
     Test case WITHDRAWN in light of 2396bis\n   "
@@ -1792,7 +1792,7 @@
   rdf_type: PositiveParserTest
   status: WITHDRAWN
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test012.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test012.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   description: "\n        Two property attributes and a property element on an rdf:Description.\n        Since the property attributes are not ordered under document\n        order, two different n-triples files corresponding to both\n        possible orderings are permitted. \n\
     \t\tOne of test012a and test012b SHOULD pass, at least.\n   "
@@ -1803,7 +1803,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test012.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-nested-bagIDs/test012.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   description: "\n        Two property attributes and a property element on an rdf:Description.\n        Since the property attributes are not ordered under document\n        order, two different n-triples files corresponding to both\n        possible orderings are permitted. \n   "
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-nested-bagIDs/test012.rdf
@@ -1813,7 +1813,7 @@
   rdf_type: PositiveParserTest
   status: OBSOLETE
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test013.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test013.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test013.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-xml-base
@@ -1822,7 +1822,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test013.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test013.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test013.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1831,7 +1831,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test014.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test014.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test014.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1840,7 +1840,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test014.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test014.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   description: "\n\
     \tTest output corrected to use correct base URL.\n   "
@@ -1851,7 +1851,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test015.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test015.rdf
   approval: http://www.w3.org/2000/11/mr76/rdfc25May.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test015.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-empty-property-elements
@@ -1860,7 +1860,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test015.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test015.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   description: "\n\
     This test case is deprecated. The use of mailto: URIs with xml:base is not within the scope of\n\
@@ -1872,7 +1872,7 @@
   rdf_type: PositiveParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test016.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test016.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     Like rdfms-empty-property-elements/test001.rdf but with a processing instruction \n\
@@ -1884,7 +1884,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/xmlbase/test016.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/test016.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2002Mar/0235.html
   description: "\n\
     This test case is deprecated. The use of mailto: URIs with xml:base is not within the scope of\n\
@@ -1896,7 +1896,7 @@
   rdf_type: PositiveParserTest
   status: NOT_APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-empty-property-elements/test017.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-empty-property-elements/test017.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     Like rdfms-empty-property-elements/test001.rdf but with a comment\n\
@@ -1908,7 +1908,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-difference-between-ID-and-about/test1.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test1.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Dec/0108.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-difference-between-ID-and-about/test1.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-difference-between-ID-and-about
@@ -1917,7 +1917,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-difference-between-ID-and-about/test2.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test2.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \tThis test shows the treatment of non-ASCII characters\n      in the value of rdf:ID attribute.\n   "
@@ -1928,7 +1928,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-difference-between-ID-and-about/test3.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-difference-between-ID-and-about/test3.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2003Jan/0025.html
   description: "\n\
     \tThis test shows the treatment of non-ASCII characters\n      in the value of rdf:about attribute.\n   "
@@ -1939,7 +1939,7 @@
   rdf_type: PositiveParserTest
   status: APPROVED
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/warn-001.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/warn-001.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/warn-001.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -1949,7 +1949,7 @@
   status: APPROVED
   warning: " allowed with warnings "
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/warn-002.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/warn-002.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/warn-002.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
@@ -1959,7 +1959,7 @@
   status: APPROVED
   warning: " allowed with warnings "
 - !ruby/object:RdfHelper::TestCase 
-  about: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/warn-003.rdf
+  about: http://www.w3.org/2000/10/rdf-tests/rdfcore/rdfms-rdf-names-use/warn-003.rdf
   approval: http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Nov/0651.html
   inputDocument: /Users/gregg/Projects/rdf-rdfxml/spec/rdfcore/rdfms-rdf-names-use/warn-003.rdf
   issue: http://www.w3.org/2000/03/rdf-tracking/#rdfms-rdf-names-use
