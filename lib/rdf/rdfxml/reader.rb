@@ -126,7 +126,6 @@ module RDF::RDFXML
     # @raise [Error]:: Raises RDF::ReaderError if _strict_
     def initialize(input = $stdin, options = {}, &block)
       super do
-        @graph = RDF::Graph.new
         @debug = options[:debug]
         @strict = options[:strict]
         @base_uri = RDF::URI.parse(options[:base_uri]) if options[:base_uri]
@@ -140,32 +139,7 @@ module RDF::RDFXML
         
         raise RDF::ReaderError, "Synax errors:\n#{@doc.errors}" if !@doc.errors.empty? && @strict
         raise RDF::ReaderError, "Empty document" if (@doc.nil? || @doc.root.nil?) && @strict
-        @callback = block
-        root = @doc.root
-  
-        add_debug(root, "base_uri: #{@base_uri || 'nil'}")
-        
-        rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF_NS)
-        if rdf_nodes.length == 0
-          # If none found, root element may be processed as an RDF Node
 
-          ec = EvaluationContext.new(@base_uri, root, @graph)
-          nodeElement(root, ec)
-        else
-          rdf_nodes.each do |node|
-            # XXX Skip this element if it's contained within another rdf:RDF element
-
-            # Extract base, lang and namespaces from parents to create proper evaluation context
-            ec = EvaluationContext.new(@base_uri, nil, @graph)
-            ec.extract_from_ancestors(node)
-            node.children.each {|el|
-              next unless el.elem?
-              new_ec = ec.clone(el)
-              nodeElement(el, new_ec)
-            }
-          end
-        end
-        
         block.call(self) if block_given?
       end
     end
@@ -178,7 +152,33 @@ module RDF::RDFXML
     # @yieldparam [RDF::Statement] statement
     # @return [void]
     def each_statement(&block)
-      @graph.each_statement(&block)
+      # Block called from add_statement
+      @callback = block
+
+      root = @doc.root
+
+      add_debug(root, "base_uri: #{@base_uri || 'nil'}")
+      
+      rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF_NS)
+      if rdf_nodes.length == 0
+        # If none found, root element may be processed as an RDF Node
+
+        ec = EvaluationContext.new(@base_uri, root, @graph)
+        nodeElement(root, ec)
+      else
+        rdf_nodes.each do |node|
+          # XXX Skip this element if it's contained within another rdf:RDF element
+
+          # Extract base, lang and namespaces from parents to create proper evaluation context
+          ec = EvaluationContext.new(@base_uri, nil, @graph)
+          ec.extract_from_ancestors(node)
+          node.children.each {|el|
+            next unless el.elem?
+            new_ec = ec.clone(el)
+            nodeElement(el, new_ec)
+          }
+        end
+      end
     end
 
     ##
@@ -190,7 +190,9 @@ module RDF::RDFXML
     # @yieldparam [RDF::Value]    object
     # @return [void]
     def each_triple(&block)
-      @graph.each_triple(&block)
+      each_statement do |statement|
+        block.call(*statement.to_triple)
+      end
     end
     
     private
@@ -234,12 +236,7 @@ module RDF::RDFXML
     def add_triple(node, subject, predicate, object)
       statement = RDF::Statement.new(subject, predicate, object)
       add_debug(node, "statement: #{statement}")
-      @graph << statement
-      statement
-    rescue RDF::ReaderError => e
-      add_debug(node, "add_triple raised #{e.class}: #{e.message}")
-      puts e.backtrace if $DEBUG
-      raise if @strict
+      @callback.call(statement)
     end
 
     # XML nodeElement production
@@ -377,7 +374,7 @@ module RDF::RDFXML
           end
 
           # For element e with possibly empty element content c.
-          n = self.bnode
+          n = bnode
           add_triple(child, subject, predicate, n)
 
           # Reification

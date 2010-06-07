@@ -38,6 +38,12 @@ Instantiate a parser and parse source, specifying type and base-URL
 * "XHTML+RDFXML 1.1 Core"[http://www.w3.org/TR/2010/WD-xhtml-rdfa-20100422/]
 * "RDF Tests"[http://www.w3.org/2000/10/rdf-tests/rdfcore/allTestCases.html]
 
+== AUTHOR:
+* Gregg Kellogg <gregg@kellogg-assoc.com>
+
+== CONTRIBUTORS:
+* Nicholas Humfrey <nicholas.humfrey@bbc.co.uk>
+
 == LICENSE:
 
 (The MIT License)

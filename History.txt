@@ -3,6 +3,7 @@
 * Added array_hacks, nokogiri_hacks, and rdf_escape
 * Fixed most bugs that are not related to the underlying framework.
   * Specific failing testcases for rdf-isomorphic, RDF::Literaland others need to be constructed and added as issues against those gems.
+* Removed interal graph in Reader and implement each_triple & each_statement to perform parsing
 
 === 0.0.1
 * First port from RdfContext version 0.5.4
