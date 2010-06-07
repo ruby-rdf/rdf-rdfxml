@@ -102,9 +102,8 @@ module RDF::RDFXML
 
       # Set XML base. Ignore any fragment
       def base=(b)
-        b = Addressable::URI.parse(b.to_s)
-        b.fragment = nil
         @base = RDF::URI.new(b)
+        @base.fragment = nil
       end
 
       def inspect
@@ -144,9 +143,6 @@ module RDF::RDFXML
         @callback = block
         root = @doc.root
   
-        add_debug(root, "base_uri = #{@base_uri}") if @base_uri
-
-        # Look for rdf:RDF elements and process each.
         rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF_NS)
         if rdf_nodes.length == 0
           # If none found, root element may be processed as an RDF Node
@@ -585,7 +581,7 @@ module RDF::RDFXML
         raise RDF::ReaderError.new(warn) if @strict
         return false
       end
-      !CORE_SYNTAX_TERMS.include?(attr.uri.to_s) && attr.namespace && attr.namespace.href != RDF::XML.uri.to_s
+      !CORE_SYNTAX_TERMS.include?(attr.uri.to_s) && attr.namespace && attr.namespace.href != RDF::XML.to_s
     end
     
     # Check Node Element name
