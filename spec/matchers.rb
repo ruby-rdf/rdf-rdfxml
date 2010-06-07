@@ -2,51 +2,16 @@ module Matchers
   class BeEquivalentGraph
     Info = Struct.new(:about, :information, :trace, :compare, :inputDocument, :outputDocument)
     def normalize(graph)
-      case @info.compare
-      when :array
-        array = case graph
-        when Rdf::Graph
-          anon = "a"
-          anon_ctx = {}
-          graph.triples.collect {|triple| triple.to_ntriples }.each do |t|
-            t.gsub!(/_:nbn\d+[a-z]+N/, "_:").
-            gsub!(/_:bn\d+[a-z]+/) do |bn|
-              # Normalize anon BNodes
-              if anon_ctx[bn]
-                anon_ctx[bn]
-              else
-                anon_ctx[bn] = anon
-                anon = anon.succ
-              end
-              "_:#{anon_ctx[bn]}"
-            end
-          end.sort
-        when Array
-          graph.sort
-        else
-          graph.to_s.split("\n").
-            map {|t| t.gsub(/^\s*(.*)\s*$/, '\1')}.
-            reject {|t2| t2.match(/^\s*$/)}.
-            compact.
-            sort.
-            uniq
-        end
-        
-        # Implement to_ntriples on array, to simplify logic later
-        def array.to_ntriples; self.join("\n") + "\n"; end
-        array
+      case graph
+      when RDF::Graph then graph
+      when IO, StringIO
+        RDF::Graph.new.load(graph, :base_uri => @info.about)
       else
-        case graph
-        when RDF::Graph then graph
-        when IO, StringIO
-          RDF::Graph.new.load(graph, :base_uri => @info.about)
-        else
-          # Figure out which parser to use
-          g = RDF::Graph.new
-          reader_class = detect_format(graph)
-          reader_class.new(graph, :base_uri => @info.about).each {|s| g << s}
-          g
-        end
+        # Figure out which parser to use
+        g = RDF::Graph.new
+        reader_class = detect_format(graph)
+        reader_class.new(graph, :base_uri => @info.about).each {|s| g << s}
+        g
       end
     end
     
@@ -75,8 +40,6 @@ module Matchers
         "Graph entry count differs:\nexpected: #{@expected.size}\nactual:   #{@actual.size}"
       elsif @expected.is_a?(Array) && @actual.size != @expected.length
         "Graph entry count differs:\nexpected: #{@expected.length}\nactual:   #{@actual.size}"
-      elsif @expected.is_a?(RDF::Graph) && @actual.context != @expected.context
-        "Graph contexts differ:\nexpected: #{@expected.context}\nactual:   #{@actual.context}"
       else
         "Graph differs#{@info.compare == :array ? '(array)' : ''}\n"
       end +
@@ -94,55 +57,6 @@ module Matchers
   
   def be_equivalent_graph(expected, info = nil)
     BeEquivalentGraph.new(expected, info)
-  end
-
-  # Run expected SPARQL query against actual
-  if $redland_enabled
-    class PassQuery
-      def initialize(expected, info)
-        @expected = expected
-        @query = Redland::Query.new(expected)
-        @info = info
-      end
-      def matches?(actual)
-        @actual = actual
-        @expected_results = @info.respond_to?(:expectedResults) ? @info.expectedResults : true
-        model = Redland::Model.new
-        ntriples_parser = Redland::Parser.ntriples
-        ntriples_parser.parse_string_into_model(model, actual.to_ntriples, "http://www.w3.org/2006/07/SWD/RDFa/testsuite/xhtml1-testcases/")
-
-        @results = @query.execute(model)
-        #puts "Redland query results: #{@results.inspect}"
-        if @expected_results
-          @results.is_boolean? && @results.get_boolean?
-        else
-          @results.nil? || @results.is_boolean? && !@results.get_boolean?
-        end
-      end
-      def failure_message_for_should
-        info = @info.respond_to?(:information) ? @info.information : ""
-        "#{info + "\n" unless info.empty?}" +
-        if @results.nil?
-          "Query failed to return results"
-        elsif !@results.is_boolean?
-          "Query returned non-boolean results"
-        elsif @expected_results
-          "Query returned false"
-        else
-          "Query returned true (expected false)"
-        end +
-        "\n#{@expected}" +
-        "\n#{@info.input}" +
-        "\nResults:\n#{@actual.to_ntriples}" +
-        "\nDebug:\n#{@info.trace}"
-      end
-    end
-
-    def pass_query(expected, info = "")
-      PassQuery.new(expected, info)
-    end
-  else
-    def pass_query(expect, info = ""); false; end
   end
 
   class BeValidXML

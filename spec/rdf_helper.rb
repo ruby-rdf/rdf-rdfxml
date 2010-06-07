@@ -93,16 +93,8 @@ module RdfHelper
 
       return unless output
 
-      case self.compare
-      when :none
-        # Don't check output, just parse to graph
-      when :array
-        graph.should Matchers::be_equivalent_graph(self.output, self)
-      else
-        output_graph = RDF::Graph.load(self.outputDocument)
-
-        graph.should Matchers::be_equivalent_graph(output_graph, self)
-      end
+      output_graph = RDF::Graph.load(self.outputDocument)
+      graph.should Matchers::be_equivalent_graph(output_graph, self)
     end
 
     def trace
