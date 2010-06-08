@@ -1,3 +1,6 @@
+=== 0.0.3
+* Working on Writer
+
 === 0.0.2
 * Added specs from RdfContext
 * Added array_hacks, nokogiri_hacks, and rdf_escape

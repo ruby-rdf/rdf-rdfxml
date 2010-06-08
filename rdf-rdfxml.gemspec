@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
     ".gitignore",
      ".yardopts",
      "AUTHORS",
+     "CONTRIBUTORS",
      "History.txt",
      "README.rdoc",
      "Rakefile",

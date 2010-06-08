@@ -4,6 +4,36 @@ module RDF::RDFXML
   ##
   # An RDF/XML serialiser in Ruby
   #
+  # Note that the natural interface is to write a whole graph at a time.
+  # Writing statements or Triples will create a graph to add them to
+  # and then serialize the graph.
+  #
+  # @example Obtaining a RDF/XML writer class
+  #   RDF::Writer.for(:rdf)         #=> RDF::TriX::Writer
+  #   RDF::Writer.for("etc/test.rdf")
+  #   RDF::Writer.for(:file_name      => "etc/test.rdf")
+  #   RDF::Writer.for(:file_extension => "rdf")
+  #   RDF::Writer.for(:content_type   => "application/rdf+xml")
+  #
+  # @example Serializing RDF graph into an RDF/XML file
+  #   RDF::RDFXML::Write.open("etc/test.rdf") do |writer|
+  #     writer.write_graph(graph)
+  #   end
+  #
+  # @example Serializing RDF statements into an RDF/XML file
+  #   RDF::RDFXML::Writer.open("etc/test.rdf") do |writer|
+  #     graph.each_statement do |statement|
+  #       writer << statement
+  #     end
+  #   end
+  #
+  # @example Serializing RDF statements into an RDF/XML string
+  #   RDF::RDFXML::Writer.buffer do |writer|
+  #     graph.each_statement do |statement|
+  #       writer << statement
+  #     end
+  #   end
+  #
   # @author [Gregg Kellogg](http://kellogg-assoc.com/)
   class Writer < RDF::Writer
     format RDF::RDFXML::Format
@@ -11,9 +41,10 @@ module RDF::RDFXML
     VALID_ATTRIBUTES = [:none, :untyped, :typed]
 
     attr_accessor :graph, :base
-    
 
     ##
+    # Initializes the RDF/XML writer instance.
+    #
     # @param  [IO, File]               output
     # @param  [Hash{Symbol => Object}] options
     # @yield  [writer]
@@ -34,6 +65,21 @@ module RDF::RDFXML
     end
 
     ##
+    # @param  [Graph] graph
+    # @return [void]
+    def write_graph(graph)
+      @graph = graph
+    end
+
+    ##
+    # @param  [Statement] statement
+    # @return [void]
+    def write_statement(statement)
+      @graph ||= RDF::Graph.new
+      @graph << statement
+    end
+
+    ##
     # Stores the RDF/XML representation of a triple.
     #
     # @param  [RDF::Resource] subject
@@ -42,7 +88,7 @@ module RDF::RDFXML
     # @return [void]
     # @see    #write_epilogue
     def write_triple(subject, predicate, object)
-      @graph << [subject, predicate, object]
+      @graph << RDF::Statement.new(subject, predicate, object)
     end
 
     ##
@@ -63,40 +109,17 @@ module RDF::RDFXML
       required_namespaces = {}
       possible.each do |res|
         next unless res.is_a?(RDF::URI)
-        if res.namespace
-          add_namespace(res.namespace)
-        else
-          required_namespaces[res.base] = true
-        end
-        #puts "possible namespace for #{res}: #{res.namespace || %(<#{res.base}>)}"
+        qn = get_qname(res, :force => true)
       end
-      add_namespace(RDF_NS)
-      add_namespace(XML_NS) if @base || @lang
+      add_namespace(:rdf, RDF_NS)
+      add_namespace(:xml, RDF::XML) if @base || @lang
       
-      # See if there's a default namespace, and favor it when generating element names.
-      # Lookup an equivalent prefixed namespace for use in generating attributes
-      @default_ns = @graph.namespace("")
-      if @default_ns
-        add_namespace(@default_ns)
-        prefix = @graph.prefix(@default_ns.uri)
-        @prefixed_default_ns = @graph.namespace(prefix)
-        add_namespace(@prefixed_default_ns) if @prefixed_default_ns
-      end
-      
-      # Add bindings for predicates not already having bindings
-      tmp_ns = "ns0"
-      required_namespaces.keys.each do |uri|
-        puts "create namespace definition for #{uri}" if $DEBUG
-        add_namespace(Namespace.new(uri, tmp_ns))
-        tmp_ns = tmp_ns.succ
-      end
-
       doc.root = Nokogiri::XML::Element.new("rdf:RDF", doc)
-      @namespaces.each_pair do |p, ns|
+      @namespaces.each_pair do |p, uri|
         if p.to_s.empty?
-          doc.root.default_namespace = ns.uri.to_s
+          doc.root.default_namespace = uri.to_s
         else
-          doc.root.add_namespace(p, ns.uri.to_s)
+          doc.root.add_namespace(p.to_s, uri.to_s)
         end
       end
       doc.root["xml:lang"] = @lang if @lang
@@ -121,10 +144,12 @@ module RDF::RDFXML
         prop_list = sort_properties(properties)
         puts "subject: #{subject.to_n3}, props: #{properties.inspect}" if $DEBUG
 
-        rdf_type, *rest = properties.fetch(RDF_TYPE.to_s, [])
+        rdf_type, *rest = properties.fetch(RDF>type.to_s, [])
         if rdf_type.is_a?(RDF::URI)
           element = get_qname(rdf_type)
           properties[RDF_TYPE.to_s] = rest
+          
+          # FIXME: different namespace logic
           type_ns = rdf_type.namespace rescue nil
           if type_ns && @default_ns && type_ns.uri == @default_ns.uri
             properties[RDF_TYPE.to_s] = rest
@@ -135,7 +160,7 @@ module RDF::RDFXML
 
         node = Nokogiri::XML::Element.new(element, parent_node.document)
       
-        if subject.is_a?(BNode)
+        if subject.is_a?(RDF::Node)
           # Only need nodeID if it's referenced elsewhere
           node["rdf:nodeID"] = subject.to_s if ref_count(subject) > (@depth == 0 ? 0 : 1)
         else
@@ -183,6 +208,7 @@ module RDF::RDFXML
 
       as_attr = false unless is_unique
       
+      # FIXME: different namespace logic
       # Can't do as an attr if the qname has no prefix and there is no prefixed version
       if @default_ns && prop.namespace.uri == @default_ns.uri
         if as_attr
@@ -328,17 +354,31 @@ module RDF::RDFXML
     # Return a QName for the URI, or nil. Adds namespace of QName to defined namespaces
     def get_qname(uri)
       if uri.is_a?(RDF::URI)
-        qn = @graph.qname(uri)
-        # Local parts with . will mess up serialization
-        return false if qn.nil? || qn.index('.')
+        # Duplicate logic from URI#qname to remember namespace assigned
+        Vocabulary.each do |vocab|
+          if uri.to_s.index(vocab.to_uri.to_s) == 0
+            vocab_name = vocab.__name__.split('::').last.downcase
+            local_name = uri.to_s[vocab.to_uri.to_s.size..-1]
+            unless vocab_name.empty? || local_name.empty?
+              add_namespace(vocab_name.to_sym, vocab)
+              return "#{vocab_name}:#{local_name}"
+            end
+          end
+        end
         
-        add_namespace(uri.namespace)
-        qn
+        # No vocabulary found, invent one
+        # Add bindings for predicates not already having bindings
+        uri.to_s.match(/^(.*[\/\#])([^\/\#]*)$/)
+        base_uri, local_name = $1, $2
+        @tmp_ns = @tmp_ns ? @tmp_ns.succ : "ns0"
+        puts "create namespace definition for #{uri}" if $DEBUG
+        add_namespace(@tmp_ns.to_sym, base_uri)
+        return "#{@tmp_ns}:#{local_name}"
       end
     end
     
-    def add_namespace(ns)
-      @namespaces[ns.prefix.to_s] = ns
+    def add_namespace(prefix, ns)
+      @namespaces[prefix.to_sym] = ns.to_s
     end
 
     # URI -> Namespace bindings (similar to graph) for looking up qnames
