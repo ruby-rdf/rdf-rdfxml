@@ -24,8 +24,6 @@ module RDF::RDFXML
       $},
       Regexp::EXTENDED)
   
-    XML_LITERAL = RDF['XMLLiteral']
-    
     # The Recursive Baggage
     class EvaluationContext # :nodoc:
       attr_reader :base

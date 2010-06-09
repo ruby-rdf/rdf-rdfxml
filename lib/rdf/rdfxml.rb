@@ -24,6 +24,7 @@ module RDF
     require 'rdf/rdfxml/vocab'
     require 'rdf/rdfxml/patches/array_hacks'
     require 'rdf/rdfxml/patches/nokogiri_hacks'
+    require 'rdf/rdfxml/patches/qname_hacks'
     require 'rdf/rdfxml/patches/rdf_escape'
     autoload :Reader,  'rdf/rdfxml/reader'
     autoload :Writer,  'rdf/rdfxml/writer'
@@ -32,5 +33,6 @@ module RDF
     
     # Fixme: RDF.to_s should generate this, but it doesn't
     RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    XML_LITERAL = RDF['XMLLiteral']
   end
 end
