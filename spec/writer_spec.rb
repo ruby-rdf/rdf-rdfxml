@@ -1,6 +1,7 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
+require 'cgi'
 
-FOO = RDF::Vocabulary.new("http://foo/")
+class FOO < RDF::Vocabulary("http://foo/"); end
 
 describe "RDF::RDFXML::Writer" do
   before(:each) do
@@ -9,7 +10,7 @@ describe "RDF::RDFXML::Writer" do
   
   describe "with types" do
     it "should serialize resource without type" do
-      @graph << ["http://release/", RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       check_xpaths(
         serialize(:max_depth => 1, :attributes => :untyped),
         "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
@@ -18,8 +19,8 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should serialize resource with type" do
-      @graph << ["http://release/", RDF.type, FOO.Release]
-      @graph << ["http://release/", RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       check_xpaths(
         serialize(:max_depth => 1, :attributes => :untyped),
         "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
@@ -29,9 +30,9 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should serialize resource with two types as attribute" do
-      @graph << ["http://release/", RDF.type, FOO.Release]
-      @graph << ["http://release/", RDF.type, FOO.XtraRelease]
-      @graph << ["http://release/", RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       check_xpaths(
         serialize(:max_depth => 1, :attributes => :untyped),
         "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
@@ -41,9 +42,9 @@ describe "RDF::RDFXML::Writer" do
     end
     
     it "should serialize resource with two types as element" do
-      @graph << ["http://release/", RDF.type, FOO.Release]
-      @graph << ["http://release/", RDF.type, FOO.XtraRelease]
-      @graph << ["http://release/", RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       check_xpaths(
         serialize(:max_depth => 1, :attributes => :none),
         "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
@@ -53,10 +54,10 @@ describe "RDF::RDFXML::Writer" do
     end
     
     it "should serialize resource with three types as element" do
-      @graph << ["http://release/", RDF.type, FOO.Release]
-      @graph << ["http://release/", RDF.type, FOO.XtraRelease]
-      @graph << ["http://release/", RDF.type, FOO.XXtraRelease]
-      @graph << ["http://release/", RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XXtraRelease]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       check_xpaths(
         serialize(:max_depth => 1, :attributes => :typed),
         "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
@@ -69,11 +70,11 @@ describe "RDF::RDFXML::Writer" do
   
   describe "with children" do
     it "should serialize referenced resource by ref" do
-      @graph << ["http://release/", RDF.type, FOO.Release]
-      @graph << ["http://release/", RDF::DC.title, "foo"]
-      @graph << ["http://release/contributor", RDF.type, FOO.Contributor]
-      @graph << ["http://release/contributor", RDF::DC.title, "bar"]
-      @graph << ["http://release/", FOO.releaseContributor, "http://release/contributor"]
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/contributor"), RDF.type, FOO.Contributor]
+      @graph << [RDF::URI.new("http://release/contributor"), RDF::DC.title, "bar"]
+      @graph << [RDF::URI.new("http://release/"), FOO.releaseContributor, RDF::URI.new("http://release/contributor")]
         check_xpaths(
         serialize(:max_depth => 1, :attributes => :untyped),
         "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
@@ -85,11 +86,11 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should serialize referenced resource by inclusion" do
-      @graph << ["http://release/", RDF.type, FOO.Release]
-      @graph << ["http://release/", RDF::DC.title, "foo"]
-      @graph << ["http://release/contributor", RDF.type, FOO.Contributor]
-      @graph << ["http://release/contributor", RDF::DC.title, "bar"]
-      @graph << ["http://release/", FOO.releaseContributor, "http://release/contributor"]
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/contributor"), RDF.type, FOO.Contributor]
+      @graph << [RDF::URI.new("http://release/contributor"), RDF::DC.title, "bar"]
+      @graph << [RDF::URI.new("http://release/"), FOO.releaseContributor, RDF::URI.new("http://release/contributor")]
       check_xpaths(
         serialize(:max_depth => 3, :attributes => :untyped),
         "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
@@ -101,9 +102,9 @@ describe "RDF::RDFXML::Writer" do
   
   describe "with sequences" do
     it "should serialize rdf:Seq with rdf:li" do
-      @graph << ["http://example/seq", RDF.type, RDF.Seq]
-      @graph << ["http://example/seq", RDF._1, "http://example/first"]
-      @graph << ["http://example/seq", RDF._2, "http://example/second"]
+      @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Seq]
+      @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
+      @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
       check_xpaths(
         serialize(:max_depth => 1, :attributes => :untyped),
         "/rdf:RDF/rdf:Seq/@rdf:about" => "http://example/seq",
@@ -113,9 +114,9 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should serialize rdf:Seq with multiple rdf:li in proper sequence" do
-      @graph << ["http://example/seq", RDF.type, RDF.Seq]
-      @graph << ["http://example/seq", RDF._2, "http://example/second"]
-      @graph << ["http://example/seq", RDF._1, "http://example/first"]
+      @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Seq]
+      @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
+      @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
       check_xpaths(
         serialize(:max_depth => 1, :attributes => :untyped),
         "/rdf:RDF/rdf:Seq/@rdf:about" => "http://example/seq",
@@ -125,9 +126,9 @@ describe "RDF::RDFXML::Writer" do
     end
 
     it "should serialize rdf:Bag with multiple rdf:li" do
-      @graph << ["http://example/seq", RDF.type, RDF.Bag]
-      @graph << ["http://example/seq", RDF._2, "http://example/second"]
-      @graph << ["http://example/seq", RDF._1, "http://example/first"]
+      @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Bag]
+      @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
+      @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
       check_xpaths(
         serialize(:max_depth => 1, :attributes => :untyped),
         "/rdf:RDF/rdf:Bag/@rdf:about" => "http://example/seq",
@@ -137,9 +138,9 @@ describe "RDF::RDFXML::Writer" do
     end
 
     it "should serialize rdf:Alt with multiple rdf:li" do
-      @graph << ["http://example/seq", RDF.type, RDF.Alt]
-      @graph << ["http://example/seq", RDF._2, "http://example/second"]
-      @graph << ["http://example/seq", RDF._1, "http://example/first"]
+      @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Alt]
+      @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
+      @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
       check_xpaths(
         serialize(:max_depth => 1, :attributes => :untyped),
         "/rdf:RDF/rdf:Alt/@rdf:about" => "http://example/seq",
@@ -150,23 +151,23 @@ describe "RDF::RDFXML::Writer" do
   end
 
   describe "with lists" do
-    it "should serialize List rdf:first/rdf:rest" do
-      @graph.parse(%(@prefix foo: <http://foo/> . foo:author foo:is (Gregg Barnum Kellogg).), "http://foo/", :type => :ttl)
-      check_xpaths(
-        serialize({}),
-        "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
-        "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
-        %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Gregg"]) => true,
-        %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Barnum"]) => true,
-        %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Kellogg"]) => true,
-        %(//rdf:first)  => false
-      )
-    end
+#    it "should serialize List rdf:first/rdf:rest" do
+#      @graph.parse(%(@prefix foo: <http://foo/> . foo:author foo:is (Gregg Barnum Kellogg).), "http://foo/", :type => :ttl)
+#      check_xpaths(
+#        serialize({}),
+#        "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
+#        "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
+#        %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Gregg"]) => true,
+#        %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Barnum"]) => true,
+#        %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Kellogg"]) => true,
+#        %(//rdf:first)  => false
+#      )
+#    end
   
     it "should serialize resource with multiple rdf:li in proper sequence" do
-      @graph << ["http://example/seq", RDF.type, RDF.Seq]
-      @graph << ["http://example/seq", RDF._2, "http://example/second"]
-      @graph << ["http://example/seq", RDF._1, "http://example/first"]
+      @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Seq]
+      @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
+      @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
       check_xpaths(
         serialize(:max_depth => 1, :attributes => :untyped),
         "/rdf:RDF/rdf:Seq/@rdf:about" => "http://example/seq",
@@ -178,7 +179,7 @@ describe "RDF::RDFXML::Writer" do
 
   describe "with untyped literals" do
     it "should seralize as element if :attributes == :none" do
-      @graph << ["http://release/", RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       check_xpaths(
         serialize(:attributes => :none),
         "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
@@ -187,7 +188,7 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should seralize as attribute if :attributes == :untyped or :typed" do
-      @graph << ["http://release/", RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       check_xpaths(
         serialize(:attributes => :untyped),
         "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
@@ -201,7 +202,7 @@ describe "RDF::RDFXML::Writer" do
     end
 
     it "should output untyped without lang as attribute lang set" do
-      @graph << ["http://release/", RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       check_xpaths(
         serialize(:attributes => :untyped, :lang => "de"),
         "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
@@ -211,7 +212,7 @@ describe "RDF::RDFXML::Writer" do
 
     describe "with language" do
       it "should output property for title with language" do
-        @graph << ["http://release/", RDF::DC.title, Literal.untyped("foo", "en-us")]
+        @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "en-us")]
         check_xpaths(
           serialize(:attributes => :untyped, :lang => "de"),
           "/rdf:RDF/@xml:lang" => "de",
@@ -222,7 +223,7 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should output untyped as attribute if lang is default" do
-      @graph << ["http://release/", RDF::DC.title, Literal.untyped("foo", "de")]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
       check_xpaths(
         serialize(:attributes => :untyped, :lang => "de"),
         "/rdf:RDF/@xml:lang" => "de",
@@ -232,7 +233,7 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should output untyped as property if lang set and no default" do
-      @graph << ["http://release/", RDF::DC.title, Literal.untyped("foo", "de")]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
       check_xpaths(
         serialize(:attributes => :untyped),
         "/rdf:RDF/@xml:lang" => false,
@@ -242,7 +243,7 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should output untyped as property if lang set and not default" do
-      @graph << ["http://release/", RDF::DC.title, Literal.untyped("foo", "de")]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
       check_xpaths(
         serialize(:attributes => :untyped, :lang => "en-us"),
         "/rdf:RDF/@xml:lang" => "en-us",
@@ -252,8 +253,8 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should output multiple untyped attributes values through properties" do
-      @graph << ["http://release/", RDF::DC.title, Literal.untyped("foo", "de")]
-      @graph << ["http://release/", RDF::DC.title, Literal.untyped("foo", "en-us")]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "en-us")]
       check_xpaths(
         serialize(:attributes => :untyped, :lang => "en-us"),
         "/rdf:RDF/@xml:lang" => "en-us",
@@ -264,11 +265,11 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should output typed node as attribute" do
-      @graph << ["http://release/", RDF::DC.title, Literal.typed("foo", XSD.string)]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :datatype => RDF::XSD.string)]
       check_xpaths(
         serialize(:attributes => :untyped),
         "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-        "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title rdf:datatype="#{XSD.string}">foo</dc:title>)
+        "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">foo</dc:title>)
       )
       check_xpaths(
         serialize(:attributes => :typed),
@@ -278,23 +279,23 @@ describe "RDF::RDFXML::Writer" do
     end
   
     it "should output multiple typed values through properties" do
-      @graph << ["http://release/", RDF::DC.title, Literal.typed("foo", XSD.string)]
-      @graph << ["http://release/", RDF::DC.title, Literal.typed("bar", XSD.string)]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :datatype => RDF::XSD.string)]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("bar", :datatype => RDF::XSD.string)]
         check_xpaths(
           serialize(:attributes => :untyped),
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/dc:title[contains(., 'foo')]" => %(<dc:title rdf:datatype="#{XSD.string}">foo</dc:title>),
-          "/rdf:RDF/rdf:Description/dc:title[contains(., 'bar')]" => %(<dc:title rdf:datatype="#{XSD.string}">bar</dc:title>)
+          "/rdf:RDF/rdf:Description/dc:title[contains(., 'foo')]" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">foo</dc:title>),
+          "/rdf:RDF/rdf:Description/dc:title[contains(., 'bar')]" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">bar</dc:title>)
         )
     end
   end
-  
+
+  # FIXME
   describe "with default namespace" do
     it "should serialize with default namespace" do
-      @graph << ["http://release/", RDF.type, FOO.Release]
-      @graph << ["http://release/", RDF::DC.title, "foo"]
-      @graph << ["http://release/", FOO.pred, FOO.obj]
-      @graph.bind(Namespace.new(FOO.uri, ""))
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), FOO.pred, FOO.obj]
     
       #$DEBUG = true
       xml = serialize(:max_depth => 1, :attributes => :untyped)
@@ -319,7 +320,7 @@ describe "RDF::RDFXML::Writer" do
   
   describe "with bnodes" do
     it "should not generate nodeID attribute unless node is referenced as an object" do
-      @graph << [BNode.new("a"), RDF::DC.title, "foo"]
+      @graph << [RDF::Node.new("a"), RDF::DC.title, "foo"]
         check_xpaths(
           serialize(:attributes => :untyped, :base => "http://release/"),
           "/rdf:RDF/rdf:Description/@dc:title" => "foo",
@@ -328,9 +329,9 @@ describe "RDF::RDFXML::Writer" do
     end
     
     it "should generate a nodeID attribute if node is referenced as an object" do
-      bn = BNode.new("a")
+      bn = RDF::Node.new("a")
       @graph << [bn, RDF::DC.title, "foo"]
-      @graph << [bn, OWL.equals, bn]
+      @graph << [bn, RDF::OWL.equals, bn]
       check_xpaths(
         serialize(:attributes => :untyped, :base => "http://release/"),
         "/rdf:RDF/rdf:Description/@dc:title" => "foo",
@@ -344,15 +345,15 @@ describe "RDF::RDFXML::Writer" do
         <http://example.org/eg#eric> a [ <http://example.org/eg#intersectionOf> (<http://example.org/eg#Person> <http://example.org/eg#Male>)] .
       ))
       graph2 = Graph.new
-      graph2.parse(serialize(:format => :xml)).should be_equivalent_graph(@graph)
+      graph2.parse(serialize(:format => :xml)).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
     end
   end
   
   def check_xpaths(doc, paths)
-    puts doc if $DEBUG || $verbose
+    puts CGI.escapeHTML doc.to_s if $DEBUG || $verbose
     doc = Nokogiri::XML.parse(doc)
-    #puts "doc: #{doc.to_s}"
     doc.should be_a(Nokogiri::XML::Document)
+    doc.root.should be_a(Nokogiri::XML::Element)
     paths.each_pair do |path, value|
       puts "xpath: #{path.inspect}" if $DEBUG
       puts doc.root.at_xpath(path, @namespaces).inspect if $DEBUG
@@ -371,15 +372,18 @@ describe "RDF::RDFXML::Writer" do
     end
     
     # Parse generated graph and compare to source
-    Graph.load(doc, :base_uri => "http://release/", :format => :rdf).should
-      be_equivalent_graph(@graph, :about => "http://release/")
+    graph = RDF::Graph.new
+    RDF::RDFXML::Reader.new(doc, :base_uri => "http://release/", :format => :rdf).each {|st| graph << st}
+    graph.should be_equivalent_graph(@graph, :about => "http://release/", :trace => @debug.join("\n"))
   end
   
   # Serialize ntstr to a string and compare against regexps
-  def serialize(options)
-    result = RDF::RDFXML::Writer.buffer(options) do |writer|
+  def serialize(options = {})
+    @debug = []
+    result = RDF::RDFXML::Writer.buffer(options.merge(:debug => @debug)) do |writer|
       writer.write_graph(@graph)
     end
+    #puts @debug.join("\n")
     result
   end
 end

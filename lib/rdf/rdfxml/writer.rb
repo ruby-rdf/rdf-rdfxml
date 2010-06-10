@@ -105,18 +105,19 @@ module RDF::RDFXML
       @base_uri = @options[:base_uri]
       @lang = @options[:lang]
       @attributes = @options[:attributes] || :none
+      @debug = @options[:debug]
       raise "Invalid attribute option '#{@attributes}', should be one of #{VALID_ATTRIBUTES.to_sentence}" unless VALID_ATTRIBUTES.include?(@attributes.to_sym)
       self.reset
 
       doc = Nokogiri::XML::Document.new
 
-      puts "\nserialize: graph namespaces: #{@namespaces.inspect}" if $DEBUG
-      puts "\nserialize: graph: #{@graph.size}" if $DEBUG
+      add_debug "\nserialize: graph namespaces: #{@namespaces.inspect}"
+      add_debug "\nserialize: graph: #{@graph.size}"
 
       preprocess
 
       predicates = @graph.predicates.uniq
-      puts "\nserialize: predicates #{predicates.inspect}" if $DEBUG
+      add_debug "\nserialize: predicates #{predicates.inspect}"
       possible = predicates + @graph.objects.uniq
       namespaces = {}
       required_namespaces = {}
@@ -139,7 +140,7 @@ module RDF::RDFXML
       
       # Add statements for each subject
       order_subjects.each do |subject|
-        #puts "subj: #{subject.inspect}"
+        #add_debug "subj: #{subject.inspect}"
         subject(subject, doc.root)
       end
 
@@ -154,7 +155,7 @@ module RDF::RDFXML
         subject_done(subject)
         properties = @graph.properties(subject)
         prop_list = sort_properties(properties)
-        puts "subject: #{subject.to_n3}, props: #{properties.inspect}" if $DEBUG
+        add_debug "subject: #{subject.inspect}, props: #{properties.inspect}"
 
         rdf_type, *rest = properties.fetch(RDF.type.to_s, [])
         if rdf_type.is_a?(RDF::URI)
@@ -189,7 +190,7 @@ module RDF::RDFXML
           end
         end
       elsif @force_RDF_about.include?(subject)
-        puts "subject: #{subject.to_n3}, force about" if $DEBUG
+        add_debug "subject: #{subject.inspect}, force about"
         node = Nokogiri::XML::Element.new("rdf:Description", parent_node.document)
         node["rdf:about"] = relativize(subject)
         @force_RDF_about.delete(subject)
@@ -234,7 +235,7 @@ module RDF::RDFXML
         end
       end
 
-      puts "predicate: #{qname}, as_attr: #{as_attr}, object: #{object.inspect}, done: #{is_done?(object)}, sub: #{@subjects.include?(object)}" if $DEBUG
+      add_debug "predicate: #{qname}, as_attr: #{as_attr}, object: #{object.inspect}, done: #{is_done?(object)}, sub: #{@subjects.include?(object)}"
       qname = "rdf:li" if qname.match(/rdf:_\d+/)
       pred_node = Nokogiri::XML::Element.new(qname, node.document)
       
@@ -242,23 +243,23 @@ module RDF::RDFXML
         # Literals or references to objects that aren't subjects, or that have already been serialized
         
         args = xml_args(object)
-        puts "predicate: args=#{args.inspect}" if $DEBUG
+        add_debug "predicate: args=#{args.inspect}"
         attrs = args.pop
         
         if as_attr
           # Serialize as attribute
           pred_node.unlink
           pred_node = nil
-          node[qname] = object.is_a?(RDF::URI) ? relativize(object) : object.to_s
+          node[qname] = object.is_a?(RDF::URI) ? relativize(object) : object.value
         else
           # Serialize as element
           attrs.each_pair do |a, av|
             next if a == "xml:lang" && av == @lang # Lang already specified, don't repeat
             av = relativize(object) if a == "#{RDF.prefix}:resource"
-            puts "  elt attr #{a}=#{av}" if $DEBUG
+            add_debug "  elt attr #{a}=#{av}"
             pred_node[a] = av.to_s
           end
-          puts "  elt #{'xmllit ' if object.is_a?(RDF::Literal) && object.xmlliteral?}content=#{args.first}" if $DEBUG && !args.empty?
+          add_debug "  elt #{'xmllit ' if object.is_a?(RDF::Literal) && object.datatype == XML_LITERAL}content=#{args.first}" if !args.empty?
           if object.is_a?(RDF::Literal) && object.datatype == XML_LITERAL
             pred_node.add_child(Nokogiri::XML::CharacterData.new(args.first, node.document))
           elsif args.first
@@ -332,7 +333,7 @@ module RDF::RDFXML
       
       top_classes.each do |class_uri|
         graph.query(:predicate => RDF.type, :object => class_uri).map {|st| st.subject}.sort.uniq.each do |subject|
-          #puts "order_subjects: #{subject.inspect}"
+          #add_debug "order_subjects: #{subject.inspect}"
           subjects << subject
           seen[subject] = @top_levels[subject] = true
         end
@@ -352,7 +353,7 @@ module RDF::RDFXML
     end
     
     def preprocess_statement(statement)
-      #puts "preprocess: #{statement.inspect}"
+      #add_debug "preprocess: #{statement.inspect}"
       references = ref_count(statement.object) + 1
       @references[statement.object] = references
       @subjects[statement.subject] = true
@@ -369,6 +370,7 @@ module RDF::RDFXML
         # Duplicate logic from URI#qname to remember namespace assigned
         if uri.qname
           add_namespace(uri.qname.first, uri.vocab)
+          add_debug "get_qname(uri.qname): #{uri.qname.join(':')}"
           return uri.qname.join(":") 
         end
         
@@ -377,6 +379,7 @@ module RDF::RDFXML
           if uri.to_s.index(vocab.to_s) == 0
             uri.vocab = vocab
             local_name = uri.to_s[(vocab.to_s.length)..-1]
+            add_debug "get_qname(ns): #{prefix}:#{local_name}"
             return "#{prefix}:#{local_name}"
           end
         end
@@ -399,10 +402,11 @@ module RDF::RDFXML
         end
         base_uri = uri.to_s[0..-(local_name.length + 1)]
         @tmp_ns = @tmp_ns ? @tmp_ns.succ : "ns0"
-        puts "create namespace definition for #{uri}" if $DEBUG
+        add_debug "create namespace definition for #{uri}"
         uri.vocab = RDF::Vocabulary.new(base_uri)
         add_namespace(@tmp_ns.to_sym, uri.vocab)
-        return @qname_cache[uri.to_s] =  "#{@tmp_ns}:#{local_name}"
+        add_debug "get_qname(tmp_ns): #{@tmp_ns}:#{local_name}"
+        return "#{@tmp_ns}:#{local_name}"
       end
     end
     
@@ -425,8 +429,8 @@ module RDF::RDFXML
     def sort_properties(properties)
       properties.keys.each do |k|
         properties[k] = properties[k].sort do |a, b|
-          a_li = a.is_a?(RDF::URI) && a.short_name =~ /^_\d+$/ ? a.to_i : a.to_s
-          b_li = b.is_a?(RDF::URI) && b.short_name =~ /^_\d+$/ ? b.to_i : b.to_s
+          a_li = a.is_a?(RDF::URI) && a.qname.last =~ /^_\d+$/ ? a.to_i : a.to_s
+          b_li = b.is_a?(RDF::URI) && b.qname.last =~ /^_\d+$/ ? b.to_i : b.to_s
           
           a_li <=> b_li
         end
@@ -445,22 +449,36 @@ module RDF::RDFXML
         prop_list << prop.to_s
       end
       
-      puts "sort_properties: #{prop_list.to_sentence}" if $DEBUG
+      add_debug "sort_properties: #{prop_list.to_sentence}"
       prop_list
     end
 
     # XML content and arguments for serialization
     #  Encoding.the_null_encoding.xml_args("foo", "en-US") => ["foo", {"xml:lang" => "en-US"}]
-    def xml_args(literal)
-      if literal.plain?
-        [literal.value, {"xml:lang" => "en-US"}]
-      elsif literal.datatype == XML_LITERAL
-        [literal.value, {"rdf:parseType" => "Literal"}]
-      else
-        [literal.value, {"rdf:datatype" => literal.datatype.to_s}]
+    def xml_args(object)
+      case object
+      when RDF::Literal
+        if object.plain?
+          [object.value, {"xml:lang" => "en-US"}]
+        elsif object.datatype == XML_LITERAL
+          [object.value, {"rdf:parseType" => "Literal"}]
+        else
+          [object.value, {"rdf:datatype" => object.datatype.to_s}]
+        end
+      when RDF::Node
+        [{"rdf:nodeID" => object.id}]
+      when RDF::URI
+        [{"rdf:resource" => object.to_s}]
       end
     end
     
+    # Add debug event to debug array, if specified
+    #
+    # @param [String] message::
+    def add_debug(message)
+      @debug << message if @debug.is_a?(Array)
+    end
+
     # Returns indent string multiplied by the depth
     def indent(modifier = 0)
       INDENT_STRING * (@depth + modifier)
