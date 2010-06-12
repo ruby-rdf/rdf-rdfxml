@@ -212,8 +212,9 @@ module RDF::RDFXML
       as_attr ||= true if [:untyped, :typed].include?(@attributes) && prop == RDF.type
 
       # Untyped attribute with no lang, or whos lang is the same as the default and RDF.type
+      add_debug("as_attr? #{@attributes}, plain? #{object.plain?}, lang #{@lang || 'nil'}:#{object.language || 'nil'}") if object.is_a?(RDF::Literal)
       as_attr ||= true if [:untyped, :typed].include?(@attributes) &&
-        (object.is_a?(RDF::Literal) && object.plain? || (object.has_language? && object.language == @lang))
+        object.is_a?(RDF::Literal) && (object.plain? || (@lang && object.language.to_s == @lang.to_s))
       
       as_attr ||= true if [:typed].include?(@attributes) && object.is_a?(RDF::Literal) && object.typed?
 
