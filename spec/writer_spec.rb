@@ -1,5 +1,5 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
-require 'cgi'
+autoload :CGI, 'cgi'
 
 class FOO < RDF::Vocabulary("http://foo/"); end
 
@@ -202,7 +202,8 @@ describe "RDF::RDFXML::Writer" do
     end
 
     it "should output untyped without lang as attribute lang set" do
-      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
+      $DEBUG = true
       check_xpaths(
         serialize(:attributes => :untyped, :lang => "de"),
         "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
@@ -383,7 +384,7 @@ describe "RDF::RDFXML::Writer" do
     result = RDF::RDFXML::Writer.buffer(options.merge(:debug => @debug)) do |writer|
       writer.write_graph(@graph)
     end
-    #puts @debug.join("\n")
+    puts @debug.join("\n") if $DEBUG
     result
   end
 end

@@ -40,7 +40,6 @@ module RDF::RDFXML
         @language = nil
         @graph = graph
         @li_counter = 0
-        @uri_mappings = {}
 
         extract_from_element(element) if element
       end
@@ -126,7 +125,7 @@ module RDF::RDFXML
       super do
         @debug = options[:debug]
         @strict = options[:strict]
-        @base_uri = RDF::URI.parse(options[:base_uri]) if options[:base_uri]
+        @base_uri = RDF::URI.new(options[:base_uri])
             
         @id_mapping = Hash.new
 
@@ -358,7 +357,13 @@ module RDF::RDFXML
           # Production literalPropertyElt
           add_debug(child, "literalPropertyElt")
           
-          literal = RDF::Literal.new(child.inner_html, :datatype => datatype, :language => child_ec.language)
+          literal_opts = {}
+          if datatype
+            literal_opts[:datatype] = datatype
+          else
+            literal_opts[:language] = child_ec.language
+          end
+          literal = RDF::Literal.new(child.inner_html, literal_opts)
           add_triple(child, subject, predicate, literal)
           reify(id, child, subject, predicate, literal, ec) if id
         elsif parseType == "Resource"
@@ -437,7 +442,7 @@ module RDF::RDFXML
             raise RDF::ReaderError.new(warn) if @strict
           end
 
-          object = RDF::Literal.new(child.children, :datatype => XML_LITERAL, :namespaces => child_ec.uri_mappings)
+          object = RDF::Literal.xmlliteral(child.children, :namespaces => child_ec.uri_mappings)
           add_triple(child, subject, predicate, object)
         elsif text_nodes.length == 0 && element_nodes.length == 0
           # Production emptyPropertyElt
@@ -470,7 +475,7 @@ module RDF::RDFXML
 
                 # Attributes not in RDF.type
                 lit = RDF::Literal.new(val, :language => child_ec.language)
-                add_triple(child, resource, attr.uri.to_s, lit)
+                add_triple(child, resource, attr.uri, lit)
               end
             end
             add_triple(child, subject, predicate, resource)

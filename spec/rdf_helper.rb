@@ -1,4 +1,5 @@
 autoload :YAML, "yaml"
+autoload :CGI, 'cgi'
 
 RDFCORE_DIR = File.join(File.dirname(__FILE__), 'rdfcore')
 RDFCORE_TEST = "http://www.w3.org/2000/10/rdf-tests/rdfcore/Manifest.rdf"
@@ -95,6 +96,7 @@ module RdfHelper
       return unless output
 
       output_graph = RDF::Graph.load(self.outputDocument)
+      puts "result: #{CGI.escapeHTML(graph.to_ntriples)}" if $DEBUG
       graph.should Matchers::be_equivalent_graph(output_graph, self)
     end
 

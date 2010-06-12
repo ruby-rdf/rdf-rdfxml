@@ -4,7 +4,7 @@ describe RDF::RDFXML::Format do
   context "descovery" do
     {
       "rdf" => RDF::Format.for(:rdf),
-      "xml" => RDF::Format.for(:xml),
+      "rdfxml" => RDF::Format.for(:rdfxml),
       "etc/foaf.xml" => RDF::Format.for("etc/foaf.xml"),
       "etc/foaf.rdf" => RDF::Format.for("etc/foaf.rdf"),
       "foaf.xml" => RDF::Format.for(:file_name      => "foaf.xml"),

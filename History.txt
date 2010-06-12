@@ -1,5 +1,15 @@
 === 0.0.3
-* Working on Writer
+* Added patches for the following:
+  * RDF::Graph#properties
+  * RDF::Graph#seq (Output rdf:Seq elements in order)
+  * RDF::Graph#type_of
+  * RDF::Literal.xmlliteral (Create literal and normalize XML)
+  * RDF::Literal#xmlliteral?
+  * RDF::Literal#anonymous? (missing from library)
+  * RDF::Literal#to_s (only one of @lang or ^^type, not both)
+  * RDF::URI#join (Don't add trailing '/')
+* Reader fixes
+* Writer progress
 
 === 0.0.2
 * Added specs from RdfContext

@@ -25,5 +25,10 @@ module RDF
         hash
       end
     end
+
+    # Get type(s) of subject, returns a list of symbols
+    def type_of(subject)
+      query(:subject => subject, :predicate => RDF.type).map {|st| st.object}
+    end
   end
 end

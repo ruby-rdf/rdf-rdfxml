@@ -1,5 +1,4 @@
 require 'nokogiri'  # FIXME: Implement using different modules as in RDF::TriX
-require 'rdf/rdfxml/patches/qname_hacks'
 require 'rdf/rdfxml/patches/graph_properties'
 
 module RDF::RDFXML
@@ -43,7 +42,6 @@ module RDF::RDFXML
     VALID_ATTRIBUTES = [:none, :untyped, :typed]
 
     attr_accessor :graph, :base_uri
-
 
     ##
     # Initializes the RDF/XML writer instance.
@@ -215,7 +213,7 @@ module RDF::RDFXML
 
       # Untyped attribute with no lang, or whos lang is the same as the default and RDF.type
       as_attr ||= true if [:untyped, :typed].include?(@attributes) &&
-        (object.is_a?(RDF::Literal) && object.plain? && (!object.has_language? || object.language == @lang))
+        (object.is_a?(RDF::Literal) && object.plain? || (object.has_language? && object.language == @lang))
       
       as_attr ||= true if [:typed].include?(@attributes) && object.is_a?(RDF::Literal) && object.typed?
 
@@ -253,20 +251,23 @@ module RDF::RDFXML
           node[qname] = object.is_a?(RDF::URI) ? relativize(object) : object.value
         else
           # Serialize as element
+          add_debug("serialize as element: #{attrs.inspect}")
           attrs.each_pair do |a, av|
-            next if a == "xml:lang" && av == @lang # Lang already specified, don't repeat
+            next if a.to_s == "xml:lang" && av.to_s == @lang # Lang already specified, don't repeat
             av = relativize(object) if a == "#{RDF.prefix}:resource"
             add_debug "  elt attr #{a}=#{av}"
             pred_node[a] = av.to_s
           end
-          add_debug "  elt #{'xmllit ' if object.is_a?(RDF::Literal) && object.datatype == XML_LITERAL}content=#{args.first}" if !args.empty?
-          if object.is_a?(RDF::Literal) && object.datatype == XML_LITERAL
+          add_debug "  elt #{'xmllit ' if object.is_a?(RDF::Literal) && object.xmlliteral?}content=#{args.first}" if !args.empty?
+          if object.is_a?(RDF::Literal) && object.xmlliteral?
             pred_node.add_child(Nokogiri::XML::CharacterData.new(args.first, node.document))
           elsif args.first
             pred_node.content = args.first unless args.empty?
           end
         end
       else
+        require 'rdf/rdfxml/patches/seq' unless RDF::Graph.respond_to?(:seq)
+        
         # Check to see if it can be serialized as a collection
         col = @graph.seq(object)
         conformant_list = col.all? {|item| !item.is_a?(RDF::Literal)}
@@ -459,8 +460,10 @@ module RDF::RDFXML
       case object
       when RDF::Literal
         if object.plain?
-          [object.value, {"xml:lang" => "en-US"}]
-        elsif object.datatype == XML_LITERAL
+          [object.value, {}]
+        elsif object.has_language?
+          [object.value, {"xml:lang" => object.language}]
+        elsif object.xmlliteral?
           [object.value, {"rdf:parseType" => "Literal"}]
         else
           [object.value, {"rdf:datatype" => object.datatype.to_s}]
