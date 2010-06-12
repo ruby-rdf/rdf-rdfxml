@@ -9,7 +9,14 @@
   * RDF::Literal#to_s (only one of @lang or ^^type, not both)
   * RDF::URI#join (Don't add trailing '/')
 * Reader fixes
-* Writer progress
+* Writer complete
+* Spec status
+  * Isomorphic XMLLiteral tests fail due to attribute order variation
+  * Reader parsing multi-line quite in NTriples test file fails due to lack of support in RDF::NTriples
+  * A couple of URI normalizations fail:
+    * should create <http://foo/> from <http://foo#> and ''
+    * should create <http://foo/bar> from <http://foo/bar#> and ''
+  * Writer test needs Turtle reader
 
 === 0.0.2
 * Added specs from RdfContext

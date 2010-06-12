@@ -297,22 +297,22 @@ describe "RDF::RDFXML::Writer" do
       @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       @graph << [RDF::URI.new("http://release/"), FOO.pred, FOO.obj]
     
-      xml = serialize(:max_depth => 1, :attributes => :untyped)
+      xml = serialize(:max_depth => 1, :attributes => :untyped, :default_namespace => FOO.to_s)
       xml.should =~ /<Release/
       xml.should =~ /<pred/
       doc = Nokogiri::XML.parse(xml)
-      doc.at_xpath("/rdf:RDF/#{FOO.prefix}:Release/#{FOO.prefix}:pred/@rdf:resource", doc.namespaces).to_s.should == FOO.obj.to_s
+      doc.at_xpath("/rdf:RDF/foo:Release/foo:pred/@rdf:resource", doc.namespaces).to_s.should == FOO.obj.to_s
     end
   end
   
   describe "with base" do
     it "should generate relative about URI" do
-      @graph << ["http://release/a", FOO.ref, "http://release/b"]
-        check_xpaths(
-          serialize(:attributes => :untyped, :base => "http://release/"),
-          "/rdf:RDF/rdf:Description/@rdf:about" => "a",
-          "/rdf:RDF/rdf:Description/foo:ref/@rdf:resource" => "b"
-        )
+      @graph << [RDF::URI.new("http://release/a"), FOO.ref, RDF::URI.new("http://release/b")]
+      check_xpaths(
+        serialize(:attributes => :untyped, :base_uri => "http://release/"),
+        "/rdf:RDF/rdf:Description/@rdf:about" => "a",
+        "/rdf:RDF/rdf:Description/foo:ref/@rdf:resource" => "b"
+      )
     end
   end
   
@@ -352,7 +352,7 @@ describe "RDF::RDFXML::Writer" do
   end
   
   def check_xpaths(doc, paths)
-    puts CGI.escapeHTML doc.to_s if $DEBUG || $verbose
+    puts doc.to_s if $DEBUG || $verbose
     doc = Nokogiri::XML.parse(doc)
     doc.should be_a(Nokogiri::XML::Document)
     doc.root.should be_a(Nokogiri::XML::Element)

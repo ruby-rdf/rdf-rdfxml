@@ -51,13 +51,15 @@ module RDF::RDFXML
     # base_uri:: Base URI of graph, used to shorting URI references
     # lang:: Output as root xml:lang attribute, and avoid generation _xml:lang_ where possible
     # attributes:: How to use XML attributes when serializing, one of :none, :untyped, :typed. The default is :none.
+    # defafult_ns:: URI to use as default namespace
     #
     # @param  [IO, File]               output
     # @param  [Hash{Symbol => Object}] options
     #   @option options [Integer]       :max_depth      (nil)
     #   @option options [String, #to_s] :base_uri (nil)
     #   @option options [String, #to_s] :lang   (nil)
-    #   @option options [Arrat]         :attributes   (nil)
+    #   @option options [Array]         :attributes   (nil)
+    #   @option options [String]        :default_namespace
     # @yield  [writer]
     # @yieldparam [RDF::Writer] writer
     def initialize(output = $stdout, options = {}, &block)
@@ -104,6 +106,7 @@ module RDF::RDFXML
       @lang = @options[:lang]
       @attributes = @options[:attributes] || :none
       @debug = @options[:debug]
+      @default_namespace = @options[:default_namespace]
       raise "Invalid attribute option '#{@attributes}', should be one of #{VALID_ATTRIBUTES.to_sentence}" unless VALID_ATTRIBUTES.include?(@attributes.to_sym)
       self.reset
 
@@ -124,6 +127,12 @@ module RDF::RDFXML
       end
       add_namespace(:rdf, RDF_NS)
       add_namespace(:xml, RDF::XML) if @base_uri || @lang
+      
+      if @default_namespace
+        add_namespace("", @default_namespace)
+        @default_namespace_prefix = @namespaces.invert[@default_namespace]
+        add_debug("def_namespace: #{@default_namespace}, prefix: #{@default_namespace_prefix}")
+      end
       
       doc.root = Nokogiri::XML::Element.new("rdf:RDF", doc)
       @namespaces.each_pair do |p, uri|
@@ -162,7 +171,7 @@ module RDF::RDFXML
           
           # FIXME: different namespace logic
           type_ns = rdf_type.vocab rescue nil
-          if type_ns && @default_ns && type_ns.to_s == @default_ns.to_s
+          if type_ns && @default_namespace && type_ns.to_s == @default_namespace.to_s
             properties[RDF.type.to_s] = rest
             element = rdf_type.qname.last
           end
@@ -220,12 +229,11 @@ module RDF::RDFXML
 
       as_attr = false unless is_unique
       
-      # FIXME: different namespace logic
       # Can't do as an attr if the qname has no prefix and there is no prefixed version
-      if @default_ns && prop.vocab.to_s == @default_ns.to_s
+      if @default_namespace && prop.vocab.to_s == @default_namespace.to_s
         if as_attr
-          if @prefixed_default_ns
-            qname = "#{@prefixed_default_ns.prefix}:#{prop.qname.last}"
+          if @default_namespace_prefix
+            qname = "#{@default_namespace_prefix}:#{prop.qname.last}"
           else
             as_attr = false
           end
@@ -250,12 +258,13 @@ module RDF::RDFXML
           pred_node.unlink
           pred_node = nil
           node[qname] = object.is_a?(RDF::URI) ? relativize(object) : object.value
+          add_debug("node[#{qname}]=#{node[qname]}, #{object.class}")
         else
           # Serialize as element
           add_debug("serialize as element: #{attrs.inspect}")
           attrs.each_pair do |a, av|
             next if a.to_s == "xml:lang" && av.to_s == @lang # Lang already specified, don't repeat
-            av = relativize(object) if a == "#{RDF.prefix}:resource"
+            av = relativize(object) if a == "rdf:resource"
             add_debug "  elt attr #{a}=#{av}"
             pred_node[a] = av.to_s
           end
