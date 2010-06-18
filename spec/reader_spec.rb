@@ -329,7 +329,7 @@ EOF
     end
 
     def self.negative_tests
-      [] #RdfHelper::TestCase.negative_parser_tests(RDFCORE_TEST, RDFCORE_DIR) rescue []
+      RdfHelper::TestCase.negative_parser_tests(RDFCORE_TEST, RDFCORE_DIR) rescue []
     end
     
     it "should parse testcase" do
@@ -387,7 +387,10 @@ EOF
           t.run_test do |rdf_string|
             t.debug = []
             g = RDF::Graph.new
-            RDF::RDFXML::Reader.new(rdf_string, :base_uri => t.about, :strict => true, :debug => t.debug).each do |statement|
+            RDF::RDFXML::Reader.new(rdf_string,
+                :base_uri => t.about,
+                :strict => true,
+                :debug => t.debug).each do |statement|
               g << statement
             end
             g
@@ -404,8 +407,13 @@ EOF
         specify "test #{t.name}: " + (t.description || t.inputDocument) do
           t.run_test do |rdf_string, parser|
             lambda do
-              parser.parse(rdf_string, :base_uri => t.about, :strict => true, :debug => [])
-              parser.graph.should be_empty
+              g = RDF::Graph.new
+              RDF::RDFXML::Reader.new(rdf_string,
+                  :base_uri => t.about,
+                  :strict => true).each do |statement|
+                g << statement
+              end
+              g.should be_empty
             end.should raise_error(RDF::ReaderError)
           end
         end
