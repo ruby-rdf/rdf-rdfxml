@@ -35,7 +35,7 @@ module RDF::RDFXML
 
       def initialize(base, element, graph)
         # Initialize the evaluation context, [5.1]
-        self.base = RDF::URI.new(base)
+        self.base = RDF::URI.intern(base)
         @uri_mappings = {}
         @language = nil
         @graph = graph
@@ -99,7 +99,7 @@ module RDF::RDFXML
 
       # Set XML base. Ignore any fragment
       def base=(b)
-        @base = RDF::URI.new(b)
+        @base = RDF::URI.intern(b)
         @base.fragment = nil
       end
 
@@ -125,7 +125,7 @@ module RDF::RDFXML
       super do
         @debug = options[:debug]
         @strict = options[:strict]
-        @base_uri = RDF::URI.new(options[:base_uri])
+        @base_uri = RDF::URI.intern(options[:base_uri])
             
         @id_mapping = Hash.new
 

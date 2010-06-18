@@ -18,7 +18,7 @@ module RDF::RDFXML
   #
   # @example Serializing RDF graph into an RDF/XML file
   #   RDF::RDFXML::Write.open("etc/test.rdf") do |writer|
-  #     writer.write_graph(graph)
+  #     writer << graph
   #   end
   #
   # @example Serializing RDF statements into an RDF/XML file
@@ -70,14 +70,14 @@ module RDF::RDFXML
     ##
     # @param  [Graph] graph
     # @return [void]
-    def write_graph(graph)
+    def insert_graph(graph)
       @graph = graph
     end
 
     ##
     # @param  [Statement] statement
     # @return [void]
-    def write_statement(statement)
+    def insert_statement(statement)
       @graph << statement
     end
 
@@ -89,7 +89,7 @@ module RDF::RDFXML
     # @param  [RDF::Value]    object
     # @return [void]
     # @see    #write_epilogue
-    def write_triple(subject, predicate, object)
+    def insert_triple(subject, predicate, object)
       @graph << RDF::Statement.new(subject, predicate, object)
     end
 
@@ -112,19 +112,13 @@ module RDF::RDFXML
 
       doc = Nokogiri::XML::Document.new
 
-      add_debug "\nserialize: graph namespaces: #{@namespaces.inspect}"
       add_debug "\nserialize: graph: #{@graph.size}"
 
       preprocess
 
-      predicates = @graph.predicates.uniq
-      add_debug "\nserialize: predicates #{predicates.inspect}"
-      possible = predicates + @graph.objects.uniq
-      namespaces = {}
-      required_namespaces = {}
-      possible.each do |res|
-        get_qname(res)
-      end
+      # Get QNames and necessary namespaces from predicates and objects
+      @graph.predicates.each {|pred| add_debug("serialize pred: #{pred.inspect}"); get_qname(pred)}
+      @graph.objects.each {|obj| add_debug("serialize obj: #{obj.inspect}"); get_qname(obj)}
       add_namespace(:rdf, RDF_NS)
       add_namespace(:xml, RDF::XML) if @base_uri || @lang
       
@@ -133,6 +127,8 @@ module RDF::RDFXML
         @default_namespace_prefix = @namespaces.invert[@default_namespace]
         add_debug("def_namespace: #{@default_namespace}, prefix: #{@default_namespace_prefix}")
       end
+      
+      add_debug "\nserialize: graph namespaces: #{@namespaces.inspect}"
       
       doc.root = Nokogiri::XML::Element.new("rdf:RDF", doc)
       @namespaces.each_pair do |p, uri|
@@ -188,7 +184,7 @@ module RDF::RDFXML
         end
 
         prop_list.each do |prop|
-          prop_ref = RDF::URI.new(prop)
+          prop_ref = RDF::URI.intern(prop)
           
           properties[prop].each do |object|
             @depth += 1
@@ -422,6 +418,7 @@ module RDF::RDFXML
     end
     
     def add_namespace(prefix, ns)
+      add_debug "add_namespace: '#{prefix}', <#{ns}>"
       @namespaces[prefix.to_sym] = ns.to_s
     end
 

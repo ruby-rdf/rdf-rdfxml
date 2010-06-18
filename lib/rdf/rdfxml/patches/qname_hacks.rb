@@ -31,7 +31,7 @@ module RDF
     def self.[](property)
       @prop_uri ||= {}
       @prop_uri[property] ||= begin
-        uri = RDF::URI.new([to_s, property.to_s].join(''))
+        uri = RDF::URI.intern([to_s, property.to_s].join(''))
         uri.vocab = self
         uri
       end
@@ -40,7 +40,7 @@ module RDF
     def [](property)
       @prop_uri ||= {}
       @prop_uri[property] ||= begin
-        uri = RDF::URI.new([to_s, property.to_s].join(''))
+        uri = RDF::URI.intern([to_s, property.to_s].join(''))
         uri.vocab = self
         uri
       end
@@ -48,7 +48,7 @@ module RDF
     
     def to_uri
       @uri ||= begin
-        uri = RDF::URI.new(to_s)
+        uri = RDF::URI.intern(to_s)
         uri.vocab = self
         uri
       end

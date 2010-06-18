@@ -382,7 +382,7 @@ describe "RDF::RDFXML::Writer" do
   def serialize(options = {})
     @debug = []
     result = RDF::RDFXML::Writer.buffer(options.merge(:debug => @debug)) do |writer|
-      writer.write_graph(@graph)
+      writer << @graph
     end
     puts @debug.join("\n") if $DEBUG
     result
