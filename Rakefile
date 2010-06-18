@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'yard'
 
 begin
   gem 'jeweler'
@@ -16,8 +17,8 @@ begin
     gemspec.add_dependency('nokogiri', '>= 1.3.3')
     gemspec.add_development_dependency('rspec')
     gemspec.add_development_dependency('rdf-spec')
-    gemspec.add_development_dependency('activesupport', '>= 2.3.0')
-    gemspec.extra_rdoc_files     = %w(README.rdoc History.txt AUTHORS)
+    gemspec.add_development_dependency('yard')
+    gemspec.extra_rdoc_files     = %w(README.rdoc History.txt AUTHORS CONTRIBUTORS)
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
@@ -42,6 +43,10 @@ Spec::Rake::SpecTask.new("doc:spec") do |spec|
   spec.libs << 'lib' << 'spec'
   spec.spec_files = FileList['spec/*_spec.rb']
   spec.spec_opts = ["--format", "html:doc/spec.html"]
+end
+
+YARD::Rake::YardocTask.new do |t|
+  t.files   = %w(lib/**/*.rb README.rdoc History.txt AUTHORS CONTRIBUTORS)   # optional
 end
 
 desc "Generate RDF Core Manifest.yml"
