@@ -207,7 +207,7 @@ module RDF::RDFXML
     # If _is_unique_ is true, this predicate may be able to be serialized as an attribute
     def predicate(prop, object, node, is_unique)
       qname = get_qname(prop)
-      raise RdfException, "No qname generated for <#{prop}>" unless qname
+      raise RDF::WriterError, "No qname generated for <#{prop}>" unless qname
 
       # See if we can serialize as attribute.
       # * untyped attributes that aren't duplicated where xml:lang == @lang
