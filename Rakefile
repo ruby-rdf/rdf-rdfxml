@@ -17,6 +17,7 @@ begin
     gemspec.add_dependency('nokogiri', '>= 1.3.3')
     gemspec.add_development_dependency('rspec')
     gemspec.add_development_dependency('rdf-spec')
+    gemspec.add_development_dependency('rdf-isomorphic')
     gemspec.add_development_dependency('yard')
     gemspec.extra_rdoc_files     = %w(README.rdoc History.txt AUTHORS CONTRIBUTORS)
   end
