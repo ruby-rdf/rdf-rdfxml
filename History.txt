@@ -1,3 +1,8 @@
+=== 0.2.1
+* Writer bug fixes:
+  * RDF::Node#identifier => RDF::Node#id
+  * Vocabulary.new(uri) => Vocabulary(uri)
+
 === 0.2.0
 * Updates for RDF 0.2.0
   * Use URI#intern instead of URI#new

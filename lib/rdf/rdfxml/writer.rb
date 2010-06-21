@@ -295,7 +295,7 @@ module RDF::RDFXML
             subject(object, pred_node)
             @depth -= 1
           elsif object.is_a?(RDF::Node)
-            pred_node["rdf:nodeID"] = object.identifier
+            pred_node["rdf:nodeID"] = object.id
           else
             pred_node["rdf:resource"] = relativize(object)
           end
@@ -410,7 +410,7 @@ module RDF::RDFXML
         base_uri = uri.to_s[0..-(local_name.length + 1)]
         @tmp_ns = @tmp_ns ? @tmp_ns.succ : "ns0"
         add_debug "create namespace definition for #{uri}"
-        uri.vocab = RDF::Vocabulary.new(base_uri)
+        uri.vocab = RDF::Vocabulary(base_uri)
         add_namespace(@tmp_ns.to_sym, uri.vocab)
         add_debug "get_qname(tmp_ns): #{@tmp_ns}:#{local_name}"
         return "#{@tmp_ns}:#{local_name}"
