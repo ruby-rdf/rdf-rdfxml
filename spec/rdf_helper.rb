@@ -119,9 +119,7 @@ module RdfHelper
       @negative_entailment_tests = []
 
       unless File.file?(File.join(test_dir, test.sub("rdf", "yml")))
-        puts "parse #{File.join(test_dir, test)} @#{Time.now}"
         graph = RDF::Graph.load(File.join(test_dir, test), :base_uri => test_uri)
-        puts "parsed #{graph.size} statements @#{Time.now}"
         uri_base = Addressable::URI.join(test_uri, ".").to_s
 
         # One of:
@@ -140,18 +138,16 @@ module RdfHelper
         self.from_yaml(File.join(test_dir, test.sub("rdf", "yml")))
       end
 
-      puts "identified #{@test_cases.size} test cases @#{Time.now}"
-
-     @test_cases.each do |tc|
-       next if tc.status && tc.status != "APPROVED"
-       case tc.rdf_type
-       when "PositiveParserTest" then @positive_parser_tests << tc
-       when "NegativeParserTest" then @negative_parser_tests << tc
-       when "PositiveEntailmentTest" then @positive_entailment_tests << tc
-       when "NegativeEntailmentTest" then @negative_entailment_tests << tc
-       else puts "Unknown test type: #{tc.rdf_type}"
-       end
-     end
+      @test_cases.each do |tc|
+        next if tc.status && tc.status != "APPROVED"
+        case tc.rdf_type
+        when "PositiveParserTest" then @positive_parser_tests << tc
+        when "NegativeParserTest" then @negative_parser_tests << tc
+        when "PositiveEntailmentTest" then @positive_entailment_tests << tc
+        when "NegativeEntailmentTest" then @negative_entailment_tests << tc
+        else puts "Unknown test type: #{tc.rdf_type}"
+        end
+      end
     end
     def self.test_cases(test_uri = nil, test_dir = nil);                parse_test_cases(test_uri, test_dir); @test_cases; end
     def self.positive_parser_tests(test_uri = nil, test_dir = nil);     parse_test_cases(test_uri, test_dir); @positive_parser_tests; end
