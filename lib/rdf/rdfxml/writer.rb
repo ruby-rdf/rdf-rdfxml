@@ -174,7 +174,7 @@ module RDF::RDFXML
         end
         element ||= "rdf:Description"
 
-        node = Nokogiri::XML::Element.new(element, parent_node.document)
+        node = Nokogiri::XML::Element.new(element.to_s, parent_node.document)
       
         if subject.is_a?(RDF::Node)
           # Only need nodeID if it's referenced elsewhere
@@ -234,7 +234,7 @@ module RDF::RDFXML
             as_attr = false
           end
         else
-          qname = prop.qname.last
+          qname = prop.qname.last.to_s
         end
       end
 
@@ -419,7 +419,7 @@ module RDF::RDFXML
     
     def add_namespace(prefix, ns)
       add_debug "add_namespace: '#{prefix}', <#{ns}>"
-      @namespaces[prefix.to_sym] = ns.to_s
+      @namespaces[prefix.to_s] = ns.to_s
     end
 
     def reset
