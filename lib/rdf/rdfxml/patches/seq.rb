@@ -6,7 +6,7 @@ module RDF
       props = properties(subject)
       rdf_type = (props[RDF.type.to_s] || []).map {|t| t.to_s}
 
-      #puts "seq; #{rdf_type} #{rdf_type - [RDF_NS.Seq, RDF_NS.Bag, RDF_NS.Alt]}"
+      #puts "seq; #{rdf_type} #{rdf_type - [RDF.Seq, RDF.Bag, RDF.Alt]}"
       if !(rdf_type - [RDF.Seq, RDF.Bag, RDF.Alt]).empty?
         props.keys.select {|k| k.match(/#{RDF.to_s}_(\d)$/)}.
           sort_by {|i| i.sub(RDF._.to_s, "").to_i}.
@@ -15,7 +15,7 @@ module RDF
       elsif !self.query(:subject => subject, :predicate => RDF.first).empty?
         # N3-style first/rest chain
         list = []
-        while subject != RDF_NS.nil
+        while subject != RDF.nil
           props = properties(subject)
           f = props[RDF.first.to_s]
           if f.to_s.empty? || f.first == RDF.nil

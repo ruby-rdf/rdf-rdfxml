@@ -10,7 +10,6 @@ module RDF
     def join(*uris)
       result = @uri
       uris.each do |uri|
-#        result.path += '/' unless result.path.match(/[\#\/]$/) || uri.to_s[0..0] == "#"
         result = result.join(uri)
       end
       self.class.new(result)

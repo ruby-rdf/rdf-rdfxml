@@ -113,11 +113,11 @@ module RDF::RDFXML
     ##
     # Initializes the RDF/XML reader instance.
     #
-    # @param  [IO, File, String]::       input
-    # @param  [Hash{Symbol => Object}]:: options
-    # <em>options[:debug]</em>:: Array to place debug messages
-    # <em>options[:strict]</em>:: Raise Error if true, continue with lax parsing, otherwise
-    # <em>options[:base_uri]</em>:: Base URI to use for relative URIs.
+    # @param  [IO, File, String]       input
+    # @option options [Array] :debug (nil) Array to place debug messages
+    # @option options [Boolean] :strict (false) Raise Error if true, continue with lax parsing, otherwise
+    # @option options [Boolean] :base_uri (nil) Base URI to use for relative URIs.
+    # @return [reader]
     # @yield  [reader]
     # @yieldparam [Reader] reader
     # @raise [Error]:: Raises RDF::ReaderError if _strict_
@@ -141,7 +141,6 @@ module RDF::RDFXML
       end
     end
 
-    # XXX Invoke the parser, and allow add_triple to make the callback?
     ##
     # Iterates the given block for each RDF statement in the input.
     #
@@ -156,7 +155,7 @@ module RDF::RDFXML
 
       add_debug(root, "base_uri: #{@base_uri || 'nil'}")
       
-      rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF_NS)
+      rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF.to_uri.to_s)
       if rdf_nodes.length == 0
         # If none found, root element may be processed as an RDF Node
 
@@ -196,12 +195,8 @@ module RDF::RDFXML
 
     # Keep track of allocated BNodes
     def bnode(value = nil)
-      if value
-        @bnode_cache ||= {}
-        @bnode_cache[value.to_s] ||= RDF::Node.new(value)
-      else
-        RDF::Node.new
-      end
+      @bnode_cache ||= {}
+      @bnode_cache[value.to_s] ||= RDF::Node.new(value)
     end
     
     # Figure out the document path, if it is a Nokogiri::XML::Element or Attribute
@@ -314,7 +309,7 @@ module RDF::RDFXML
             #attrs[attr.to_s] = attr.value unless attr.to_s.match?(/^xml/)
           elsif attr.namespace.href == RDF::XML.to_s
             # No production. Lang and base elements already extracted
-          elsif attr.namespace.href == RDF_NS
+          elsif attr.namespace.href == RDF.to_uri.to_s
             case attr.name
             when "ID"         then id = attr.value
             when "datatype"   then datatype = attr.value
@@ -377,7 +372,7 @@ module RDF::RDFXML
           end
 
           # For element e with possibly empty element content c.
-          n = bnode
+          n = RDF::Node.new
           add_triple(child, subject, predicate, n)
 
           # Reification
@@ -460,7 +455,7 @@ module RDF::RDFXML
             elsif nodeID
               resource = bnode(nodeID)
             else
-              resource = bnode
+              resource = RDF::Node.new
             end
 
             # produce triples for attributes
@@ -533,7 +528,7 @@ module RDF::RDFXML
         ec.base.join(about)
       else
         add_debug(el, "parse_subject, BNode")
-        bnode
+        RDF::Node.new
       end
     end
     

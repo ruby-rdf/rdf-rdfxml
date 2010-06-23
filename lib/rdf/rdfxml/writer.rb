@@ -119,7 +119,7 @@ module RDF::RDFXML
       # Get QNames and necessary namespaces from predicates and objects
       @graph.predicates.each {|pred| add_debug("serialize pred: #{pred.inspect}"); get_qname(pred)}
       @graph.objects.each {|obj| add_debug("serialize obj: #{obj.inspect}"); get_qname(obj)}
-      add_namespace(:rdf, RDF_NS)
+      add_namespace(:rdf, RDF.to_uri)
       add_namespace(:xml, RDF::XML) if @base_uri || @lang
       
       if @default_namespace

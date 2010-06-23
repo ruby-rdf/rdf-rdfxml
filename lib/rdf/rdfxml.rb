@@ -32,9 +32,5 @@ module RDF
     autoload :Writer,  'rdf/rdfxml/writer'
     autoload :VERSION, 'rdf/rdfxml/version'
     autoload :XML,     'rdf/rdfxml/vocab'
-    
-    # Fixme: RDF.to_s should generate this, but it doesn't
-    RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-    XML_LITERAL = RDF['XMLLiteral']
   end
 end
