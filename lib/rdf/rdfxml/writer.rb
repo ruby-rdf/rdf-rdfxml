@@ -10,7 +10,7 @@ module RDF::RDFXML
   # and then serialize the graph.
   #
   # @example Obtaining a RDF/XML writer class
-  #   RDF::Writer.for(:rdf)         #=> RDF::TriX::Writer
+  #   RDF::Writer.for(:rdf)         #=> RDF::RDFXML::Writer
   #   RDF::Writer.for("etc/test.rdf")
   #   RDF::Writer.for(:file_name      => "etc/test.rdf")
   #   RDF::Writer.for(:file_extension => "rdf")

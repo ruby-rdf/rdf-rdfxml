@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe RDF::RDFXML::Format do
-  context "descovery" do
+  context "discovery" do
     {
       "rdf" => RDF::Format.for(:rdf),
       "rdfxml" => RDF::Format.for(:rdfxml),
