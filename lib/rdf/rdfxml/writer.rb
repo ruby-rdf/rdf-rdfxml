@@ -51,7 +51,7 @@ module RDF::RDFXML
     # base_uri:: Base URI of graph, used to shorting URI references
     # lang:: Output as root xml:lang attribute, and avoid generation _xml:lang_ where possible
     # attributes:: How to use XML attributes when serializing, one of :none, :untyped, :typed. The default is :none.
-    # defafult_ns:: URI to use as default namespace
+    # default_namespace:: URI to use as default namespace
     #
     # @param  [IO, File]               output
     # @param  [Hash{Symbol => Object}] options
