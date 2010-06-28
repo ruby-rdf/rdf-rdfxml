@@ -264,8 +264,8 @@ module RDF::RDFXML
             add_debug "  elt attr #{a}=#{av}"
             pred_node[a] = av.to_s
           end
-          add_debug "  elt #{'xmllit ' if object.is_a?(RDF::Literal) && object.xmlliteral?}content=#{args.first}" if !args.empty?
-          if object.is_a?(RDF::Literal) && object.xmlliteral?
+          add_debug "  elt #{'xmllit ' if object.is_a?(RDF::Literal) && object.datatype == RDF.XMLLiteral}content=#{args.first}" if !args.empty?
+          if object.is_a?(RDF::Literal) && object.datatype == RDF.XMLLiteral
             pred_node.add_child(Nokogiri::XML::CharacterData.new(args.first, node.document))
           elsif args.first
             pred_node.content = args.first unless args.empty?
@@ -470,7 +470,7 @@ module RDF::RDFXML
           [object.value, {}]
         elsif object.has_language?
           [object.value, {"xml:lang" => object.language}]
-        elsif object.xmlliteral?
+        elsif object.datatype == RDF.XMLLiteral
           [object.value, {"rdf:parseType" => "Literal"}]
         else
           [object.value, {"rdf:datatype" => object.datatype.to_s}]

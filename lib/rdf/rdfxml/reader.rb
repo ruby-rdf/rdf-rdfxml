@@ -437,7 +437,7 @@ module RDF::RDFXML
             raise RDF::ReaderError.new(warn) if @strict
           end
 
-          object = RDF::Literal.xmlliteral(child.children, :namespaces => child_ec.uri_mappings)
+          object = RDF::Literal.new(child.children, :datatype => RDF.XMLLiteral, :namespaces => child_ec.uri_mappings, :language => ec.language)
           add_triple(child, subject, predicate, object)
         elsif text_nodes.length == 0 && element_nodes.length == 0
           # Production emptyPropertyElt
