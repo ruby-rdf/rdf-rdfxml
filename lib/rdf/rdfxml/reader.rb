@@ -354,7 +354,7 @@ module RDF::RDFXML
           
           literal_opts = {}
           if datatype
-            literal_opts[:datatype] = datatype
+            literal_opts[:datatype] = RDF::URI.intern(datatype)
           else
             literal_opts[:language] = child_ec.language
           end
