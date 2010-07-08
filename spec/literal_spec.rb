@@ -121,5 +121,67 @@ describe RDF::Literal do
         end
       end
     end
+
+    context "rdfa tests" do
+      it "should reproduce test 0011: XMLLiteral" do
+        l = @new.call("E = mc<sup>2</sup>: The Most Urgent Problem of Our Time",
+                    :datatype => RDF.XMLLiteral,
+                    :namespaces => {"" => "http://www.w3.org/1999/xhtml"})
+
+        l.to_s.should == "E = mc<sup xmlns=\"http://www.w3.org/1999/xhtml\">2</sup>: The Most Urgent Problem of Our Time"
+      end
+
+      it "should reproduce test 0092: Tests XMLLiteral content with explicit @datatype" do
+        l = @new.call(%(E = mc<sup>2</sup>: The Most Urgent Problem of Our Time<),
+                    :datatype => RDF.XMLLiteral,
+                    :namespaces => {"" => "http://www.w3.org/1999/xhtml"})
+
+        l.to_s.should == "E = mc<sup xmlns=\"http://www.w3.org/1999/xhtml\">2</sup>: The Most Urgent Problem of Our Time"
+      end
+
+      it "should reproduce test 0100: XMLLiteral with explicit namespace" do
+        l = @new.call(%(Some text here in <strong>bold</strong> and an svg rectangle: <svg:svg><svg:rect svg:width="200" svg:height="100"/></svg:svg>),
+                    :datatype => RDF.XMLLiteral,
+                    :namespaces => {
+                      "" => "http://www.w3.org/1999/xhtml",
+                      "svg" => "http://www.w3.org/2000/svg",
+                    })
+
+        l.to_s.should == "Some text here in <strong xmlns=\"http://www.w3.org/1999/xhtml\">bold</strong> and an svg rectangle: <svg:svg xmlns:svg=\"http://www.w3.org/2000/svg\"><svg:rect svg:height=\"100\" svg:width=\"200\"></svg:rect></svg:svg>"
+      end
+
+      it "should reproduce 0101: XMLLiteral with explicit namespace and xml:lang" do
+        l = @new.call(%(Du texte ici en <strong>gras</strong> et un rectangle en svg: <svg:svg><svg:rect svg:width="200" svg:height="100"/></svg:svg>),
+                    :datatype => RDF.XMLLiteral, :language => :fr,
+                    :namespaces => {
+                      "" => "http://www.w3.org/1999/xhtml",
+                      "svg" => "http://www.w3.org/2000/svg",
+                    })
+
+        l.to_s.should == "Du texte ici en <strong xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"fr\">gras</strong> et un rectangle en svg: <svg:svg xmlns:svg=\"http://www.w3.org/2000/svg\" xml:lang=\"fr\"><svg:rect svg:height=\"100\" svg:width=\"200\"></svg:rect></svg:svg>"
+      end
+
+      it "should reproduce test 0102: XMLLiteral with explicit namespace and xml:lang; not overwriting existing langs" do
+        l = @new.call(%(Du texte ici en <strong>gras</strong> et un rectangle en svg: <svg:svg xml:lang="hu"><svg:rect svg:width="200" svg:height="100"/></svg:svg>),
+                    :datatype => RDF.XMLLiteral, :language => :fr,
+                    :namespaces => {
+                      "" => "http://www.w3.org/1999/xhtml",
+                      "svg" => "http://www.w3.org/2000/svg",
+                    })
+
+        l.to_s.should == "Du texte ici en <strong xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"fr\">gras</strong> et un rectangle en svg: <svg:svg xmlns:svg=\"http://www.w3.org/2000/svg\" xml:lang=\"hu\"><svg:rect svg:height=\"100\" svg:width=\"200\"></svg:rect></svg:svg>"
+      end
+
+      it "should reproduce test 0103: XMLLiteral with explicit namespace; not overwriting local namespaces" do
+        l = @new.call(%(Some text here in <strong>bold</strong> and an svg rectangle: <svg xmlns="http://www.w3.org/2000/svg"><rect width="200" height="100"/></svg>),
+                    :datatype => RDF.XMLLiteral,
+                    :namespaces => {
+                      "" => "http://www.w3.org/1999/xhtml",
+                      "svg" => "http://www.w3.org/2000/svg",
+                    })
+
+        l.to_s.should == "Some text here in <strong xmlns=\"http://www.w3.org/1999/xhtml\">bold</strong> and an svg rectangle: <svg xmlns=\"http://www.w3.org/2000/svg\"><rect height=\"100\" width=\"200\"></rect></svg>"
+      end
+    end
   end if defined?(::Nokogiri)
 end
