@@ -290,7 +290,6 @@ describe "RDF::RDFXML::Writer" do
     end
   end
 
-  # FIXME
   describe "with default namespace" do
     it "should serialize with default namespace" do
       @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
