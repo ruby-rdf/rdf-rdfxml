@@ -94,6 +94,11 @@ module RDF; class Literal
     
     # Nokogiri implementations
     if defined?(::Nokogiri)
+      # A somewhat half-hearted attempt at C14N.
+      # Main problem is that it promotes all namespaces to top element, instead of demoting them
+      # to the required element, and does not properly order either namespaces or attributes.
+      #
+      # An open-issue in Nokogiri is to add support for C14N from the underlying libxml2 libraries.
       def parse_value_nokogiri(value, ns_strs, language)
         return value if value.is_a?(Nokogiri::XML::NodeSet)
         # Add inherited namespaces to created root element so that they're inherited to sub-elements
@@ -110,7 +115,7 @@ module RDF; class Literal
               c[prefix] = ns.href.to_s unless c.namespaces[prefix]
             end
 
-            # Add lanuage
+            # Add language
             if language && c["lang"].to_s.empty?
               c["xml:lang"] = language.to_s
             end
@@ -125,6 +130,7 @@ module RDF; class Literal
     end   # Nokogiri
     
     if defined?(::LibXML)
+      # This should use Document#canonicalize if as and when it is available in libxml-ruby
       def parse_value_libxml(value, ns_strs, language)
         # Fixme
       end
@@ -135,6 +141,8 @@ module RDF; class Literal
     end   # LibXML
     
     # REXML
+    # This could make use of the XMLCanonicalizer gem (http://rubygems.org/gems/XMLCanonicalizer)
+    # But, it hasn't been touched since 2007 and relies on log4r.
     def parse_value_rexml(value, ns_strs, language)
       # Fixme
     end
@@ -143,5 +151,5 @@ module RDF; class Literal
       # Fixme
     end
     
-  end unless defined?(::RDF::Literal::XML)# class XML
+  end # class XML
 end; end
