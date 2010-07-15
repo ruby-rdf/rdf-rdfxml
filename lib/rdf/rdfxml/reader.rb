@@ -141,6 +141,12 @@ module RDF::RDFXML
       end
     end
 
+    # No need to rewind, as parsing is done in initialize
+    def rewind; end
+    
+    # Document closed when read in initialize
+    def close; end
+    
     ##
     # Iterates the given block for each RDF statement in the input.
     #
