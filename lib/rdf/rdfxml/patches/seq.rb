@@ -8,7 +8,7 @@ module RDF
 
       #puts "seq; #{rdf_type} #{rdf_type - [RDF.Seq, RDF.Bag, RDF.Alt]}"
       if !(rdf_type - [RDF.Seq, RDF.Bag, RDF.Alt]).empty?
-        props.keys.select {|k| k.match(/#{RDF.to_s}_(\d)$/)}.
+        props.keys.select {|k| k.match(/#{RDF._}(\d)$/)}.
           sort_by {|i| i.sub(RDF._.to_s, "").to_i}.
           map {|key| props[key]}.
           flatten
