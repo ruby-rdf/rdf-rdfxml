@@ -3,8 +3,8 @@
 irb = RUBY_PLATFORM =~ /(:?mswin|mingw)/ ? 'irb.bat' : 'irb'
 
 libs =  " -r irb/completion"
-# Perhaps use a console_lib to store any extra methods I may want available in the cosole
-# libs << " -r #{File.dirname(__FILE__) + '/../lib/console_lib/console_logger.rb'}"
+RDF = File.dirname(__FILE__) + "/../../rdf/lib"
+libs << " -I #{RDF}" if File.directory?(RDF)
 libs <<  " -r #{File.dirname(__FILE__) + '/../lib/rdf/rdfxml.rb'}"
 puts "Loading rdf-rdfxml gem"
 exec "#{irb} #{libs} --simple-prompt"
