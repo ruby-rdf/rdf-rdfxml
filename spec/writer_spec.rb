@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), 'spec_helper')
+require 'rdf/spec/writer'
 autoload :CGI, 'cgi'
 
 class FOO < RDF::Vocabulary("http://foo/"); end
@@ -6,7 +7,10 @@ class FOO < RDF::Vocabulary("http://foo/"); end
 describe "RDF::RDFXML::Writer" do
   before(:each) do
     @graph = RDF::Graph.new
+    @writer = RDF::RDFXML::Writer
   end
+  
+  it_should_behave_like RDF_Writer
   
   describe "with types" do
     it "should serialize resource without type" do
@@ -380,7 +384,7 @@ describe "RDF::RDFXML::Writer" do
   # Serialize ntstr to a string and compare against regexps
   def serialize(options = {})
     @debug = []
-    result = RDF::RDFXML::Writer.buffer(options.merge(:debug => @debug)) do |writer|
+    result = @writer.buffer(options.merge(:debug => @debug)) do |writer|
       writer << @graph
     end
     puts @debug.join("\n") if $DEBUG
