@@ -119,20 +119,20 @@ module RDF::RDFXML
       # Get QNames and necessary namespaces from predicates and objects
       @graph.predicates.each {|pred| add_debug("serialize pred: #{pred.inspect}"); get_qname(pred)}
       @graph.objects.each {|obj| add_debug("serialize obj: #{obj.inspect}"); get_qname(obj)}
-      add_namespace(:rdf, RDF.to_uri)
-      add_namespace(:xml, RDF::XML) if @base_uri || @lang
+      prefix(:rdf, RDF.to_uri)
+      prefix(:xml, RDF::XML) if @base_uri || @lang
       
       if @default_namespace
-        add_namespace("", @default_namespace)
-        @default_namespace_prefix = @namespaces.invert[@default_namespace]
+        prefix(:__default__, @default_namespace)
+        @default_namespace_prefix = prefixes.invert[@default_namespace]
         add_debug("def_namespace: #{@default_namespace}, prefix: #{@default_namespace_prefix}")
       end
       
-      add_debug "\nserialize: graph namespaces: #{@namespaces.inspect}"
+      add_debug "\nserialize: graph namespaces: #{prefixes.inspect}"
       
       doc.root = Nokogiri::XML::Element.new("rdf:RDF", doc)
-      @namespaces.each_pair do |p, uri|
-        if p.to_s.empty?
+      prefixes.each_pair do |p, uri|
+        if p == :__default__
           doc.root.default_namespace = uri.to_s
         else
           doc.root.add_namespace(p.to_s, uri.to_s)
@@ -376,13 +376,13 @@ module RDF::RDFXML
       if uri.is_a?(RDF::URI)
         # Duplicate logic from URI#qname to remember namespace assigned
         if uri.qname
-          add_namespace(uri.qname.first, uri.vocab)
+          prefix(uri.qname.first, uri.vocab)
           add_debug "get_qname(uri.qname): #{uri.qname.join(':')}"
           return uri.qname.join(":") 
         end
         
         # No vocabulary assigned, find one from cache of created namespace URIs
-        @namespaces.each_pair do |prefix, vocab|
+        prefixes.each_pair do |prefix, vocab|
           if uri.to_s.index(vocab.to_s) == 0
             uri.vocab = vocab
             local_name = uri.to_s[(vocab.to_s.length)..-1]
@@ -411,21 +411,16 @@ module RDF::RDFXML
         @tmp_ns = @tmp_ns ? @tmp_ns.succ : "ns0"
         add_debug "create namespace definition for #{uri}"
         uri.vocab = RDF::Vocabulary(base_uri)
-        add_namespace(@tmp_ns.to_sym, uri.vocab)
+        prefix(@tmp_ns.to_sym, uri.vocab)
         add_debug "get_qname(tmp_ns): #{@tmp_ns}:#{local_name}"
         return "#{@tmp_ns}:#{local_name}"
       end
     end
     
-    def add_namespace(prefix, ns)
-      add_debug "add_namespace: '#{prefix}', <#{ns}>"
-      @namespaces[prefix.to_s] = ns.to_s
-    end
-
     def reset
       @depth = 0
       @lists = {}
-      @namespaces = {}
+      prefixes = {}
       @references = {}
       @serialized = {}
       @subjects = {}
