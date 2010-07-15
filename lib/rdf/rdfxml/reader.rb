@@ -335,9 +335,9 @@ module RDF::RDFXML
         end
 
         # Apply character transformations
-        id = id_check(el, id.rdf_escape, nil) if id
-        resourceAttr = resourceAttr.rdf_escape if resourceAttr
-        nodeID = nodeID_check(el, nodeID.rdf_escape) if nodeID
+        id = id_check(el, RDF::NTriples.escape(id), nil) if id
+        resourceAttr = RDF::NTriples.escape(resourceAttr) if resourceAttr
+        nodeID = nodeID_check(el, RDF::NTriples.escape(nodeID)) if nodeID
 
         add_debug(child, "attrs: #{attrs.inspect}")
         add_debug(child, "datatype: #{datatype}") if datatype
@@ -521,15 +521,15 @@ module RDF::RDFXML
 
       case
       when id
-        add_debug(el, "parse_subject, id: '#{id.value.rdf_escape}'")
-        id_check(el, id.value.rdf_escape, ec.base) # Returns URI
+        add_debug(el, "parse_subject, id: '#{RDF::NTriples.escape(id.value)}'")
+        id_check(el, RDF::NTriples.escape(id.value), ec.base) # Returns URI
       when nodeID
         # The value of rdf:nodeID must match the XML Name production
-        nodeID = nodeID_check(el, nodeID.value.rdf_escape)
+        nodeID = nodeID_check(el, RDF::NTriples.escape(nodeID.value))
         add_debug(el, "parse_subject, nodeID: '#{nodeID}")
         bnode(nodeID)
       when about
-        about = about.value.rdf_escape
+        about = RDF::NTriples.escape(about.value)
         add_debug(el, "parse_subject, about: '#{about}'")
         ec.base.join(about)
       else

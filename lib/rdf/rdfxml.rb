@@ -26,7 +26,6 @@ module RDF
     require 'rdf/rdfxml/patches/literal_hacks'
     require 'rdf/rdfxml/patches/nokogiri_hacks'
     require 'rdf/rdfxml/patches/qname_hacks'
-    require 'rdf/rdfxml/patches/rdf_escape'
     require 'rdf/rdfxml/patches/uri_hacks'
     autoload :Reader,  'rdf/rdfxml/reader'
     autoload :Writer,  'rdf/rdfxml/writer'
