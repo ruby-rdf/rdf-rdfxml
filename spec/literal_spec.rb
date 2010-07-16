@@ -22,26 +22,64 @@ describe RDF::Literal do
     describe "with a namespace" do
       subject {
         @new.call("foo <dc:sup>bar</dc:sup> baz!", :datatype => RDF.XMLLiteral,
-                      :namespaces => {"dc" => RDF::DC.to_s})
+                      :namespaces => {:dc => RDF::DC.to_s})
       }
 
       it "should add namespaces" do subject.to_s.should == "foo <dc:sup xmlns:dc=\"http://purl.org/dc/terms/\">bar</dc:sup> baz!" end
 
+        describe "as string prefix" do
+          subject {
+            @new.call("foo <dc:sup>bar</dc:sup> baz!", :datatype => RDF.XMLLiteral,
+                          :namespaces => {"dc" => RDF::DC.to_s})
+          }
+
+          it "should add namespaces" do subject.to_s.should == "foo <dc:sup xmlns:dc=\"http://purl.org/dc/terms/\">bar</dc:sup> baz!" end
+        end
+
       describe "and language" do
         subject {
           @new.call("foo <dc:sup>bar</dc:sup> baz!", :datatype => RDF.XMLLiteral,
-                        :namespaces => {"dc" => RDF::DC.to_s},
+                        :namespaces => {:dc => RDF::DC.to_s},
                         :language => :fr)
         }
 
         it "should add namespaces and language" do subject.to_s.should == "foo <dc:sup xmlns:dc=\"http://purl.org/dc/terms/\" xml:lang=\"fr\">bar</dc:sup> baz!" end
       end
 
+      describe "and node set" do
+        subject {
+          root = Nokogiri::XML.parse(%(<?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+          <html xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:dc="http://purl.org/dc/terms/"
+                xmlns:ex="http://example.org/rdf/"
+                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:svg="http://www.w3.org/2000/svg">
+            <head profile="http://www.w3.org/1999/xhtml/vocab http://www.w3.org/2005/10/profile">
+              <title>Test 0100</title>
+            </head>
+            <body>
+              <div about="http://www.example.org">
+                <h2 property="ex:example" datatype="rdf:XMLLiteral"><svg:svg/></h2>
+              </div>
+            </body>
+          </html>
+          ), nil, nil, Nokogiri::XML::ParseOptions::DEFAULT_XML).root
+          content = root.css("h2").children
+          @new.call(content, :datatype => RDF.XMLLiteral,
+                    :namespaces => {
+                      :svg => "http://www.w3.org/2000/svg",
+                      :dc => "http://purl.org/dc/terms/",
+                    })
+        }
+        it "should add namespace" do subject.to_s.should == "<svg:svg xmlns:svg=\"http://www.w3.org/2000/svg\"></svg:svg>" end
+      end
+
       describe "and language with an existing language embedded" do
         subject {
           @new.call("foo <dc:sup>bar</dc:sup><dc:sub xml:lang=\"en\">baz</dc:sub>",
                         :datatype => RDF.XMLLiteral,
-                        :namespaces => {"dc" => RDF::DC.to_s},
+                        :namespaces => {:dc => RDF::DC.to_s},
                         :language => :fr)
         }
 
@@ -52,12 +90,21 @@ describe RDF::Literal do
     describe "with a default namespace" do
       subject {
         @new.call("foo <sup>bar</sup> baz!", :datatype => RDF.XMLLiteral,
+                      :namespaces => {:__default__ => RDF::DC.to_s})
+      }
+
+      it "should add namespace" do subject.to_s.should == "foo <sup xmlns=\"http://purl.org/dc/terms/\">bar</sup> baz!" end
+    end
+
+    describe "with a default namespace (as empty string)" do
+      subject {
+        @new.call("foo <sup>bar</sup> baz!", :datatype => RDF.XMLLiteral,
                       :namespaces => {"" => RDF::DC.to_s})
       }
 
       it "should add namespace" do subject.to_s.should == "foo <sup xmlns=\"http://purl.org/dc/terms/\">bar</sup> baz!" end
     end
-    
+
     context "rdfcore tests" do
       context "rdfms-xml-literal-namespaces" do
         it "should reproduce test001" do
