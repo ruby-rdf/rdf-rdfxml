@@ -1,3 +1,16 @@
+=== 0.2.2
+* Fix bug creating datatyped literal where datatype is a string, not an RDF::URI
+* Added more XMLLiteral tests (fail, until full canonicalization working)
+* Added RDF_Reader and RDF_Writer behavior expectations
+* Use RDF::Writer#prefix and #prefixes implementation instead of internal version.
+* Added RDF::Reader#rewind and #close, which override default behavior as stream is closed on initialization and rewinding isn't required.
+* In console, load RDF.rb from parent directory, if it exists.
+* Dependencies on RDF 0.2.2
+* Replace String#rdf_escape with RDF::NTriples.escape
+* Fixed bug in Writer where a qname was expected for sorting, but property has no qname
+* Handle XMLLiteral when value is a Nokogiri node set.
+* Ensure URIs are properly RDF Escaped (patch to RDF::NTriples::Writer#format_uri)
+
 === 0.2.1
 * Update for RDF 0.2.1
 * Writer bug fixes:
