@@ -15,4 +15,10 @@ module RDF
       self.class.new(result)
     end
   end
+  
+  class NTriples::Writer
+    def format_uri(uri, options = {})
+      "<%s>" % escaped(uri_for(uri))
+    end
+  end
 end
