@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns="http://usefulinc.com/ns/doap#"
+    xmlns:log="http://www.w3.org/2000/10/swap/log#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+
+    <Person xmlns="http://xmlns.com/foaf/0.1/"
+        rdf:about="#_ggenid1">
+        <mbox_sha1sum>c69f3255ff0639543cc5edfd8116eac8df16fab8</mbox_sha1sum>
+        <name>Hellekin O. Wolf</name>
+    </Person>
+
+    <Person xmlns="http://xmlns.com/foaf/0.1/"
+        rdf:about="#_ggenid3">
+        <mbox_sha1sum>bedbbf2451e5beb38d59687c0460032aff92cd3c</mbox_sha1sum>
+        <name>Pius Uzamere</name>
+    </Person>
+
+    <Person xmlns="http://xmlns.com/foaf/0.1/"
+        rdf:about="#_ggenid2">
+        <mbox_sha1sum>f7653fc1ac0e82ebb32f092389bd5fc728eaae12</mbox_sha1sum>
+        <name>John Fieber</name>
+    </Person>
+
+    <Person xmlns="http://xmlns.com/foaf/0.1/"
+        rdf:about="http://ar.to/#self">
+        <isDefinedBy xmlns="http://www.w3.org/2000/01/rdf-schema#"
+            rdf:resource="http://datagraph.org/bendiken/foaf"/>
+        <homepage rdf:resource="http://ar.to/"/>
+        <made rdf:resource="http://rubygems.org/gems/rdf"/>
+        <mbox rdf:resource="mailto:arto.bendiken@gmail.com"/>
+        <mbox_sha1sum>a033f652c84a4d73b8c26d318c2395699dd2bdfb</mbox_sha1sum>
+        <mbox_sha1sum>d0737cceb55eb7d740578d2db1bc0727e3ed49ce</mbox_sha1sum>
+        <name>Arto Bendiken</name>
+    </Person>
+
+    <Person xmlns="http://xmlns.com/foaf/0.1/"
+        rdf:about="http://bhuga.net/#ben">
+        <isDefinedBy xmlns="http://www.w3.org/2000/01/rdf-schema#"
+            rdf:resource="http://datagraph.org/bhuga/foaf"/>
+        <homepage rdf:resource="http://bhuga.net/"/>
+        <mbox rdf:resource="mailto:blavender@gmail.com"/>
+        <mbox_sha1sum>dbf45f4ffbd27b67aa84f02a6a31c144727d10af</mbox_sha1sum>
+        <name>Ben Lavender</name>
+    </Person>
+
+    <Project rdf:about="http://rubygems.org/gems/rdf">
+        <creator xmlns="http://purl.org/dc/terms/"
+            rdf:resource="http://ar.to/#self"/>
+        <blog rdf:resource="http://ar.to/"/>
+        <blog rdf:resource="http://blog.datagraph.org/"/>
+        <bug-database rdf:resource="http://github.com/bendiken/rdf/issues"/>
+        <category rdf:resource="http://dbpedia.org/resource/Resource_Description_Framework"/>
+        <category rdf:resource="http://dbpedia.org/resource/Ruby_(programming_language)"/>
+        <created>2007-10-23</created>
+        <description xml:lang="en">RDF.rb is a pure-Ruby library for working with Resource Description Framework (RDF) data.</description>
+        <developer rdf:resource="http://ar.to/#self"/>
+        <developer rdf:resource="http://bhuga.net/#ben"/>
+        <documenter rdf:resource="http://ar.to/#self"/>
+        <download-page rdf:resource="http://rubyforge.org/projects/rdf/"/>
+        <helper rdf:resource="#_ggenid1"/>
+        <helper rdf:resource="#_ggenid2"/>
+        <helper rdf:resource="#_ggenid3"/>
+        <homepage rdf:resource="http://rdf.rubyforge.org/"/>
+        <license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+        <maintainer rdf:resource="http://ar.to/#self"/>
+        <name>RDF.rb</name>
+        <platform>Ruby</platform>
+        <shortdesc xml:lang="en">A Ruby library for working with Resource Description Framework (RDF) data.</shortdesc>
+        <vendor rdf:resource="http://datagraph.org/"/>
+        <maker xmlns="http://xmlns.com/foaf/0.1/"
+            rdf:resource="http://ar.to/#self"/>
+    </Project>
+</rdf:RDF>
