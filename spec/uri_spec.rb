@@ -3,6 +3,10 @@ $:.unshift "."
 require File.join(File.dirname(__FILE__), 'spec_helper')
 
 describe RDF::URI do
+  class EXa < RDF::Vocabulary("http://example.org/foo/"); end
+  class EXb < RDF::Vocabulary("http://example.org/foo#"); end
+  class EXc < RDF::Vocabulary("http://example.org/foo"); end
+  
   subject { RDF::URI.new("http://example.org")}
   
   context "join" do
@@ -70,6 +74,28 @@ describe RDF::URI do
           RDF::URI.new(input[0]).join(input[1].to_s).to_ntriples.should == result
         end
       end
+    end
+  end
+
+  context "qname" do
+    it "should create [:rdf, :foo]" do
+      RDF.foo.qname.should == [:rdf, :foo]
+    end
+
+    it "should create [:rdfs, nil]" do
+      RDF::RDFS.to_uri.qname.should == [:rdfs, nil]
+    end
+
+    it "should find with trailing /" do
+      EXa.bar.qname.should == [:exa, :bar]
+    end
+
+    it "should find with trailing #" do
+      EXb.bar.qname.should == [:exb, :bar]
+    end
+
+    it "should find with trailing word" do
+      EXc.bar.qname.should == [:exc, :bar]
     end
   end
 end
