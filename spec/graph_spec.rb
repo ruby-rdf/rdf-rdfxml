@@ -1,3 +1,4 @@
+$:.unshift "."
 require File.join(File.dirname(__FILE__), 'spec_helper')
 require 'rdf/rdfxml/patches/graph_properties'
 require 'rdf/rdfxml/patches/seq'

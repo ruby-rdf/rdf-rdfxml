@@ -22,7 +22,7 @@ module RDF; class Literal
     # @option options [String] :lexical (nil)
     # @option options [Hash] :namespaces ({}) Use :__default__ or "" to declare default namespace
     # @option options [Symbol] :language (nil)
-    # @option options [Symbol] :library (:nokogiri, :libxml, or :rexml)
+    # @option options [:nokogiri, :libxml, or :rexml] :library
     def initialize(value, options = {})
       options[:namespaces] ||= {}
 
