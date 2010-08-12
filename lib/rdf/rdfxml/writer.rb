@@ -123,7 +123,7 @@ module RDF::RDFXML
       prefix(:xml, RDF::XML) if @base_uri || @lang
       
       if @default_namespace
-        prefix(:__default__, @default_namespace)
+        prefix(:__default__, @default_namespace.respond_to?(:to_uri) ? @default_namespace.to_uri : @default_namespace)
         @default_namespace_prefix = prefixes.invert[@default_namespace]
         add_debug("def_namespace: #{@default_namespace}, prefix: #{@default_namespace_prefix}")
       end
@@ -376,7 +376,7 @@ module RDF::RDFXML
       if uri.is_a?(RDF::URI)
         # Duplicate logic from URI#qname to remember namespace assigned
         if uri.qname
-          prefix(uri.qname.first, uri.vocab)
+          prefix(uri.qname.first, uri.vocab.to_uri)
           add_debug "get_qname(uri.qname): #{uri.qname.join(':')}"
           return uri.qname.join(":") 
         end
@@ -411,7 +411,7 @@ module RDF::RDFXML
         @tmp_ns = @tmp_ns ? @tmp_ns.succ : "ns0"
         add_debug "create namespace definition for #{uri}"
         uri.vocab = RDF::Vocabulary(base_uri)
-        prefix(@tmp_ns.to_sym, uri.vocab)
+        prefix(@tmp_ns.to_sym, uri.vocab.to_uri)
         add_debug "get_qname(tmp_ns): #{@tmp_ns}:#{local_name}"
         return "#{@tmp_ns}:#{local_name}"
       end
