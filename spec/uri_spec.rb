@@ -98,4 +98,12 @@ describe RDF::URI do
       EXc.bar.qname.should == [:exc, :bar]
     end
   end
+  
+  context "vocab" do
+    RDF::Vocabulary.each do |v|
+      specify {v.foo.vocab.should == v}
+      specify {v.foo.vocab.to_uri.to_s.should == v.to_uri.to_s}
+      specify {v.to_s.should == v.to_uri.to_s} unless v == RDF
+    end
+  end
 end
