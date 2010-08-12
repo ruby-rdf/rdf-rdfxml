@@ -343,15 +343,11 @@ describe "RDF::RDFXML::Writer" do
     end
     
     it "should replicate rdfcore/rdfms-seq-representation" do
-      begin
-        @graph.parse(%(
-          <http://example.org/eg#eric> a [ <http://example.org/eg#intersectionOf> (<http://example.org/eg#Person> <http://example.org/eg#Male>)] .
-        ))
-        graph2 = Graph.new
-        graph2.parse(serialize(:format => :xml)).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
-      rescue
-        pending("Requires Turtle reader")
-      end
+      $verbose = true
+      graph_expect = parse(%(
+        <http://example.org/eg#eric> a [ <http://example.org/eg#intersectionOf> (<http://example.org/eg#Person> <http://example.org/eg#Male>)] .
+      ), :reader => RDF::N3::Reader)
+      graph_check = parse(serialize(:format => :xml)).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
     end
   end
   
@@ -381,14 +377,26 @@ describe "RDF::RDFXML::Writer" do
     #RDF::RDFXML::Reader.new(doc, :base_uri => "http://release/", :format => :rdf).each {|st| graph << st}
     #graph.should be_equivalent_graph(@graph, :about => "http://release/", :trace => @debug.join("\n"))
   end
-  
+
+  require 'rdf/n3'
+  def parse(input, options = {})
+    reader_class = options.fetch(:reader, detect_format(input))
+    
+    graph = RDF::Graph.new
+    reader_class.new(input, options).each do |statement|
+      graph << statement
+    end
+    graph
+  end
+
   # Serialize ntstr to a string and compare against regexps
   def serialize(options = {})
     @debug = []
     result = @writer.buffer(options.merge(:debug => @debug)) do |writer|
       writer << @graph
     end
-    puts @debug.join("\n") if $DEBUG
+    require 'cgi'
+    puts CGI.escapeHTML(result) if $verbose
     result
   end
 end
