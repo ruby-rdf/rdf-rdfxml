@@ -2,10 +2,10 @@ module RDF::RDFXML::VERSION
   MAJOR = 0
   MINOR = 2
   TINY  = 2
-  EXTRA = nil
+  EXTRA = 1
 
   STRING = [MAJOR, MINOR, TINY].join('.')
-  STRING << "-#{EXTRA}" if EXTRA
+  STRING << ".#{EXTRA}" if EXTRA
 
   ##
   # @return [String]
