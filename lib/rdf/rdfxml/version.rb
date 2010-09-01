@@ -1,8 +1,8 @@
 module RDF::RDFXML::VERSION
   MAJOR = 0
   MINOR = 2
-  TINY  = 2
-  EXTRA = 1
+  TINY  = 3
+  EXTRA = nil
 
   STRING = [MAJOR, MINOR, TINY].join('.')
   STRING << ".#{EXTRA}" if EXTRA

@@ -99,6 +99,12 @@ describe RDF::URI do
     end
   end
   
+  context "Invalid Formats" do
+    it "should detect invalid URI formats" do
+      lambda {Addressable::URI.parse("_:test")}.should raise_error(Addressable::URI::InvalidURIError)
+    end
+  end
+  
   context "vocab" do
     RDF::Vocabulary.each do |v|
       specify {v.foo.vocab.should == v}

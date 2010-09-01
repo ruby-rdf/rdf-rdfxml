@@ -208,9 +208,8 @@ module RDF::RDFXML
     # Figure out the document path, if it is a Nokogiri::XML::Element or Attribute
     def node_path(node)
       case node
-      when Nokogiri::XML::Element, Nokogiri::XML::Attr then "#{node_path(node.parent)}/#{node.name}"
-      when String then node
-      else ""
+      when Nokogiri::XML::Node then node.display_path
+      else node.to_s
       end
     end
     

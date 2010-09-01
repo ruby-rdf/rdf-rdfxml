@@ -393,21 +393,15 @@ module RDF::RDFXML
         
         # No vocabulary found, invent one
         # Add bindings for predicates not already having bindings
-        # short_name of URI for creating QNames.
-        #   "#{base_uri]{#short_name}}" == uri
-        local_name = uri.fragment
-        local_name ||= begin
-          path = uri.path.split("/")
-          unless path &&
-              path.length > 1 &&
-              path.last.class == String &&
-              path.last.length > 0 &&
-              path.last.index("/") != 0
-            return false
-          end
-          path.last
-        end
-        base_uri = uri.to_s[0..-(local_name.length + 1)]
+        # From RDF/XML Syntax and Processing:
+        #   An XML namespace-qualified name (QName) has restrictions on the legal characters such that not all property URIs can be expressed
+        #   as these names. It is recommended that implementors of RDF serializers, in order to break a URI into a namespace name and a local
+        #   name, split it after the last XML non-NCName character, ensuring that the first character of the name is a Letter or '_'. If the
+        #   URI ends in a non-NCName character then throw a "this graph cannot be serialized in RDF/XML" exception or error.
+        separation = uri.to_s.rindex(%r{[^a-zA-Z_0-9-](?=[a-zA-Z_])})
+        return nil unless separation
+        base_uri = uri.to_s[0..separation]
+        local_name = uri.to_s[separation+1..-1]
         @tmp_ns = @tmp_ns ? @tmp_ns.succ : "ns0"
         add_debug "create namespace definition for #{uri}"
         uri.vocab = RDF::Vocabulary(base_uri)

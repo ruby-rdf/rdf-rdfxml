@@ -323,11 +323,11 @@ describe "RDF::RDFXML::Writer" do
   describe "with bnodes" do
     it "should not generate nodeID attribute unless node is referenced as an object" do
       @graph << [RDF::Node.new("a"), RDF::DC.title, "foo"]
-        check_xpaths(
-          serialize(:attributes => :untyped, :base => "http://release/"),
-          "/rdf:RDF/rdf:Description/@dc:title" => "foo",
-          "/rdf:RDF/rdf:Description/@rdf:nodeID" => false
-        )
+      check_xpaths(
+        serialize(:attributes => :untyped, :base => "http://release/"),
+        "/rdf:RDF/rdf:Description/@dc:title" => "foo",
+        "/rdf:RDF/rdf:Description/@rdf:nodeID" => false
+      )
     end
     
     it "should generate a nodeID attribute if node is referenced as an object" do
@@ -343,7 +343,6 @@ describe "RDF::RDFXML::Writer" do
     end
     
     it "should replicate rdfcore/rdfms-seq-representation" do
-      $verbose = true
       graph_expect = parse(%(
         <http://example.org/eg#eric> a [ <http://example.org/eg#intersectionOf> (<http://example.org/eg#Person> <http://example.org/eg#Male>)] .
       ), :reader => RDF::N3::Reader)

@@ -1,3 +1,6 @@
+=== 0.2.3
+* Fixed QName generation in Writer based on RDF/XML Processing recommendations
+
 === 0.2.2.1
 * Ruby 1.9.2 support.
 * Added script/tc to run test cases
