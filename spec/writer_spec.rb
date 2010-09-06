@@ -356,7 +356,7 @@ describe "RDF::RDFXML::Writer" do
     doc.should be_a(Nokogiri::XML::Document)
     doc.root.should be_a(Nokogiri::XML::Element)
     paths.each_pair do |path, value|
-      @debug <<  doc.root.at_xpath(path, @namespaces).to_s if $DEBUG
+      @debug <<  doc.root.at_xpath(path, doc.namespaces).to_s if $DEBUG
       case value
       when false
         doc.root.at_xpath(path, doc.namespaces).should be_nil

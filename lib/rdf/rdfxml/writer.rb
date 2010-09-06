@@ -116,9 +116,6 @@ module RDF::RDFXML
 
       preprocess
 
-      # Get QNames and necessary namespaces from predicates and objects
-      @graph.predicates.each {|pred| add_debug("serialize pred: #{pred.inspect}"); get_qname(pred)}
-      @graph.objects.each {|obj| add_debug("serialize obj: #{obj.inspect}"); get_qname(obj)}
       prefix(:rdf, RDF.to_uri)
       prefix(:xml, RDF::XML) if @base_uri || @lang
       
@@ -131,13 +128,6 @@ module RDF::RDFXML
       add_debug "\nserialize: graph namespaces: #{prefixes.inspect}"
       
       doc.root = Nokogiri::XML::Element.new("rdf:RDF", doc)
-      prefixes.each_pair do |p, uri|
-        if p == :__default__
-          doc.root.default_namespace = uri.to_s
-        else
-          doc.root.add_namespace(p.to_s, uri.to_s)
-        end
-      end
       doc.root["xml:lang"] = @lang if @lang
       doc.root["xml:base"] = @base_uri if @base_uri
       
@@ -145,6 +135,14 @@ module RDF::RDFXML
       order_subjects.each do |subject|
         #add_debug "subj: #{subject.inspect}"
         subject(subject, doc.root)
+      end
+
+      prefixes.each_pair do |p, uri|
+        if p == :__default__
+          doc.root.default_namespace = uri.to_s
+        else
+          doc.root.add_namespace(p.to_s, uri.to_s)
+        end
       end
 
       doc.write_xml_to(@output, :encoding => "UTF-8", :indent => 2)
