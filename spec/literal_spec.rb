@@ -1,7 +1,6 @@
 # coding: utf-8
 $:.unshift "."
 require File.join(File.dirname(__FILE__), 'spec_helper')
-require 'nokogiri'
 
 describe RDF::Literal do
   require 'nokogiri' rescue nil

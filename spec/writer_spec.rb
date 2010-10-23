@@ -351,12 +351,12 @@ describe "RDF::RDFXML::Writer" do
   end
   
   def check_xpaths(doc, paths)
-    puts doc.to_s if $DEBUG || $verbose
+    puts doc.to_s if ::RDF::RDFXML::debug? || $verbose
     doc = Nokogiri::XML.parse(doc)
     doc.should be_a(Nokogiri::XML::Document)
     doc.root.should be_a(Nokogiri::XML::Element)
     paths.each_pair do |path, value|
-      @debug <<  doc.root.at_xpath(path, doc.namespaces).to_s if $DEBUG
+      @debug <<  doc.root.at_xpath(path, doc.namespaces).to_s if ::RDF::RDFXML::debug?
       case value
       when false
         doc.root.at_xpath(path, doc.namespaces).should be_nil

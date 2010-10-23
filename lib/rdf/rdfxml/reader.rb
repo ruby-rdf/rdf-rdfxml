@@ -218,7 +218,7 @@ module RDF::RDFXML
     # @param [XML Node, any] node:: XML Node or string for showing context
     # @param [String] message::
     def add_debug(node, message)
-      puts "#{node_path(node)}: #{message}" if $DEBUG
+      puts "#{node_path(node)}: #{message}" if ::RDF::RDFXML::debug?
       @debug << "#{node_path(node)}: #{message}" if @debug.is_a?(Array)
     end
 

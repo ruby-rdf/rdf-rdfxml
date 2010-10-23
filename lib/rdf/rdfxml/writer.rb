@@ -304,7 +304,7 @@ module RDF::RDFXML
 
     def relativize(uri)
       uri = uri.to_s
-      self.base_uri ? uri.sub(/^#{self.base_uri}/, "") : uri
+      self.base_uri ? uri.sub(self.base_uri, "") : uri
     end
 
     def preprocess_triple(triple)

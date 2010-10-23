@@ -31,5 +31,8 @@ module RDF
     autoload :Writer,  'rdf/rdfxml/writer'
     autoload :VERSION, 'rdf/rdfxml/version'
     autoload :XML,     'rdf/rdfxml/vocab'
+    
+    def self.debug?; @debug; end
+    def self.debug=(value); @debug = value; end
   end
 end
