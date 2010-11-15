@@ -9,6 +9,8 @@ module RDF::RDFXML
   # Writing statements or Triples will create a graph to add them to
   # and then serialize the graph.
   #
+  # The writer will add prefix definitions, and use them for creating @prefix definitions, and minting QNames
+  #
   # @example Obtaining a RDF/XML writer class
   #   RDF::Writer.for(:rdf)         #=> RDF::RDFXML::Writer
   #   RDF::Writer.for("etc/test.rdf")
@@ -35,62 +37,85 @@ module RDF::RDFXML
   #     end
   #   end
   #
+  # @example Creating @base and @prefix definitions in output
+  #   RDF::RDFXML::Writer.buffer(:base_uri => "http://example.com/", :prefixes => {
+  #       :"" => "http://example.com/ns#",
+  #       :foaf => "http://xmlns.com/foaf/0.1/"}
+  #   ) do |writer|
+  #     graph.each_statement do |statement|
+  #       writer << statement
+  #     end
+  #   end
+  #
   # @author [Gregg Kellogg](http://kellogg-assoc.com/)
   class Writer < RDF::Writer
     format RDF::RDFXML::Format
 
     VALID_ATTRIBUTES = [:none, :untyped, :typed]
 
-    attr_accessor :graph, :base_uri
-
+    # @return [Graph] Graph of statements serialized
+    attr_accessor :graph
+    # @return [URI] Base URI used for relativizing URIs
+    attr_accessor :base_uri
+    
     ##
     # Initializes the RDF/XML writer instance.
     #
-    # Opitons:
-    # max_depth:: Maximum depth for recursively defining resources, defaults to 3
-    # base_uri:: Base URI of graph, used to shorting URI references
-    # lang:: Output as root xml:lang attribute, and avoid generation _xml:lang_ where possible
-    # attributes:: How to use XML attributes when serializing, one of :none, :untyped, :typed. The default is :none.
-    # default_namespace:: URI to use as default namespace
-    #
     # @param  [IO, File]               output
     # @param  [Hash{Symbol => Object}] options
-    #   @option options [Integer]       :max_depth      (nil)
-    #   @option options [String, #to_s] :base_uri (nil)
-    #   @option options [String, #to_s] :lang   (nil)
-    #   @option options [Array]         :attributes   (nil)
-    #   @option options [String]        :default_namespace
+    # @option options [Integer]       :max_depth (3) Maximum depth for recursively defining resources
+    # @option options [String, #to_s] :base_uri (nil) Base URI of graph, used to shorting URI references
+    # @option options [String, #to_s] :lang   (nil) Output as root xml:lang attribute, and avoid generation _xml:lang_ where possible
+    # @option options [Array]         :attributes   (nil) How to use XML attributes when serializing, one of :none, :untyped, :typed. The default is :none.
+    # @option options [{Symbol => URI}] :prefixes   ({}) URI Prefix associatesions for minting QNames and creating @prefix definitions
+    # @option options [Boolean] :standard_prefixes   (false) Add standard prefixes to @prefixes, if necessary.
+    # @option options [String]        :default_namespace (nil) URI to use as default namespace, same as prefixes[:""]
     # @yield  [writer]
     # @yieldparam [RDF::Writer] writer
     def initialize(output = $stdout, options = {}, &block)
-      @graph = RDF::Graph.new
-      super
+      super do
+        @graph = RDF::Graph.new
+        @uri_to_qname = {}
+        prefix(:"",@options[:default_namespace]) if @options[:default_namespace]
+        block.call(self) if block_given?
+      end
     end
 
     ##
+    # Write whole graph
+    #
     # @param  [Graph] graph
     # @return [void]
-    def insert_graph(graph)
+    def write_graph(graph)
       @graph = graph
     end
 
     ##
-    # @param  [Statement] statement
+    # Addes a statement to be serialized
+    # @param  [RDF::Statement] statement
     # @return [void]
-    def insert_statement(statement)
-      @graph << statement
+    def write_statement(statement)
+      @graph.insert_statement(statement)
     end
 
     ##
-    # Stores the RDF/XML representation of a triple.
-    #
+    # Addes a statement to be serialized
+    # @param  [RDF::Statement] statement
+    # @return [void]
+    def write_statement(statement)
+      @graph.insert_statement(statement)
+    end
+
+    ##
+    # Addes a triple to be serialized
     # @param  [RDF::Resource] subject
     # @param  [RDF::URI]      predicate
     # @param  [RDF::Value]    object
     # @return [void]
-    # @see    #write_epilogue
-    def insert_triple(subject, predicate, object)
-      @graph << RDF::Statement.new(subject, predicate, object)
+    # @raise  [NotImplementedError] unless implemented in subclass
+    # @abstract
+    def write_triple(subject, predicate, object)
+      @graph.insert_statement(Statement.new(subject, predicate, object))
     end
 
     ##
@@ -106,7 +131,6 @@ module RDF::RDFXML
       @lang = @options[:lang]
       @attributes = @options[:attributes] || :none
       @debug = @options[:debug]
-      @default_namespace = @options[:default_namespace]
       raise "Invalid attribute option '#{@attributes}', should be one of #{VALID_ATTRIBUTES.to_sentence}" unless VALID_ATTRIBUTES.include?(@attributes.to_sym)
       self.reset
 
@@ -118,12 +142,6 @@ module RDF::RDFXML
 
       prefix(:rdf, RDF.to_uri)
       prefix(:xml, RDF::XML) if @base_uri || @lang
-      
-      if @default_namespace
-        prefix(:__default__, @default_namespace.respond_to?(:to_uri) ? @default_namespace.to_uri : @default_namespace)
-        @default_namespace_prefix = prefixes.invert[@default_namespace]
-        add_debug("def_namespace: #{@default_namespace}, prefix: #{@default_namespace_prefix}")
-      end
       
       add_debug "\nserialize: graph namespaces: #{prefixes.inspect}"
       
@@ -138,7 +156,7 @@ module RDF::RDFXML
       end
 
       prefixes.each_pair do |p, uri|
-        if p == :__default__
+        if p == :""
           doc.root.default_namespace = uri.to_s
         else
           doc.root.add_namespace(p.to_s, uri.to_s)
@@ -148,7 +166,139 @@ module RDF::RDFXML
       doc.write_xml_to(@output, :encoding => "UTF-8", :indent => 2)
     end
     
+    # Return a QName for the URI, or nil. Adds namespace of QName to defined prefixes
+    # @param [URI,#to_s] uri
+    # @return [Array<Symbol,Symbol>, nil] Prefix, Suffix pair or nil, if none found
+    def get_qname(uri)
+      uri = RDF::URI.intern(uri.to_s) unless uri.is_a?(URI)
+
+      unless @uri_to_qname.has_key?(uri)
+        # Find in defined prefixes
+        prefixes.each_pair do |prefix, vocab|
+          if uri.to_s.index(vocab.to_s) == 0
+            local_name = uri.to_s[(vocab.to_s.length)..-1]
+            add_debug "get_qname(ns): #{prefix}:#{local_name}"
+            return @uri_to_qname[uri] = [prefix, local_name.to_sym]
+          end
+        end
+        
+        # Use a default vocabulary
+        if @options[:standard_prefixes] && vocab = RDF::Vocabulary.detect {|v| uri.to_s.index(v.to_uri.to_s) == 0}
+          prefix = vocab.__name__.to_s.split('::').last.downcase
+          prefixes[prefix.to_sym] = vocab.to_uri
+          suffix = uri.to_s[vocab.to_uri.to_s.size..-1]
+          return @uri_to_qname[uri] = [prefix.to_sym, suffix.empty? ? nil : suffix.to_sym] if prefix && suffix
+        end
+        
+        # No vocabulary found, invent one
+        # Add bindings for predicates not already having bindings
+        # From RDF/XML Syntax and Processing:
+        #   An XML namespace-qualified name (QName) has restrictions on the legal characters such that not all property URIs can be expressed
+        #   as these names. It is recommended that implementors of RDF serializers, in order to break a URI into a namespace name and a local
+        #   name, split it after the last XML non-NCName character, ensuring that the first character of the name is a Letter or '_'. If the
+        #   URI ends in a non-NCName character then throw a "this graph cannot be serialized in RDF/XML" exception or error.
+        separation = uri.to_s.rindex(%r{[^a-zA-Z_0-9-](?=[a-zA-Z_])})
+        return @uri_to_qname[uri] = nil unless separation
+        base_uri = uri.to_s[0..separation]
+        suffix = uri.to_s[separation+1..-1]
+        @gen_prefix = @gen_prefix ? @gen_prefix.succ : "ns0"
+        add_debug "create prefix definition for #{uri}"
+        prefix(@gen_prefix.to_sym, base_uri)
+        add_debug "get_qname(tmp_ns): #{@gen_prefix}:#{suffix}"
+        return @uri_to_qname[uri] = [@gen_prefix.to_sym, suffix.to_sym]
+      end
+      
+      @uri_to_qname[uri]
+    rescue Addressable::URI::InvalidURIError
+       @uri_to_qname[uri] = nil
+    end
+    
     protected
+    # If @base_uri is defined, use it to try to make uri relative
+    # @param [#to_s] uri
+    # @return [String]
+    def relativize(uri)
+      uri = uri.to_s
+      @base_uri ? uri.sub(@base_uri.to_s, "") : uri
+    end
+
+    # Defines rdf:type of subjects to be emitted at the beginning of the graph. Defaults to rdfs:Class
+    # @return [Array<URI>]
+    def top_classes; [RDF::RDFS.Class]; end
+
+    # Defines order of predicates to to emit at begninning of a resource description. Defaults to
+    # [rdf:type, rdfs:label, dc:title]
+    # @return [Array<URI>]
+    def predicate_order; [RDF.type, RDF::RDFS.label, RDF::DC.title]; end
+    
+    # Order subjects for output. Override this to output subjects in another order.
+    #
+    # Uses top_classes
+    # @return [Array<Resource>] Ordered list of subjects
+    def order_subjects
+      seen = {}
+      subjects = []
+      
+      top_classes.each do |class_uri|
+        graph.query(:predicate => RDF.type, :object => class_uri).map {|st| st.subject}.sort.uniq.each do |subject|
+          #add_debug "order_subjects: #{subject.inspect}"
+          subjects << subject
+          seen[subject] = @top_levels[subject] = true
+        end
+      end
+      
+      # Sort subjects by resources over bnodes, ref_counts and the subject URI itself
+      recursable = @subjects.keys.
+        select {|s| !seen.include?(s)}.
+        map {|r| [r.is_a?(RDF::Node) ? 1 : 0, ref_count(r), r]}.
+        sort
+      
+      subjects += recursable.map{|r| r.last}
+    end
+    
+    # Mark a subject as done.
+    def subject_done(subject)
+      @serialized[subject] = true
+    end
+    
+    # Perform any preprocessing of statements required
+    def preprocess
+      @graph.each {|statement| preprocess_statement(statement)}
+    end
+    
+    # Perform any statement preprocessing required. This is used to perform reference counts and determine required
+    # prefixes.
+    # @param [Statement] statement
+    def preprocess_statement(statement)
+      #add_debug "preprocess: #{statement.inspect}"
+      references = ref_count(statement.object) + 1
+      @references[statement.object] = references
+      @subjects[statement.subject] = true
+    end
+    
+    # Return the number of times this node has been referenced in the object position
+    def ref_count(node)
+      @references.fetch(node, 0)
+    end
+
+    # Returns indent string multiplied by the depth
+    # @param [Integer] modifier Increase depth by specified amount
+    # @return [String] A number of spaces, depending on current depth
+    def indent(modifier = 0)
+      " " * (@depth + modifier)
+    end
+
+    def reset
+      @depth = 0
+      @lists = {}
+      prefixes = {}
+      @references = {}
+      @serialized = {}
+      @subjects = {}
+      @top_levels = {}
+    end
+
+    private
     def subject(subject, parent_node)
       node = nil
       
@@ -159,20 +309,15 @@ module RDF::RDFXML
         add_debug "subject: #{subject.inspect}, props: #{properties.inspect}"
 
         rdf_type, *rest = properties.fetch(RDF.type.to_s, [])
-        if rdf_type.is_a?(RDF::URI)
-          element = get_qname(rdf_type)
+        qname = get_qname_string(rdf_type, :with_default => true)
+        if qname
           properties[RDF.type.to_s] = rest
-          
-          # FIXME: different namespace logic
-          type_ns = rdf_type.vocab rescue nil
-          if type_ns && @default_namespace && type_ns.to_s == @default_namespace.to_s
-            properties[RDF.type.to_s] = rest
-            element = rdf_type.qname.last
-          end
+        else
+          qname = "rdf:Description"
+          prefixes[:rdf] = RDF.to_uri
         end
-        element ||= "rdf:Description"
 
-        node = Nokogiri::XML::Element.new(element.to_s, parent_node.document)
+        node = Nokogiri::XML::Element.new(qname, parent_node.document)
       
         if subject.is_a?(RDF::Node)
           # Only need nodeID if it's referenced elsewhere
@@ -204,15 +349,12 @@ module RDF::RDFXML
     #
     # If _is_unique_ is true, this predicate may be able to be serialized as an attribute
     def predicate(prop, object, node, is_unique)
-      qname = get_qname(prop)
-      raise RDF::WriterError, "No qname generated for <#{prop}>" unless qname
-
       # See if we can serialize as attribute.
       # * untyped attributes that aren't duplicated where xml:lang == @lang
       # * typed attributes that aren't duplicated if @dt_as_attr is true
       # * rdf:type
       as_attr = false
-      as_attr ||= true if [:untyped, :typed].include?(@attributes) && prop == RDF.type
+      as_attr = true if [:untyped, :typed].include?(@attributes) && prop == RDF.type
 
       # Untyped attribute with no lang, or whos lang is the same as the default and RDF.type
       add_debug("as_attr? #{@attributes}, plain? #{object.plain?}, lang #{@lang || 'nil'}:#{object.language || 'nil'}") if object.is_a?(RDF::Literal)
@@ -222,19 +364,12 @@ module RDF::RDFXML
       as_attr ||= true if [:typed].include?(@attributes) && object.is_a?(RDF::Literal) && object.typed?
 
       as_attr = false unless is_unique
-      
+
+      qname = get_qname_string(prop, :with_default => !as_attr)
+      raise RDF::WriterError, "No qname generated for <#{prop}>" unless qname
+
       # Can't do as an attr if the qname has no prefix and there is no prefixed version
-      if @default_namespace && prop.vocab.to_s == @default_namespace.to_s
-        if as_attr
-          if @default_namespace_prefix
-            qname = "#{@default_namespace_prefix}:#{prop.qname.last}"
-          else
-            as_attr = false
-          end
-        else
-          qname = prop.qname.last.to_s
-        end
-      end
+      as_attr = false if as_attr && qname !~ /:/
 
       add_debug "predicate: #{qname}, as_attr: #{as_attr}, object: #{object.inspect}, done: #{is_done?(object)}, sub: #{@subjects.include?(object)}"
       qname = "rdf:li" if qname.match(/rdf:_\d+/)
@@ -302,130 +437,20 @@ module RDF::RDFXML
       node.add_child(pred_node) if pred_node
     end
 
-    def relativize(uri)
-      uri = uri.to_s
-      self.base_uri ? uri.sub(self.base_uri, "") : uri
-    end
-
-    def preprocess_triple(triple)
-      super
-      
-      # Pre-fetch qnames, to fill namespaces
-      get_qname(triple.predicate)
-      get_qname(triple.object) if triple.predicate == RDF.type
-
-      @references[triple.predicate] = ref_count(triple.predicate) + 1
-    end
-
-    MAX_DEPTH = 10
-    INDENT_STRING = " "
-    
-    def top_classes; [RDF::RDFS.Class]; end
-    def predicate_order; [RDF.type, RDF::RDFS.label, RDF::DC.title]; end
-    
     def is_done?(subject)
       @serialized.include?(subject)
     end
     
-    # Mark a subject as done.
-    def subject_done(subject)
-      @serialized[subject] = true
-    end
     
-    def order_subjects
-      seen = {}
-      subjects = []
-      
-      top_classes.each do |class_uri|
-        graph.query(:predicate => RDF.type, :object => class_uri).map {|st| st.subject}.sort.uniq.each do |subject|
-          #add_debug "order_subjects: #{subject.inspect}"
-          subjects << subject
-          seen[subject] = @top_levels[subject] = true
-        end
-      end
-      
-      # Sort subjects by resources over bnodes, ref_counts and the subject URI itself
-      recursable = @subjects.keys.
-        select {|s| !seen.include?(s)}.
-        map {|r| [r.is_a?(RDF::Node) ? 1 : 0, ref_count(r), r]}.
-        sort
-      
-      subjects += recursable.map{|r| r.last}
-    end
-    
-    def preprocess
-      @graph.each {|statement| preprocess_statement(statement)}
-    end
-    
-    def preprocess_statement(statement)
-      #add_debug "preprocess: #{statement.inspect}"
-      references = ref_count(statement.object) + 1
-      @references[statement.object] = references
-      @subjects[statement.subject] = true
-    end
-    
-    # Return the number of times this node has been referenced in the object position
-    def ref_count(node)
-      @references.fetch(node, 0)
-    end
-
-    # Return a QName for the URI, or nil. Adds namespace of QName to defined namespaces
-    def get_qname(uri)
-      if uri.is_a?(RDF::URI)
-        # Duplicate logic from URI#qname to remember namespace assigned
-        if uri.qname
-          prefix(uri.qname.first, uri.vocab.to_uri)
-          add_debug "get_qname(uri.qname): #{uri.qname.join(':')}"
-          return uri.qname.join(":") 
-        end
-        
-        # No vocabulary assigned, find one from cache of created namespace URIs
-        prefixes.each_pair do |prefix, vocab|
-          if uri.to_s.index(vocab.to_s) == 0
-            uri.vocab = vocab
-            local_name = uri.to_s[(vocab.to_s.length)..-1]
-            add_debug "get_qname(ns): #{prefix}:#{local_name}"
-            return "#{prefix}:#{local_name}"
-          end
-        end
-        
-        # No vocabulary found, invent one
-        # Add bindings for predicates not already having bindings
-        # From RDF/XML Syntax and Processing:
-        #   An XML namespace-qualified name (QName) has restrictions on the legal characters such that not all property URIs can be expressed
-        #   as these names. It is recommended that implementors of RDF serializers, in order to break a URI into a namespace name and a local
-        #   name, split it after the last XML non-NCName character, ensuring that the first character of the name is a Letter or '_'. If the
-        #   URI ends in a non-NCName character then throw a "this graph cannot be serialized in RDF/XML" exception or error.
-        separation = uri.to_s.rindex(%r{[^a-zA-Z_0-9-](?=[a-zA-Z_])})
-        return nil unless separation
-        base_uri = uri.to_s[0..separation]
-        local_name = uri.to_s[separation+1..-1]
-        @tmp_ns = @tmp_ns ? @tmp_ns.succ : "ns0"
-        add_debug "create namespace definition for #{uri}"
-        uri.vocab = RDF::Vocabulary(base_uri)
-        prefix(@tmp_ns.to_sym, uri.vocab.to_uri)
-        add_debug "get_qname(tmp_ns): #{@tmp_ns}:#{local_name}"
-        return "#{@tmp_ns}:#{local_name}"
-      end
-    end
-    
-    def reset
-      @depth = 0
-      @lists = {}
-      prefixes = {}
-      @references = {}
-      @serialized = {}
-      @subjects = {}
-      @top_levels = {}
-    end
-
     # Take a hash from predicate uris to lists of values.
     # Sort the lists of values.  Return a sorted list of properties.
+    # @param [Hash{String => Array<Resource>}] properties A hash of Property to Resource mappings
+    # @return [Array<String>}] Ordered list of properties. Uses predicate_order.
     def sort_properties(properties)
       properties.keys.each do |k|
         properties[k] = properties[k].sort do |a, b|
-          a_li = a.is_a?(RDF::URI) && a.qname && a.qname.last =~ /^_\d+$/ ? a.to_i : a.to_s
-          b_li = b.is_a?(RDF::URI) && b.qname && b.qname.last =~ /^_\d+$/ ? b.to_i : b.to_s
+          a_li = a.is_a?(RDF::URI) && get_qname(a) && get_qname(a).last.to_s =~ /^_\d+$/ ? a.to_i : a.to_s
+          b_li = b.is_a?(RDF::URI) && get_qname(b) && get_qname(b).last.to_s =~ /^_\d+$/ ? b.to_i : b.to_s
           
           a_li <=> b_li
         end
@@ -476,9 +501,22 @@ module RDF::RDFXML
       @debug << message if @debug.is_a?(Array)
     end
 
-    # Returns indent string multiplied by the depth
-    def indent(modifier = 0)
-      INDENT_STRING * (@depth + modifier)
+    # Return string representation of QName pair
+    #
+    # @option [Boolean] :with_default (false) If a default mapping exists, use it, otherwise if a prefixed mapping exists, use it
+    def get_qname_string(uri, options = {})
+      if qname = get_qname(uri)
+        if options[:with_default]
+          if qname.first != :"" && prefixes[qname.first].to_s == prefixes[:""].to_s
+            qname[0] = :""
+          elsif qname.first == :""
+            prefix = nil
+            prefixes.each_pair {|k, v| prefix = k if k != :"" && v.to_s == prefixes[:""].to_s}
+            qname[0] = prefix if prefix
+          end
+        end
+        qname.first == :"" ? qname.last.to_s : qname.map(&:to_s).join(":")
+      end
     end
   end
 end
