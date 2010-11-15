@@ -54,7 +54,8 @@ describe "RDF::RDFXML::Writer" do
         serialize(:max_depth => 1, :attributes => :none),
         "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
         "/rdf:RDF/foo:Release/dc:title" => true,
-        "/rdf:RDF/foo:Release/rdf:type" => %(<rdf:type rdf:resource="#{FOO.XtraRelease}"/>)
+        %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.XtraRelease}"]) => true,
+        %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.Release}"]) => false,
       )
     end
     
@@ -301,7 +302,9 @@ describe "RDF::RDFXML::Writer" do
       @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       @graph << [RDF::URI.new("http://release/"), FOO.pred, FOO.obj]
     
-      xml = serialize(:max_depth => 1, :attributes => :untyped, :default_namespace => FOO.to_s)
+      xml = serialize(:max_depth => 1, :attributes => :untyped,
+                      :default_namespace => FOO.to_s,
+                      :prefixes => {:foo => FOO.to_s})
       xml.should =~ /<Release/
       xml.should =~ /<pred/
       doc = Nokogiri::XML.parse(xml)
@@ -391,7 +394,7 @@ describe "RDF::RDFXML::Writer" do
   # Serialize ntstr to a string and compare against regexps
   def serialize(options = {})
     @debug = []
-    result = @writer.buffer(options.merge(:debug => @debug)) do |writer|
+    result = @writer.buffer({:debug => @debug, :standard_prefixes => true}.merge(options)) do |writer|
       writer << @graph
     end
     require 'cgi'
