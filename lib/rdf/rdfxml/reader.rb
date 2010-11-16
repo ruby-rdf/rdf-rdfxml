@@ -4,6 +4,8 @@ module RDF::RDFXML
   ##
   # An RDF/XML parser in Ruby
   #
+  # Based on RDF/XML Syntax Specification: http://www.w3.org/TR/REC-rdf-syntax/
+  #
   # @author [Gregg Kellogg](http://kellogg-assoc.com/)
   class Reader < RDF::Reader
     format Format
@@ -99,8 +101,9 @@ module RDF::RDFXML
 
       # Set XML base. Ignore any fragment
       def base=(b)
-        @base = RDF::URI.intern(b)
-        @base.fragment = nil
+        base = Addressable::URI.parse(b)
+        base.fragment = nil
+        @base = RDF::URI.intern(base)
       end
 
       def inspect
@@ -117,6 +120,9 @@ module RDF::RDFXML
     # @option options [Array] :debug (nil) Array to place debug messages
     # @option options [Boolean] :strict (false) Raise Error if true, continue with lax parsing, otherwise
     # @option options [Boolean] :base_uri (nil) Base URI to use for relative URIs.
+    # @option options [Boolean] :canonicalize (false) Canonicalize literals on input.
+    # @option options [Boolean] :intern (true) Intern created URIs.
+    # @option options [Boolean] :prefixes (true) Used to initialize @prefixes.
     # @return [reader]
     # @yield  [reader]
     # @yieldparam [Reader] reader
@@ -126,9 +132,8 @@ module RDF::RDFXML
         @debug = options[:debug]
         @strict = options[:strict]
         @base_uri = RDF::URI.intern(options[:base_uri])
+        @prefixes = options.fetch(:prefixes, {})
             
-        @id_mapping = Hash.new
-
         @doc = case input
         when Nokogiri::XML::Document then input
         else Nokogiri::XML.parse(input, @base_uri.to_s)
@@ -334,9 +339,9 @@ module RDF::RDFXML
         end
 
         # Apply character transformations
-        id = id_check(el, RDF::NTriples.escape(id), nil) if id
-        resourceAttr = RDF::NTriples.escape(resourceAttr) if resourceAttr
-        nodeID = nodeID_check(el, RDF::NTriples.escape(nodeID)) if nodeID
+        id = id_check(el, RDF::NTriples.unescape(id), nil) if id
+        resourceAttr = RDF::NTriples.unescape(resourceAttr) if resourceAttr
+        nodeID = nodeID_check(el, RDF::NTriples.unescape(nodeID)) if nodeID
 
         add_debug(child, "attrs: #{attrs.inspect}")
         add_debug(child, "datatype: #{datatype}") if datatype
@@ -520,15 +525,15 @@ module RDF::RDFXML
 
       case
       when id
-        add_debug(el, "parse_subject, id: '#{RDF::NTriples.escape(id.value)}'")
-        id_check(el, RDF::NTriples.escape(id.value), ec.base) # Returns URI
+        add_debug(el, "parse_subject, id: '#{RDF::NTriples.unescape(id.value)}'")
+        id_check(el, RDF::NTriples.unescape(id.value), ec.base) # Returns URI
       when nodeID
         # The value of rdf:nodeID must match the XML Name production
-        nodeID = nodeID_check(el, RDF::NTriples.escape(nodeID.value))
+        nodeID = nodeID_check(el, RDF::NTriples.unescape(nodeID.value))
         add_debug(el, "parse_subject, nodeID: '#{nodeID}")
         bnode(nodeID)
       when about
-        about = RDF::NTriples.escape(about.value)
+        about = RDF::NTriples.unescape(about.value)
         add_debug(el, "parse_subject, about: '#{about}'")
         ec.base.join(about)
       else
@@ -539,28 +544,25 @@ module RDF::RDFXML
     
     # ID attribute must be an NCName
     def id_check(el, id, base)
-      if NC_REGEXP.match(id)
-        # ID may only be specified once for the same URI
-        if base
-          # FIXME: Known bug in RDF::URI#join
-          uri = base.join("##{id}")
-          if @id_mapping[id] && @id_mapping[id] == uri
-            warn = "ID addtribute '#{id}' may only be defined once for the same URI"
-            add_debug(el, warn)
-            raise RDF::ReaderError.new(warn) if @strict
-          end
-          
-          @id_mapping[id] = uri
-          # Returns URI, in this case
-        else
-          id
-        end
-      else
+      unless NC_REGEXP.match(id)
         warn = "ID addtribute '#{id}' must be a NCName"
-        add_debug(el, "ID addtribute '#{id}' must be a NCName")
         add_debug(el, warn)
         raise RDF::ReaderError.new(warn) if @strict
-        nil
+      end
+      # ID may only be specified once for the same URI
+      if base
+        # FIXME: Known bug in RDF::URI#join
+        uri = base.join("##{id}")
+        if @prefixes[id] && @prefixes[id] == uri
+          warn = "ID addtribute '#{id}' may only be defined once for the same URI"
+          add_debug(el, warn)
+          raise RDF::ReaderError.new(warn) if @strict
+        end
+        
+        @prefixes[id] = uri
+        # Returns URI, in this case
+      else
+        id
       end
     end
     

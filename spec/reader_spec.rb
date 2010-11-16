@@ -398,7 +398,7 @@ EOF
               g = RDF::Graph.new
               @reader.new(rdf_string,
                   :base_uri => t.about,
-                  :strict => true,
+                  :strict => false,
                   :debug => t.debug).each do |statement|
                 g << statement
               end
