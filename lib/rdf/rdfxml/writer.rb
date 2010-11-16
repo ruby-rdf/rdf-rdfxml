@@ -61,15 +61,26 @@ module RDF::RDFXML
     ##
     # Initializes the RDF/XML writer instance.
     #
-    # @param  [IO, File]               output
+    # @param  [IO, File] output
+    #   the output stream
     # @param  [Hash{Symbol => Object}] options
-    # @option options [Integer]       :max_depth (3) Maximum depth for recursively defining resources
-    # @option options [String, #to_s] :base_uri (nil) Base URI of graph, used to shorting URI references
-    # @option options [String, #to_s] :lang   (nil) Output as root xml:lang attribute, and avoid generation _xml:lang_ where possible
-    # @option options [Array]         :attributes   (nil) How to use XML attributes when serializing, one of :none, :untyped, :typed. The default is :none.
-    # @option options [{Symbol => URI}] :prefixes   ({}) URI Prefix associatesions for minting QNames and creating @prefix definitions
-    # @option options [Boolean] :standard_prefixes   (false) Add standard prefixes to @prefixes, if necessary.
-    # @option options [String]        :default_namespace (nil) URI to use as default namespace, same as prefixes[:""]
+    #   any additional options
+    # @option options [Boolean]  :canonicalize (false)
+    #   whether to canonicalize literals when serializing
+    # @option options [Hash]     :prefixes     (Hash.new)
+    #   the prefix mappings to use (not supported by all writers)
+    # @option options [#to_s]    :base_uri     (nil)
+    #   the base URI to use when constructing relative URIs
+    # @option options [Integer]  :max_depth (3)
+    #   Maximum depth for recursively defining resources
+    # @option options [S#to_s]   :lang   (nil)
+    #   Output as root xml:lang attribute, and avoid generation _xml:lang_ where possible
+    # @option options [Array]    :attributes   (nil)
+    #   How to use XML attributes when serializing, one of :none, :untyped, :typed. The default is :none.
+    # @option options [Boolean]  :standard_prefixes   (false)
+    #   Add standard prefixes to _prefixes_, if necessary.
+    # @option options [String]   :default_namespace (nil)
+    #   URI to use as default namespace, same as prefixes[:""]
     # @yield  [writer]
     # @yieldparam [RDF::Writer] writer
     def initialize(output = $stdout, options = {}, &block)

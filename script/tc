@@ -8,7 +8,7 @@ require 'getoptlong'
 def run_tc(tc)
   puts "run #{tc.name}"
   puts RDF::Writer.for($format.to_sym).buffer { |writer|
-    RDF::RDFXML::Reader.new(tc.input, :base_uri => tc.about, :strict => $strict).each do |statement|
+    RDF::RDFXML::Reader.new(tc.input, :base_uri => tc.about, :validate => $validate).each do |statement|
       writer << statement
     end
   }
@@ -16,14 +16,14 @@ end
 
 $verbose = false
 $format = :ntriples
-$strict = false
+$validate = false
 suite = "rdfxml"
 opts = GetoptLong.new(
   ["--debug", GetoptLong::NO_ARGUMENT],
   ["--verbose", GetoptLong::NO_ARGUMENT],
   ["--quiet", GetoptLong::NO_ARGUMENT],
   ["--suite", GetoptLong::OPTIONAL_ARGUMENT],
-  ["--strict", GetoptLong::NO_ARGUMENT],
+  ["--validate", GetoptLong::NO_ARGUMENT],
   ["--format", GetoptLong::REQUIRED_ARGUMENT]
 )
 opts.each do |opt, arg|
@@ -33,7 +33,7 @@ opts.each do |opt, arg|
   when '--debug' then ::RDF::RDFXML::debug = true
   when '--format' then $format = arg
   when '--suite' then suite = arg
-  when '--strict' then $strict = true
+  when '--validate' then $validate = true
   end
 end
 

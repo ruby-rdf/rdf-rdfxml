@@ -84,7 +84,7 @@ EOF
     it "should recognise and create single triple for empty non-RDF root" do
       sampledoc = %(<?xml version="1.0" ?>
         <NotRDF />)
-      graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+      graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       graph.size.should == 1
       statement = graph.statements.first
       statement.subject.class.should == RDF::Node
@@ -109,7 +109,7 @@ EOF
   </rdf:RDF>
 </GenericXML>
 EOF
-      graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+      graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       objects = graph.statements.map {|s| s.object.value}.sort
       objects.should == ["Bar", "Foo"]
     end
@@ -141,7 +141,7 @@ xmlns:ex="http://www.example.org/" xml:lang="en" xml:base="http://www.example.or
 </rdf:RDF>
 EOF
 
-      graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+      graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       #puts @debug
       graph.size.should == 10
       # print graph.to_ntriples
@@ -160,7 +160,7 @@ EOF
   </rdf:Bag>
 </rdf:RDF>
 EOF
-      graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+      graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       graph.predicates.map(&:to_s).should include("http://www.w3.org/1999/02/22-rdf-syntax-ns#_1", "http://www.w3.org/1999/02/22-rdf-syntax-ns#_2")
     end
   end
@@ -185,7 +185,7 @@ EOF
 EOF
   
       lambda do
-        graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+        graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       end.should raise_error(RDF::ReaderError, /Obsolete attribute .*aboutEach/)
     end
 
@@ -208,7 +208,7 @@ EOF
 EOF
   
       lambda do
-        graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+        graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       end.should raise_error(RDF::ReaderError, /Obsolete attribute .*aboutEachPrefix/)
     end
 
@@ -221,7 +221,7 @@ EOF
 EOF
   
       lambda do
-        graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+        graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       end.should raise_error(RDF::ReaderError, /ID addtribute '.*' must be a NCName/)
     end
 
@@ -237,7 +237,7 @@ EOF
 EOF
   
       lambda do
-        graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+        graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       end.should raise_error(RDF::ReaderError, /ID addtribute '.*' must be a NCName/)
     end
 
@@ -251,7 +251,7 @@ EOF
 EOF
   
       lambda do
-        graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+        graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       end.should raise_error(RDF::ReaderError, "ID addtribute 'a/b' must be a NCName")
     end
   
@@ -264,7 +264,7 @@ EOF
 EOF
     
       lambda do
-        graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+        graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
         puts @debug
       end.should raise_error(RDF::ReaderError, /Obsolete attribute .*bagID/)
     end
@@ -291,7 +291,7 @@ EOF
 <http://example.org/triples/#triple1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> \"blah\" .
 EOF
 
-      graph = parse(sampledoc, :base_uri => "http://example.com", :strict => true)
+      graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       graph.should be_equivalent_graph(triples, :about => "http://example.com/", :trace => @debug)
     end
   end
@@ -299,7 +299,7 @@ EOF
   context "parsing rdf files" do
     def test_file(filepath, uri)
       rdf_string = File.read(filepath)
-      graph = parse(rdf_string, :base_uri => uri, :strict => true)
+      graph = parse(rdf_string, :base_uri => uri, :validate => true)
 
       nt_string = File.read(filepath.sub('.rdf', '.nt'))
       nt_graph = RDF::Graph.new
@@ -381,7 +381,7 @@ EOF
 EOF
       uri = "http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/Manifest.rdf#test001"
 
-      graph = parse(sampledoc, :base_uri => uri, :strict => true)
+      graph = parse(sampledoc, :base_uri => uri, :validate => true)
       graph.should be_equivalent_graph(triples, :about => uri, :trace => @debug)
     end
   
@@ -398,7 +398,7 @@ EOF
               g = RDF::Graph.new
               @reader.new(rdf_string,
                   :base_uri => t.about,
-                  :strict => false,
+                  :validate => false,
                   :debug => t.debug).each do |statement|
                 g << statement
               end
@@ -426,7 +426,7 @@ EOF
               g = RDF::Graph.new
               @reader.new(rdf_string,
                   :base_uri => t.about,
-                  :strict => true).each do |statement|
+                  :validate => true).each do |statement|
                 g << statement
               end
               g.should be_empty
