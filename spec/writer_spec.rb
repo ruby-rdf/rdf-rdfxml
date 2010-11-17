@@ -55,7 +55,7 @@ describe "RDF::RDFXML::Writer" do
         "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
         "/rdf:RDF/foo:Release/dc:title" => true,
         %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.XtraRelease}"]) => true,
-        %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.Release}"]) => false,
+        %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.Release}"]) => false
       )
     end
     

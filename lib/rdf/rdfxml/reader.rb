@@ -116,13 +116,12 @@ module RDF::RDFXML
     ##
     # Initializes the RDF/XML reader instance.
     #
-    # @param  [IO, File, String] input
+    # @param  [Nokogiri::XML::Document, IO, File, String] input
     #   the input stream to read
-    # @option options [Array] :debug
-    #   Array to place debug messages
-    # @option options [#to_s]    :base_uri     (nil)
-    #   the base URI to use when resolving relative URIs (not supported by
-    #   all readers)
+    # @param  [Hash{Symbol => Object}] options
+    #   any additional options
+    # @option options [Encoding] :encoding     (Encoding::UTF_8)
+    #   the encoding of the input stream (Ruby 1.9+)
     # @option options [Boolean]  :validate     (false)
     #   whether to validate the parsed statements and values
     # @option options [Boolean]  :canonicalize (false)
@@ -131,6 +130,10 @@ module RDF::RDFXML
     #   whether to intern all parsed URIs
     # @option options [Hash]     :prefixes     (Hash.new)
     #   the prefix mappings to use (not supported by all readers)
+    # @option options [#to_s]    :base_uri     (nil)
+    #   the base URI to use when resolving relative URIs
+    # @option options [Array] :debug
+    #   Array to place debug messages
     # @return [reader]
     # @yield  [reader] `self`
     # @yieldparam  [RDF::Reader] reader
@@ -140,7 +143,6 @@ module RDF::RDFXML
       super do
         @debug = options[:debug]
         @base_uri = uri(options[:base_uri]) if options[:base_uri]
-        @prefixes = options.fetch(:prefixes, {})
             
         @doc = case input
         when Nokogiri::XML::Document then input
@@ -560,13 +562,13 @@ module RDF::RDFXML
       # ID may only be specified once for the same URI
       if base
         uri = uri(base, "##{id}")
-        if @prefixes[id] && @prefixes[id] == uri
+        if prefix(id) && prefix(id) == uri
           warn = "ID addtribute '#{id}' may only be defined once for the same URI"
           add_debug(el, warn)
           raise RDF::ReaderError.new(warn) if validate?
         end
         
-        @prefixes[id] = uri
+        prefix(id, uri)
         # Returns URI, in this case
       else
         id

@@ -1,3 +1,17 @@
+=== 0.3.0.pre
+* RDF.rb 0.3.0 compatibility updates
+  * Remove literal_normalization and qname_hacks, add back uri_hacks (until 0.3.0)
+  * In Writer
+    * Use only :prefixes for creating QNames.
+    * Add :standard_prefixes and :default_namespace options.
+  * In Reader
+    * URI canonicalization and validation.
+    * Added :canonicalize, and :intern options.
+    * Added #prefixes method returning a hash of prefix definitions.
+    * Change :strict option to :validate.
+    * Don't create unnecessary namespaces.
+    * Don't use regexp to substitute base URI in URI serialization.
+
 === 0.2.3
 * Fixed QName generation in Writer based on RDF/XML Processing recommendations
 
