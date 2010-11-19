@@ -35,7 +35,7 @@ module RDF::RDFXML
       attr :graph, true
       attr :li_counter, true
 
-      def initialize(base, element, graph)
+      def initialize(base, element, graph, &cb)
         # Initialize the evaluation context, [5.1]
         self.base = RDF::URI.intern(base)
         @uri_mappings = {}
@@ -43,51 +43,52 @@ module RDF::RDFXML
         @graph = graph
         @li_counter = 0
 
-        extract_from_element(element) if element
+        extract_from_element(element, &cb) if element
       end
       
       # Clone existing evaluation context adding information from element
-      def clone(element, options = {})
+      def clone(element, options = {}, &cb)
         new_ec = EvaluationContext.new(@base, nil, @graph)
         new_ec.uri_mappings = self.uri_mappings.clone
         new_ec.language = self.language
 
-        new_ec.extract_from_element(element) if element
+        new_ec.extract_from_element(element, &cb) if element
         
         options.each_pair {|k, v| new_ec.send("#{k}=", v)}
         new_ec
       end
       
       # Extract Evaluation Context from an element by looking at ancestors recurively
-      def extract_from_ancestors(el)
+      def extract_from_ancestors(el, &cb)
         ancestors = el.ancestors
         while ancestors.length > 0
           a = ancestors.pop
           next unless a.element?
-          extract_from_element(a)
+          extract_from_element(a, &cb)
         end
-        extract_from_element(el)
+        extract_from_element(el, &cb)
       end
 
       # Extract Evaluation Context from an element
-      def extract_from_element(el)
+      def extract_from_element(el, &cb)
         b = el.attribute_with_ns("base", RDF::XML.to_s)
         lang = el.attribute_with_ns("lang", RDF::XML.to_s)
         self.base = self.base.join(b) if b
         self.language = lang if lang
-        self.uri_mappings.merge!(extract_mappings(el))
+        self.uri_mappings.merge!(extract_mappings(el, &cb))
       end
       
       # Extract the XMLNS mappings from an element
-      def extract_mappings(element)
+      def extract_mappings(element, &cb)
         mappings = {}
 
         # look for xmlns
         element.namespaces.each do |attr_name,attr_value|
-          abbr, suffix = attr_name.to_s.split(":")
+          abbr, prefix = attr_name.to_s.split(":")
           if abbr == "xmlns"
             attr_value = self.base.to_s + attr_value if attr_value.match(/^\#/)
-            mappings[suffix] = attr_value
+            mappings[prefix] = attr_value
+            cb.call(prefix, attr_value) if block_given?
           end
         end
         mappings
@@ -187,18 +188,25 @@ module RDF::RDFXML
       if rdf_nodes.length == 0
         # If none found, root element may be processed as an RDF Node
 
-        ec = EvaluationContext.new(@base_uri, root, @graph)
+        ec = EvaluationContext.new(@base_uri, root, @graph) do |prefix, value|
+          prefix(prefix, value)
+        end
+        
         nodeElement(root, ec)
       else
         rdf_nodes.each do |node|
           # XXX Skip this element if it's contained within another rdf:RDF element
 
           # Extract base, lang and namespaces from parents to create proper evaluation context
-          ec = EvaluationContext.new(@base_uri, nil, @graph)
+          ec = EvaluationContext.new(@base_uri, nil, @graph) do |prefix, value|
+            prefix(prefix, value)
+          end
           ec.extract_from_ancestors(node)
           node.children.each {|el|
             next unless el.elem?
-            new_ec = ec.clone(el)
+            new_ec = ec.clone(el) do |prefix, value|
+              prefix(prefix, value)
+            end
             nodeElement(el, new_ec)
           }
         end
@@ -297,7 +305,9 @@ module RDF::RDFXML
       li_counter = 0 # this will increase for each li we iterate through
       el.children.each do |child|
         next unless child.elem?
-        child_ec = ec.clone(child)
+        child_ec = ec.clone(child) do |prefix, value|
+          prefix(prefix, value)
+        end
         predicate = child.uri
         add_debug(child, "propertyElt, predicate: #{predicate}")
         propertyElementURI_check(child)
@@ -370,7 +380,9 @@ module RDF::RDFXML
         if attrs.empty? && datatype.nil? && parseType.nil? && element_nodes.length == 1
           # Production resourcePropertyElt
 
-          new_ec = child_ec.clone(nil)
+          new_ec = child_ec.clone(nil) do |prefix, value|
+            prefix(prefix, value)
+          end
           new_node_element = element_nodes.first
           add_debug(child, "resourcePropertyElt: #{node_path(new_node_element)}")
           new_subject = nodeElement(new_node_element, new_ec)
@@ -418,7 +430,9 @@ module RDF::RDFXML
           node.namespace = pt_attr.namespace
           node.attributes.keys.each {|a| node.remove_attribute(a)}
           node.node_name = "Description"
-          new_ec = child_ec.clone(nil, :subject => n)
+          new_ec = child_ec.clone(nil, :subject => n) do |prefix, value|
+            prefix(prefix, value)
+          end
           nodeElement(node, new_ec)
         elsif parseType == "Collection"
           # Production parseTypeCollectionPropertyElt
@@ -443,7 +457,9 @@ module RDF::RDFXML
             o = s[i+1]
             f = element_nodes[i]
 
-            new_ec = child_ec.clone(nil)
+            new_ec = child_ec.clone(nil) do |prefix, value|
+              prefix(prefix, value)
+            end
             object = nodeElement(f, new_ec)
             add_triple(child, n, RDF.first, object)
             add_triple(child, n, RDF.rest, o ? o : RDF.nil)
