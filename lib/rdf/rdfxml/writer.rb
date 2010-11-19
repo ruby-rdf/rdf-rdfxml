@@ -39,7 +39,7 @@ module RDF::RDFXML
   #
   # @example Creating @base and @prefix definitions in output
   #   RDF::RDFXML::Writer.buffer(:base_uri => "http://example.com/", :prefixes => {
-  #       :"" => "http://example.com/ns#",
+  #       nil => "http://example.com/ns#",
   #       :foaf => "http://xmlns.com/foaf/0.1/"}
   #   ) do |writer|
   #     graph.each_statement do |statement|
@@ -58,6 +58,13 @@ module RDF::RDFXML
     # @return [URI] Base URI used for relativizing URIs
     attr_accessor :base_uri
     
+    # FIXME: temporary patch until fixed in RDF.rb
+    # Allow for nil prefix mapping
+    def prefix(name, uri = nil)
+      name = name.to_s.empty? ? nil : (name.respond_to?(:to_sym) ? name.to_sym : name.to_s.to_sym)
+      uri.nil? ? prefixes[name] : prefixes[name] = RDF::URI(uri)
+    end
+
     ##
     # Initializes the RDF/XML writer instance.
     #
@@ -80,14 +87,14 @@ module RDF::RDFXML
     # @option options [Boolean]  :standard_prefixes   (false)
     #   Add standard prefixes to _prefixes_, if necessary.
     # @option options [String]   :default_namespace (nil)
-    #   URI to use as default namespace, same as prefixes[:""]
+    #   URI to use as default namespace, same as prefix(nil)
     # @yield  [writer]
     # @yieldparam [RDF::Writer] writer
     def initialize(output = $stdout, options = {}, &block)
       super do
         @graph = RDF::Graph.new
         @uri_to_qname = {}
-        prefix(:"",@options[:default_namespace]) if @options[:default_namespace]
+        prefix(nil, @options[:default_namespace]) if @options[:default_namespace]
         block.call(self) if block_given?
       end
     end
@@ -167,7 +174,7 @@ module RDF::RDFXML
       end
 
       prefixes.each_pair do |p, uri|
-        if p == :""
+        if p == nil
           doc.root.default_namespace = uri.to_s
         else
           doc.root.add_namespace(p.to_s, uri.to_s)
@@ -518,15 +525,13 @@ module RDF::RDFXML
     def get_qname_string(uri, options = {})
       if qname = get_qname(uri)
         if options[:with_default]
-          if qname.first != :"" && prefixes[qname.first].to_s == prefixes[:""].to_s
-            qname[0] = :""
-          elsif qname.first == :""
-            prefix = nil
-            prefixes.each_pair {|k, v| prefix = k if k != :"" && v.to_s == prefixes[:""].to_s}
-            qname[0] = prefix if prefix
-          end
+          qname[0] = nil if !qname.first.nil? && prefix(qname.first).to_s == prefix(nil).to_s
+        elsif qname.first.nil?
+          prefix = nil
+          prefixes.each_pair {|k, v| prefix = k if !k.nil? && v.to_s == prefix(nil).to_s}
+          qname[0] = prefix if prefix
         end
-        qname.first == :"" ? qname.last.to_s : qname.map(&:to_s).join(":")
+        qname.first == nil ? qname.last.to_s : qname.map(&:to_s).join(":")
       end
     end
   end

@@ -310,6 +310,19 @@ describe "RDF::RDFXML::Writer" do
       doc = Nokogiri::XML.parse(xml)
       doc.at_xpath("/rdf:RDF/foo:Release/foo:pred/@rdf:resource", doc.namespaces).to_s.should == FOO.obj.to_s
     end
+
+    it "should serialize with nil namespace" do
+      @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
+      @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
+      @graph << [RDF::URI.new("http://release/"), FOO.pred, FOO.obj]
+    
+      xml = serialize(:max_depth => 1, :attributes => :untyped,
+                      :prefixes => {nil => FOO.to_s, :foo => FOO.to_s})
+      xml.should =~ /<Release/
+      xml.should =~ /<pred/
+      doc = Nokogiri::XML.parse(xml)
+      doc.at_xpath("/rdf:RDF/foo:Release/foo:pred/@rdf:resource", doc.namespaces).to_s.should == FOO.obj.to_s
+    end
   end
   
   describe "with base" do
