@@ -117,7 +117,7 @@ module RDF::RDFXML
     # Allow for nil prefix mapping
     def prefix(name, uri = nil)
       name = name.to_s.empty? ? nil : (name.respond_to?(:to_sym) ? name.to_sym : name.to_s.to_sym)
-      uri.nil? ? prefixes[name] : prefixes[name] = RDF::URI(uri)
+      uri.nil? ? prefixes[name] : prefixes[name] = (uri.respond_to?(:to_sym) ? uri.to_sym : uri.to_s.to_sym)
     end
 
     ##
@@ -569,13 +569,13 @@ module RDF::RDFXML
       # ID may only be specified once for the same URI
       if base
         uri = uri(base, "##{id}")
-        if prefix(id) && prefix(id) == uri
+        if prefix(id) && RDF::URI(prefix(id)) == uri
           warn = "ID addtribute '#{id}' may only be defined once for the same URI"
           add_debug(el, warn)
           raise RDF::ReaderError.new(warn) if validate?
         end
         
-        prefix(id, uri)
+        RDF::URI(prefix(id, uri))
         # Returns URI, in this case
       else
         id

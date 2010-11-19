@@ -7,6 +7,7 @@ require 'getoptlong'
 
 def run_tc(tc)
   puts "run #{tc.name}"
+  puts tc.input if $verbose
   puts RDF::Writer.for($format.to_sym).buffer { |writer|
     RDF::RDFXML::Reader.new(tc.input, :base_uri => tc.about, :validate => $validate).each do |statement|
       writer << statement

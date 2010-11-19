@@ -7,13 +7,11 @@ begin
   Jeweler::Tasks.new do |gemspec|
     gemspec.name = "rdf-rdfxml"
     gemspec.summary = "RDF/XML reader/writer for RDF.rb."
-    gemspec.description = <<-DESCRIPTION
-    RDF::RDFXML is an RDF/XML reader and writer for Ruby using the RDF.rb library suite.
-    DESCRIPTION
+    gemspec.description = %q(RDF::RDFXML is an RDF/XML reader and writer for Ruby using the RDF.rb library suite.)
     gemspec.email = "gregg@kellogg-assoc.com"
     gemspec.homepage = "http://github.com/gkellogg/rdf-rdfxml"
     gemspec.authors = ["Gregg Kellogg"]
-    gemspec.add_dependency('rdf')
+    gemspec.add_dependency('rdf', '= 0.3.0.pre')
     gemspec.add_dependency('nokogiri', '>= 1.3.3')
     gemspec.add_development_dependency('rspec', '= 1.3.0')
     gemspec.add_development_dependency('rdf-spec')

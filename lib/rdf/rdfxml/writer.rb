@@ -62,7 +62,7 @@ module RDF::RDFXML
     # Allow for nil prefix mapping
     def prefix(name, uri = nil)
       name = name.to_s.empty? ? nil : (name.respond_to?(:to_sym) ? name.to_sym : name.to_s.to_sym)
-      uri.nil? ? prefixes[name] : prefixes[name] = RDF::URI(uri)
+      uri.nil? ? prefixes[name] : prefixes[name] = (uri.respond_to?(:to_sym) ? uri.to_sym : uri.to_s.to_sym)
     end
 
     ##
@@ -221,7 +221,7 @@ module RDF::RDFXML
         suffix = uri.to_s[separation+1..-1]
         @gen_prefix = @gen_prefix ? @gen_prefix.succ : "ns0"
         add_debug "create prefix definition for #{uri}"
-        prefix(@gen_prefix.to_sym, base_uri)
+        prefix(@gen_prefix, base_uri)
         add_debug "get_qname(tmp_ns): #{@gen_prefix}:#{suffix}"
         return @uri_to_qname[uri] = [@gen_prefix.to_sym, suffix.to_sym]
       end
