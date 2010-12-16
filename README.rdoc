@@ -7,9 +7,9 @@ RDF/XML parser for RDF.rb.
 RDF::RDFXML is an RDF/XML reader/writer for Ruby using the RDF.rb library suite.
 
 == FEATURES:
-RDF::RDFXML parses RDF/XML into statements or triples.
+RDF::RDFXML parses RDF/XML into statements or triples and serializes triples, statements or graphs.
 
-* Fully compliant RDF/XML parser.
+* Fully compliant RDF/XML parser and serializer.
 
 Install with 'gem install rdf-rdfxml'
 

@@ -5,13 +5,15 @@
   * In Writer
     * Use only :prefixes for creating QNames.
     * Add :standard_prefixes and :default_namespace options.
-  * In Reader
-    * URI canonicalization and validation.
-    * Added :canonicalize, and :intern options.
-    * Added #prefixes method returning a hash of prefix definitions.
-    * Change :strict option to :validate.
-    * Don't create unnecessary namespaces.
-    * Don't use regexp to substitute base URI in URI serialization.
+* In Reader
+  * URI canonicalization and validation.
+  * Added :canonicalize, and :intern options.
+  * Change :strict option to :validate.
+  * Don't create unnecessary namespaces.
+  * Don't use regexp to substitute base URI in URI serialization.
+  * Collect prefixes when extracting mappings.
+* Literal::XML
+  * Add all in-scope namespaces, not just those that seem to be used.
 
 === 0.2.3
 * Fixed QName generation in Writer based on RDF/XML Processing recommendations
