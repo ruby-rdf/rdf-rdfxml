@@ -404,7 +404,7 @@ EOF
               end
               g
             end
-          rescue Spec::Expectations::ExpectationNotMetError => e
+          rescue RSpec::Expectations::ExpectationNotMetError => e
             if t.inputDocument =~ %r(xml-literal|xml-canon)
               pending("XMLLiteral canonicalization not implemented yet")
             else
