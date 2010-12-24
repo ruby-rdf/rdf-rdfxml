@@ -2,11 +2,11 @@
 
 RDF/XML parser for RDF.rb.
 
-== DESCRIPTION:
+== DESCRIPTION
 
 RDF::RDFXML is an RDF/XML reader/writer for Ruby using the RDF.rb library suite.
 
-== FEATURES:
+== FEATURES
 RDF::RDFXML parses RDF/XML into statements or triples and serializes triples, statements or graphs.
 
 * Fully compliant RDF/XML parser and serializer.
@@ -23,7 +23,7 @@ Instantiate a parser and parse source, specifying type and base-URL
   end
 
 == Dependencies
-  * [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.2.0)
+  * [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.0)
   * [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.3.3)
 
 == TODO
@@ -31,20 +31,20 @@ Instantiate a parser and parse source, specifying type and base-URL
 * Consider a SAX-based parser for improved performance
 * Add generic RDF/XML Writer
 
-== Resources:
+== Resources
 * Distiller[http://kellogg-assoc/distiller]
 * RDoc[http://rdoc.info/projects/gkellogg/rdf-rdfxml]
 * History[http://github.com/gkellogg/rdf-rdfxml/blob/master/History.txt]
 * "XHTML+RDFXML 1.1 Core"[http://www.w3.org/TR/2010/WD-xhtml-rdfa-20100422/]
 * "RDF Tests"[http://www.w3.org/2000/10/rdf-tests/rdfcore/allTestCases.html]
 
-== AUTHOR:
+== AUTHOR
 * Gregg Kellogg <gregg@kellogg-assoc.com>
 
-== CONTRIBUTORS:
+== CONTRIBUTORS
 * Nicholas Humfrey <nicholas.humfrey@bbc.co.uk>
 
-== LICENSE:
+== LICENSE
 
 (The MIT License)
 
@@ -72,7 +72,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 == FEEDBACK
 
 * gregg@kellogg-assoc.com
-* rubygems.org/rdf-rdfxml
-* github.com/gkellogg/rdf-rdfxml
-* gkellogg.lighthouseapp.com for bug reports
+* http://rubygems.org/rdf-rdfxml
+* http://github.com/gkellogg/rdf-rdfxml
 * public-rdf-ruby mailing list on w3.org

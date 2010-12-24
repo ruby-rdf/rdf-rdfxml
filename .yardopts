@@ -6,6 +6,8 @@
 --markup rdoc
 --readme README.rdoc
 -
+README.rdoc
+History.rdoc
 AUTHORS
 CONTRIBUTORS
 VERSION
