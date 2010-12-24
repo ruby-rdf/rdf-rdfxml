@@ -416,10 +416,9 @@ module RDF::RDFXML
           end
         end
       else
-        require 'rdf/rdfxml/patches/seq' unless RDF::Graph.respond_to?(:seq)
         
         # Check to see if it can be serialized as a collection
-        col = @graph.seq(object)
+        col = RDF::List.new(object, @graph).to_a
         conformant_list = col.all? {|item| !item.is_a?(RDF::Literal)}
         o_props = @graph.properties(object)
         if conformant_list && o_props[RDF.first.to_s]
