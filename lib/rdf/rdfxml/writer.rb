@@ -73,7 +73,7 @@ module RDF::RDFXML
     #   the base URI to use when constructing relative URIs
     # @option options [Integer]  :max_depth (3)
     #   Maximum depth for recursively defining resources
-    # @option options [S#to_s]   :lang   (nil)
+    # @option options [#to_s]   :lang   (nil)
     #   Output as root xml:lang attribute, and avoid generation _xml:lang_ where possible
     # @option options [Array]    :attributes   (nil)
     #   How to use XML attributes when serializing, one of :none, :untyped, :typed. The default is :none.
@@ -110,14 +110,6 @@ module RDF::RDFXML
     end
 
     ##
-    # Addes a statement to be serialized
-    # @param  [RDF::Statement] statement
-    # @return [void]
-    def write_statement(statement)
-      @graph.insert(statement)
-    end
-
-    ##
     # Addes a triple to be serialized
     # @param  [RDF::Resource] subject
     # @param  [RDF::URI]      predicate
@@ -135,7 +127,6 @@ module RDF::RDFXML
     # @return [void]
     # @see    #write_triple
     def write_epilogue
-      @base_uri = nil
       @force_RDF_about = {}
       @max_depth = @options[:max_depth] || 3
       @base_uri = @options[:base_uri]
@@ -204,11 +195,12 @@ module RDF::RDFXML
         # No vocabulary found, invent one
         # Add bindings for predicates not already having bindings
         # From RDF/XML Syntax and Processing:
-        #   An XML namespace-qualified name (QName) has restrictions on the legal characters such that not all property URIs can be expressed
-        #   as these names. It is recommended that implementors of RDF serializers, in order to break a URI into a namespace name and a local
-        #   name, split it after the last XML non-NCName character, ensuring that the first character of the name is a Letter or '_'. If the
-        #   URI ends in a non-NCName character then throw a "this graph cannot be serialized in RDF/XML" exception or error.
-        separation = uri.to_s.rindex(%r{[^a-zA-Z_0-9-](?=[a-zA-Z_])})
+        #   An XML namespace-qualified name (QName) has restrictions on the legal characters such that not all
+        #   property URIs can be expressed as these names. It is recommended that implementors of RDF serializers,
+        #   in order to break a URI into a namespace name and a local name, split it after the last XML non-NCName
+        #   character, ensuring that the first character of the name is a Letter or '_'. If the URI ends in a
+        #   non-NCName character then throw a "this graph cannot be serialized in RDF/XML" exception or error.
+        separation = uri.to_s.rindex(%r{[^a-zA-Z_0-9-][a-zA-Z_][a-z0-9A-Z_-]*$})
         return @uri_to_qname[uri] = nil unless separation
         base_uri = uri.to_s[0..separation]
         suffix = uri.to_s[separation+1..-1]
@@ -267,11 +259,6 @@ module RDF::RDFXML
       subjects += recursable.map{|r| r.last}
     end
     
-    # Mark a subject as done.
-    def subject_done(subject)
-      @serialized[subject] = true
-    end
-    
     # Perform any preprocessing of statements required
     def preprocess
       @graph.each {|statement| preprocess_statement(statement)}
@@ -287,11 +274,6 @@ module RDF::RDFXML
       @subjects[statement.subject] = true
     end
     
-    # Return the number of times this node has been referenced in the object position
-    def ref_count(node)
-      @references.fetch(node, 0)
-    end
-
     # Returns indent string multiplied by the depth
     # @param [Integer] modifier Increase depth by specified amount
     # @return [String] A number of spaces, depending on current depth
@@ -316,23 +298,35 @@ module RDF::RDFXML
       if !is_done?(subject)
         subject_done(subject)
         properties = @graph.properties(subject)
-        prop_list = sort_properties(properties)
         add_debug "subject: #{subject.inspect}, props: #{properties.inspect}"
 
         rdf_type, *rest = properties.fetch(RDF.type.to_s, [])
         qname = get_qname_string(rdf_type, :with_default => true)
+        add_debug "subject: #{subject.inspect}, qname: #{qname.inspect}"
+        if rdf_type.is_a?(RDF::Node)
+          # Must serialize with an element
+          rdf_type = nil
+        elsif rest.empty?
+          properties.delete(RDF.type.to_s)
+        else
+          properties[RDF.type.to_s] = [rest].flatten.compact
+        end
+        prop_list = order_properties(properties)
+
         if qname
-          properties[RDF.type.to_s] = rest
+          rdf_type = nil
         else
           qname = "rdf:Description"
           prefixes[:rdf] = RDF.to_uri
         end
 
         node = Nokogiri::XML::Element.new(qname, parent_node.document)
+        
+        node["rdf:type"] = rdf_type if rdf_type
       
         if subject.is_a?(RDF::Node)
           # Only need nodeID if it's referenced elsewhere
-          node["rdf:nodeID"] = subject.to_s if ref_count(subject) > (@depth == 0 ? 0 : 1)
+          node["rdf:nodeID"] = subject.id if ref_count(subject) > (@depth == 0 ? 0 : 1)
         else
           node["rdf:about"] = relativize(subject)
         end
@@ -383,7 +377,7 @@ module RDF::RDFXML
       as_attr = false if as_attr && qname !~ /:/
 
       add_debug "predicate: #{qname}, as_attr: #{as_attr}, object: #{object.inspect}, done: #{is_done?(object)}, sub: #{@subjects.include?(object)}"
-      qname = "rdf:li" if qname.match(/rdf:_\d+/)
+      #qname = "rdf:li" if qname.match(/rdf:_\d+/)
       pred_node = Nokogiri::XML::Element.new(qname, node.document)
       
       if object.is_a?(RDF::Literal) || is_done?(object) || !@subjects.include?(object)
@@ -410,7 +404,7 @@ module RDF::RDFXML
           end
           add_debug "  elt #{'xmllit ' if object.is_a?(RDF::Literal) && object.datatype == RDF.XMLLiteral}content=#{args.first}" if !args.empty?
           if object.is_a?(RDF::Literal) && object.datatype == RDF.XMLLiteral
-            pred_node.add_child(Nokogiri::XML::CharacterData.new(args.first, node.document))
+            pred_node.inner_html = args.first.to_s
           elsif args.first
             pred_node.content = args.first unless args.empty?
           end
@@ -447,6 +441,16 @@ module RDF::RDFXML
       node.add_child(pred_node) if pred_node
     end
 
+    # Mark a subject as done.
+    def subject_done(subject)
+      @serialized[subject] = true
+    end
+    
+    # Return the number of times this node has been referenced in the object position
+    def ref_count(node)
+      @references.fetch(node, 0)
+    end
+
     def is_done?(subject)
       @serialized.include?(subject)
     end
@@ -456,7 +460,7 @@ module RDF::RDFXML
     # Sort the lists of values.  Return a sorted list of properties.
     # @param [Hash{String => Array<Resource>}] properties A hash of Property to Resource mappings
     # @return [Array<String>}] Ordered list of properties. Uses predicate_order.
-    def sort_properties(properties)
+    def order_properties(properties)
       properties.keys.each do |k|
         properties[k] = properties[k].sort do |a, b|
           a_li = a.is_a?(RDF::URI) && get_qname(a) && get_qname(a).last.to_s =~ /^_\d+$/ ? a.to_i : a.to_s
@@ -479,7 +483,7 @@ module RDF::RDFXML
         prop_list << prop.to_s
       end
       
-      add_debug "sort_properties: #{prop_list.to_sentence}"
+      add_debug "order_properties: #{prop_list.to_sentence}"
       prop_list
     end
 
@@ -508,6 +512,7 @@ module RDF::RDFXML
     #
     # @param [String] message::
     def add_debug(message)
+      STDERR.puts message if ::RDF::RDFXML.debug?
       @debug << message if @debug.is_a?(Array)
     end
 

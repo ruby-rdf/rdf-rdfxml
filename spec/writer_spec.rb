@@ -158,20 +158,20 @@ describe "RDF::RDFXML::Writer" do
     end
 
     describe "with lists" do
-#      it "should serialize List rdf:first/rdf:rest" do
-#        @graph = parse(%(
-#          @prefix foo: <http://foo/> . foo:author foo:is (Gregg Barnum Kellogg) .
-#        ), :base_uri => "http://foo/", :reader => RDF::N3::Reader)
-#        check_xpaths(
-#          serialize({}),
-#          "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
-#          "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
-#          %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Gregg"]) => true,
-#          %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Barnum"]) => true,
-#          %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Kellogg"]) => true,
-#          %(//rdf:first)  => false
-#        )
-#      end
+      it "should serialize List rdf:first/rdf:rest" do
+        @graph = parse(%(
+          @prefix foo: <http://foo/> . foo:author foo:is (:Gregg :Barnum :Kellogg) .
+        ), :base_uri => "http://foo/", :reader => RDF::N3::Reader)
+        check_xpaths(
+          serialize({}),
+          "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
+          "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
+          %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Gregg"]) => true,
+          %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Barnum"]) => true,
+          %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Kellogg"]) => true,
+          %(//rdf:first)  => false
+        )
+      end
   
       it "should serialize resource with multiple rdf:li in proper sequence" do
         @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Seq]
@@ -365,10 +365,29 @@ describe "RDF::RDFXML::Writer" do
         graph_expect = parse(%(
           <http://example.org/eg#eric> a [ <http://example.org/eg#intersectionOf> (<http://example.org/eg#Person> <http://example.org/eg#Male>)] .
         ), :reader => RDF::N3::Reader)
-        graph_check = parse(serialize(:format => :xml)).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+        graph_check = parse(serialize(:format => :rdfxml)).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
       end
     end
   
+    describe "w3c rdfcore tests" do
+      require 'rdf_helper'
+
+      def self.positive_tests
+        RdfHelper::TestCase.positive_parser_tests(RDFCORE_TEST, RDFCORE_DIR)
+      end
+
+      positive_tests.each do |t|
+        #next unless t.about =~ /rdfms-not-id-and-resource-attr\/test001/
+        next if t.about =~ /rdfms-xml-literal-namespaces|xml-canon/ # Literal serialization adds namespace definitions
+        #next unless t.name =~ /11/
+        #puts t.inspect
+        specify "#{t.name}: " + (t.description || "#{t.outputDocument}"), :focus => true do
+          @graph = parse(t.output, :base_uri => t.about, :format => :ntriples)
+          parse(serialize(:format => :rdfxml, :base_uri => t.about), :base_uri => t.about).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+        end
+      end
+    end
+
     def check_xpaths(doc, paths)
       puts doc.to_s if ::RDF::RDFXML::debug? || $verbose
       doc = Nokogiri::XML.parse(doc)
@@ -392,7 +411,7 @@ describe "RDF::RDFXML::Writer" do
     
       # Parse generated graph and compare to source
       #graph = RDF::Graph.new
-      #RDF::RDFXML::Reader.new(doc, :base_uri => "http://release/", :format => :rdf).each {|st| graph << st}
+      #RDF::RDFXML::Reader.new(doc, :base_uri => "http://release/", :format => :rdfxml).each {|st| graph << st}
       #graph.should be_equivalent_graph(@graph, :about => "http://release/", :trace => @debug.join("\n"))
     end
 
@@ -407,7 +426,7 @@ describe "RDF::RDFXML::Writer" do
       graph
     end
 
-    # Serialize ntstr to a string and compare against regexps
+    # Serialize  @graph to a string and compare against regexps
     def serialize(options = {})
       @debug = []
       result = @writer.buffer({:debug => @debug, :standard_prefixes => true}.merge(options)) do |writer|
