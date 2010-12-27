@@ -1,7 +1,6 @@
 $:.unshift "."
 require File.join(File.dirname(__FILE__), 'spec_helper')
 require 'rdf/rdfxml/patches/graph_properties'
-require 'rdf/rdfxml/patches/seq'
 
 class EX < RDF::Vocabulary("http://example.com/"); end
 
@@ -55,21 +54,6 @@ describe RDF::Graph do
       subject << [EX.a, EX.b, EX.c]
       subject.properties(EX.a)[RDF.type.to_s].should == nil
       subject.type_of(EX.a).should == []
-    end
-  end
-
-  describe "rdf:_n sequences" do
-    subject {
-      g = RDF::Graph.new
-      g << [EX.Seq, RDF.type, RDF.Seq]
-      g << [EX.Seq, RDF._1, EX.john]
-      g << [EX.Seq, RDF._2, EX.jane]
-      g << [EX.Seq, RDF._3, EX.rick]
-      g
-    }
-    
-    it "should return object list" do
-      subject.seq(EX.Seq).should == [EX.john, EX.jane, EX.rick]
     end
   end
 end
