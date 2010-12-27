@@ -52,7 +52,7 @@ def detect_format(stream)
   case string
   when /<\w+:RDF/ then RDF::RDFXML::Reader
   when /<RDF/     then RDF::RDFXML::Reader
-  when /<html/i   then RDF::RDFa::Reader
+  #when /<html/i   then RDF::RDFa::Reader
   when /@prefix/i then RDF::N3::Reader
   else                 RDF::NTriples::Reader
   end
