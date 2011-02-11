@@ -225,9 +225,9 @@ module RDF::RDFXML
       @base_uri ? uri.sub(@base_uri.to_s, "") : uri
     end
 
-    # Defines rdf:type of subjects to be emitted at the beginning of the graph. Defaults to rdfs:Class
+    # Defines rdf:type of subjects to be emitted at the beginning of the graph. Defaults to none
     # @return [Array<URI>]
-    def top_classes; [RDF::RDFS.Class]; end
+    def top_classes; []; end
 
     # Defines order of predicates to to emit at begninning of a resource description. Defaults to
     # [rdf:type, rdfs:label, dc:title]
@@ -253,8 +253,8 @@ module RDF::RDFXML
       # Sort subjects by resources over bnodes, ref_counts and the subject URI itself
       recursable = @subjects.keys.
         select {|s| !seen.include?(s)}.
-        map {|r| [r.is_a?(RDF::Node) ? 1 : 0, ref_count(r), r]}.
-        sort
+        map {|r| [(r.is_a?(RDF::Node) ? 1 : 0) + ref_count(r), r]}.
+        sort_by {|l| l.first }
       
       subjects += recursable.map{|r| r.last}
     end
@@ -344,8 +344,8 @@ module RDF::RDFXML
         add_debug "subject: #{subject.inspect}, force about"
         node = Nokogiri::XML::Element.new("rdf:Description", parent_node.document)
         node["rdf:about"] = relativize(subject)
-        @force_RDF_about.delete(subject)
       end
+      @force_RDF_about.delete(subject)
 
       parent_node.add_child(node) if node
     end
@@ -410,7 +410,6 @@ module RDF::RDFXML
           end
         end
       else
-        
         # Check to see if it can be serialized as a collection
         col = RDF::List.new(object, @graph).to_a
         conformant_list = col.all? {|item| !item.is_a?(RDF::Literal)}
@@ -419,7 +418,7 @@ module RDF::RDFXML
           # Serialize list as parseType="Collection"
           pred_node["rdf:parseType"] = "Collection"
           col.each do |item|
-            # Mark the BNode subject of each item as being complete, so that it is not serialized
+            # Mark the BNode subject of each item as being complete, so that it is not serialized elsewhere
             @graph.query(:predicate => RDF.first, :object => item) do |statement|
               subject_done(statement.subject)
             end
@@ -443,6 +442,7 @@ module RDF::RDFXML
 
     # Mark a subject as done.
     def subject_done(subject)
+      add_debug("subject_done: #{subject}")
       @serialized[subject] = true
     end
     
@@ -452,6 +452,7 @@ module RDF::RDFXML
     end
 
     def is_done?(subject)
+      add_debug("is_done?(#{subject}): #{@serialized.include?(subject)}")
       @serialized.include?(subject)
     end
     

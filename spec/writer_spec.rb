@@ -362,8 +362,24 @@ describe "RDF::RDFXML::Writer" do
       end
     
       it "should replicate rdfcore/rdfms-seq-representation" do
-        graph_expect = parse(%(
+        @graph = parse(%(
           <http://example.org/eg#eric> a [ <http://example.org/eg#intersectionOf> (<http://example.org/eg#Person> <http://example.org/eg#Male>)] .
+        ), :reader => RDF::N3::Reader)
+        graph_check = parse(serialize(:format => :rdfxml)).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+      end
+      
+      it "should not generate extraneous BNode" do
+        @graph = parse(%(
+        <part_of> a <http://www.w3.org/2002/07/owl#ObjectProperty> .
+        <a> a <http://www.w3.org/2002/07/owl#Class> .
+        <b> a <http://www.w3.org/2002/07/owl#Class> .
+         [ a <http://www.w3.org/2002/07/owl#Class>;
+            <http://www.w3.org/2002/07/owl#intersectionOf> (<b> [ a <http://www.w3.org/2002/07/owl#Class>,
+                <http://www.w3.org/2002/07/owl#Restriction>;
+                <http://www.w3.org/2002/07/owl#onProperty> <part_of>;
+                <http://www.w3.org/2002/07/owl#someValuesFrom> <a>])] .
+         [ a <http://www.w3.org/2002/07/owl#Class>;
+            <http://www.w3.org/2002/07/owl#intersectionOf> (<a> <b>)] .
         ), :reader => RDF::N3::Reader)
         graph_check = parse(serialize(:format => :rdfxml)).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
       end
