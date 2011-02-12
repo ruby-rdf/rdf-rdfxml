@@ -16,7 +16,7 @@ Install with 'gem install rdf-rdfxml'
 == Usage:
 Instantiate a parser and parse source, specifying type and base-URL
 
-  RDF::RDFXML::Reader.open("etc/foaf.xml") do |reader|
+  RDF::RDFXML::Reader.open("./etc/doap.xml") do |reader|
     reader.each_statement do |statement|
       puts statement.inspect
     end
