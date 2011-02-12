@@ -11,13 +11,13 @@ begin
     gemspec.email = "gregg@kellogg-assoc.com"
     gemspec.homepage = "http://github.com/gkellogg/rdf-rdfxml"
     gemspec.authors = ["Gregg Kellogg"]
-    gemspec.add_dependency('rdf', '>= 0.3.0')
-    gemspec.add_dependency('nokogiri', '>= 1.3.3')
-    gemspec.add_development_dependency('rspec', '>= 2.1.0')
-    gemspec.add_development_dependency('rdf-spec')
-    gemspec.add_development_dependency('rdf-isomorphic')
-    gemspec.add_development_dependency('yard')
-    gemspec.extra_rdoc_files     = %w(README.rdoc History.rdoc AUTHORS CONTRIBUTORS)
+    gemspec.add_dependency('rdf', '>= 0.3.1')
+    gemspec.add_dependency('nokogiri', '>= 1.4.4')
+    gemspec.add_development_dependency('rspec', '>= 2.5.0')
+    gemspec.add_development_dependency('rdf-spec', '>= 0.3.1')
+    gemspec.add_development_dependency('rdf-isomorphic', '>= 0.3.4')
+    gemspec.add_development_dependency('yard', '>= 0.6.4')
+    gemspec.extra_rdoc_files     = %w(README.md History.rdoc AUTHORS CONTRIBUTORS)
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
@@ -39,7 +39,7 @@ RSpec::Core::RakeTask.new("doc:spec") do |spec|
 end
 
 YARD::Rake::YardocTask.new do |t|
-  t.files   = %w(lib/**/*.rb README.rdoc History.txt AUTHORS CONTRIBUTORS)   # optional
+  t.files   = %w(lib/**/*.rb README.md History.txt AUTHORS CONTRIBUTORS)   # optional
 end
 
 desc "Generate RDF Core Manifest.yml"
