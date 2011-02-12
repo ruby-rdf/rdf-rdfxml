@@ -1,3 +1,8 @@
+=== 0.3.1
+* In writer
+  * fix bug where a serialized subject is output again, when it appears in a collection.
+  * Fix subject ordering.
+
 === 0.3.0
 * RDF.rb 0.3.0 compatibility updates
   * Remove literal_normalization and qname_hacks, add back uri_hacks (until 0.3.0)

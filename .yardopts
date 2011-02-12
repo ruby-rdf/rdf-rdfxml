@@ -4,9 +4,8 @@
 --no-private
 --hide-void-return
 --markup rdoc
---readme README.rdoc
+--readme README.md
 -
-README.rdoc
 History.rdoc
 AUTHORS
 CONTRIBUTORS
