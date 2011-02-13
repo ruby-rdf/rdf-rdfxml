@@ -354,95 +354,73 @@ module RDF::RDFXML
     #
     # If _is_unique_ is true, this predicate may be able to be serialized as an attribute
     def predicate(prop, object, node, is_unique)
-      # See if we can serialize as attribute.
-      # * untyped attributes that aren't duplicated where xml:lang == @lang
-      # * typed attributes that aren't duplicated if @dt_as_attr is true
-      # * rdf:type
-      as_attr = false
-      as_attr = true if [:untyped, :typed].include?(@attributes) && prop == RDF.type
-
-      # Untyped attribute with no lang, or whos lang is the same as the default and RDF.type
-      add_debug("as_attr? #{@attributes}, plain? #{object.plain?}, lang #{@lang || 'nil'}:#{object.language || 'nil'}") if object.is_a?(RDF::Literal)
-      as_attr ||= true if [:untyped, :typed].include?(@attributes) &&
-        object.is_a?(RDF::Literal) && (object.plain? || (@lang && object.language.to_s == @lang.to_s))
+      as_attr = predicate_as_attribute?(prop, object) && is_unique
       
-      as_attr ||= true if [:typed].include?(@attributes) && object.is_a?(RDF::Literal) && object.typed?
-
-      as_attr = false unless is_unique
-
       qname = get_qname_string(prop, :with_default => !as_attr)
       raise RDF::WriterError, "No qname generated for <#{prop}>" unless qname
 
-      # Can't do as an attr if the qname has no prefix and there is no prefixed version
-      as_attr = false if as_attr && qname !~ /:/
-
-      add_debug "predicate: #{qname}, as_attr: #{as_attr}, object: #{object.inspect}, done: #{is_done?(object)}, sub: #{@subjects.include?(object)}"
+      add_debug "predicate: #{qname}, as_attr: #{as_attr}, object: #{object.inspect}, done: #{is_done?(object)}, subject: #{@subjects.include?(object)}"
       #qname = "rdf:li" if qname.match(/rdf:_\d+/)
       pred_node = Nokogiri::XML::Element.new(qname, node.document)
       
-      if object.is_a?(RDF::Literal) || is_done?(object) || !@subjects.include?(object)
-        # Literals or references to objects that aren't subjects, or that have already been serialized
-        
-        args = xml_args(object)
-        add_debug "predicate: args=#{args.inspect}"
-        attrs = args.pop
-        
-        if as_attr
-          # Serialize as attribute
-          pred_node.unlink
-          pred_node = nil
-          node[qname] = object.is_a?(RDF::URI) ? relativize(object) : object.value
-          add_debug("node[#{qname}]=#{node[qname]}, #{object.class}")
-        else
-          # Serialize as element
-          add_debug("serialize as element: #{attrs.inspect}")
-          attrs.each_pair do |a, av|
-            next if a.to_s == "xml:lang" && av.to_s == @lang # Lang already specified, don't repeat
-            av = relativize(object) if a == "rdf:resource"
-            add_debug "  elt attr #{a}=#{av}"
-            pred_node[a] = av.to_s
+      col = RDF::List.new(object, @graph).to_a
+      conformant_list = col.all? {|item| !item.literal?}
+      o_props = @graph.properties(object)
+      args = xml_args(object)
+      attrs = args.pop
+
+      # Check to see if it can be serialized as a collection
+      if conformant_list && o_props[RDF.first.to_s]
+        add_debug("predicate as collection")
+        # Serialize list as parseType="Collection"
+        pred_node["rdf:parseType"] = "Collection"
+        col.each do |item|
+          # Mark the BNode subject of each item as being complete, so that it is not serialized elsewhere
+          @graph.query(:predicate => RDF.first, :object => item) do |statement|
+            subject_done(statement.subject)
           end
-          add_debug "  elt #{'xmllit ' if object.is_a?(RDF::Literal) && object.datatype == RDF.XMLLiteral}content=#{args.first}" if !args.empty?
-          if object.is_a?(RDF::Literal) && object.datatype == RDF.XMLLiteral
-            pred_node.inner_html = args.first.to_s
-          elsif args.first
-            pred_node.content = args.first unless args.empty?
-          end
+          @force_RDF_about[item] = true
+          subject(item, pred_node)
         end
+      elsif as_attr
+        # Serialize as attribute
+        pred_node.unlink
+        pred_node = nil
+        node[qname] = object.is_a?(RDF::URI) ? relativize(object) : object.value
+        add_debug("predicate as attribute: node[#{qname}]=#{node[qname]}, #{object.class}")
+      elsif object.literal?
+        # Serialize as element
+        add_debug("predicate as element: #{attrs.inspect}")
+        attrs.each_pair do |a, av|
+          next if a.to_s == "xml:lang" && av.to_s == @lang # Lang already specified, don't repeat
+          add_debug "  elt attr #{a}=#{av}"
+          pred_node[a] = av.to_s
+        end
+        add_debug "  elt #{'xmllit ' if object.literal? && object.datatype == RDF.XMLLiteral}content=#{args.first}" if !args.empty?
+        if object.datatype == RDF.XMLLiteral
+          pred_node.inner_html = args.first.to_s
+        elsif args.first
+          pred_node.content = args.first
+        end
+      elsif @depth < @max_depth && !is_done?(object) && @subjects.include?(object)
+        add_debug("predicate as element (recurse)")
+        @depth += 1
+        subject(object, pred_node)
+        @depth -= 1
+      elsif object.is_a?(RDF::Node)
+        add_debug("predicate as element (nodeID)")
+        pred_node["rdf:nodeID"] = object.id
       else
-        # Check to see if it can be serialized as a collection
-        col = RDF::List.new(object, @graph).to_a
-        conformant_list = col.all? {|item| !item.is_a?(RDF::Literal)}
-        o_props = @graph.properties(object)
-        if conformant_list && o_props[RDF.first.to_s]
-          # Serialize list as parseType="Collection"
-          pred_node["rdf:parseType"] = "Collection"
-          col.each do |item|
-            # Mark the BNode subject of each item as being complete, so that it is not serialized elsewhere
-            @graph.query(:predicate => RDF.first, :object => item) do |statement|
-              subject_done(statement.subject)
-            end
-            @force_RDF_about[item] = true
-            subject(item, pred_node)
-          end
-        else
-          if @depth < @max_depth
-            @depth += 1
-            subject(object, pred_node)
-            @depth -= 1
-          elsif object.is_a?(RDF::Node)
-            pred_node["rdf:nodeID"] = object.id
-          else
-            pred_node["rdf:resource"] = relativize(object)
-          end
-        end
+        add_debug("predicate as element (resource)")
+        pred_node["rdf:resource"] = relativize(object)
       end
+
       node.add_child(pred_node) if pred_node
     end
 
     # Mark a subject as done.
     def subject_done(subject)
-      add_debug("subject_done: #{subject}")
+      #add_debug("subject_done: #{subject}")
       @serialized[subject] = true
     end
     
@@ -452,10 +430,21 @@ module RDF::RDFXML
     end
 
     def is_done?(subject)
-      add_debug("is_done?(#{subject}): #{@serialized.include?(subject)}")
+      #add_debug("is_done?(#{subject}): #{@serialized.include?(subject)}")
       @serialized.include?(subject)
     end
     
+    # See if we can serialize as attribute.
+    # * untyped attributes that aren't duplicated where xml:lang == @lang
+    # * typed attributes that aren't duplicated if @dt_as_attr is true
+    # * rdf:type
+    def predicate_as_attribute?(prop, object)
+      [:untyped, :typed].include?(@attributes) && (
+        prop == RDF.type ||
+        [:typed].include?(@attributes) && object.literal? && object.typed? ||
+        (object.literal? && object.plain? || @lang && object.language.to_s == @lang.to_s)
+      )
+    end
     
     # Take a hash from predicate uris to lists of values.
     # Sort the lists of values.  Return a sorted list of properties.

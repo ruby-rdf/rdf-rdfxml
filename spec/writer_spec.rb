@@ -113,7 +113,7 @@ describe "RDF::RDFXML::Writer" do
         @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
         @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
         check_xpaths(
-          serialize(:max_depth => 1, :attributes => :untyped),
+          serialize(:max_depth => 1, :attributes => :none),
           "/rdf:RDF/rdf:Seq/@rdf:about" => "http://example/seq",
           %(/rdf:RDF/rdf:Seq/rdf:_1[@rdf:resource="http://example/first"]) => true,
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => true
@@ -125,7 +125,7 @@ describe "RDF::RDFXML::Writer" do
         @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
         @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
         check_xpaths(
-          serialize(:max_depth => 1, :attributes => :untyped),
+          serialize(:max_depth => 1, :attributes => :none),
           "/rdf:RDF/rdf:Seq/@rdf:about" => "http://example/seq",
           %(/rdf:RDF/rdf:Seq/rdf:_1[@rdf:resource="http://example/first"]) => true,
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => true
@@ -137,19 +137,19 @@ describe "RDF::RDFXML::Writer" do
         @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
         @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
         check_xpaths(
-          serialize(:max_depth => 1, :attributes => :untyped),
+          serialize(:max_depth => 1, :attributes => :none),
           "/rdf:RDF/rdf:Bag/@rdf:about" => "http://example/seq",
           %(/rdf:RDF/rdf:Bag/rdf:_1[@rdf:resource="http://example/first"]) => true,
           %(/rdf:RDF/rdf:Bag/rdf:_2[@rdf:resource="http://example/second"]) => true
         )
       end
 
-      it "should serialize rdf:Alt with multiple rdf:_2" do
+      it "should serialize rdf:Alt with rdf:_n" do
         @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Alt]
         @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
         @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
         check_xpaths(
-          serialize(:max_depth => 1, :attributes => :untyped),
+          serialize(:max_depth => 1, :attributes => :none),
           "/rdf:RDF/rdf:Alt/@rdf:about" => "http://example/seq",
           %(/rdf:RDF/rdf:Alt/rdf:_1[@rdf:resource="http://example/first"]) => true,
           %(/rdf:RDF/rdf:Alt/rdf:_2[@rdf:resource="http://example/second"]) => true
@@ -178,7 +178,7 @@ describe "RDF::RDFXML::Writer" do
         @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
         @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
         check_xpaths(
-          serialize(:max_depth => 1, :attributes => :untyped),
+          serialize(:max_depth => 1, :attributes => :none),
           "/rdf:RDF/rdf:Seq/@rdf:about" => "http://example/seq",
           %(/rdf:RDF/rdf:Seq/rdf:_1[@rdf:resource="http://example/first"]) => true,
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => true
@@ -283,7 +283,8 @@ describe "RDF::RDFXML::Writer" do
         check_xpaths(
           serialize(:attributes => :typed),
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/@dc:title" => "foo"
+          "/rdf:RDF/rdf:Description/@dc:title" => "foo",
+          :reparse => false
         )
       end
   
@@ -305,7 +306,7 @@ describe "RDF::RDFXML::Writer" do
         @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
         @graph << [RDF::URI.new("http://release/"), FOO.pred, FOO.obj]
     
-        xml = serialize(:max_depth => 1, :attributes => :untyped,
+        xml = serialize(:max_depth => 1, :attributes => :none,
                         :default_namespace => FOO.to_s,
                         :prefixes => {:foo => FOO.to_s})
         xml.should =~ /<Release/
@@ -319,7 +320,7 @@ describe "RDF::RDFXML::Writer" do
         @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
         @graph << [RDF::URI.new("http://release/"), FOO.pred, FOO.obj]
     
-        xml = serialize(:max_depth => 1, :attributes => :untyped,
+        xml = serialize(:max_depth => 1, :attributes => :none,
                         :prefixes => {nil => FOO.to_s, :foo => FOO.to_s})
         xml.should =~ /<Release/
         xml.should =~ /<pred/
@@ -410,6 +411,7 @@ describe "RDF::RDFXML::Writer" do
       doc.should be_a(Nokogiri::XML::Document)
       doc.root.should be_a(Nokogiri::XML::Element)
       paths.each_pair do |path, value|
+        next if path.is_a?(Symbol)
         @debug <<  doc.root.at_xpath(path, doc.namespaces).to_s if ::RDF::RDFXML::debug?
         case value
         when false
@@ -426,9 +428,11 @@ describe "RDF::RDFXML::Writer" do
       end
     
       # Parse generated graph and compare to source
-      #graph = RDF::Graph.new
-      #RDF::RDFXML::Reader.new(doc, :base_uri => "http://release/", :format => :rdfxml).each {|st| graph << st}
-      #graph.should be_equivalent_graph(@graph, :about => "http://release/", :trace => @debug.join("\n"))
+      if paths[:reparse]
+        graph = RDF::Graph.new
+        RDF::RDFXML::Reader.new(doc, :base_uri => "http://release/", :format => :rdfxml).each {|st| graph << st}
+        graph.should be_equivalent_graph(@graph, :about => "http://release/", :trace => @debug.join("\n"))
+      end
     end
 
     require 'rdf/n3'
