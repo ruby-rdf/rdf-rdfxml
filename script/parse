@@ -11,7 +11,7 @@ def parse(input, base)
   writer_class = RDF::Writer.for($output_format.to_sym)
   raise "Reader not found for #{$input_format}" unless reader_class
   raise "Writer not found for #{$output_format}" unless writer_class
-  puts writer_class.buffer { |writer|
+  puts writer_class.buffer(:standard_prefixes => true) { |writer|
     reader_class.new(input, :base_uri => base, :validate => true).each do |statement|
       writer << statement
     end
