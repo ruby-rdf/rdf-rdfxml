@@ -1,3 +1,7 @@
+=== 0.3.2
+* Refactor rdfcore tests using Spira and open-uri-cached.
+* Improve detection and reporting of attempts to write illegal values.
+
 === 0.3.1
 * In writer
   * fix bug where a serialized subject is output again, when it appears in a collection.
