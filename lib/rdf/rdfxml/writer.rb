@@ -115,7 +115,6 @@ module RDF::RDFXML
     # @param  [RDF::URI]      predicate
     # @param  [RDF::Value]    object
     # @return [void]
-    # @raise  [NotImplementedError] unless implemented in subclass
     # @abstract
     def write_triple(subject, predicate, object)
       @graph.insert(Statement.new(subject, predicate, object))
@@ -125,6 +124,7 @@ module RDF::RDFXML
     # Outputs the RDF/XML representation of all stored triples.
     #
     # @return [void]
+    # @raise [RDF::WriterError] when attempting to write non-conformant graph
     # @see    #write_triple
     def write_epilogue
       @force_RDF_about = {}
@@ -133,7 +133,7 @@ module RDF::RDFXML
       @lang = @options[:lang]
       @attributes = @options[:attributes] || :none
       @debug = @options[:debug]
-      raise "Invalid attribute option '#{@attributes}', should be one of #{VALID_ATTRIBUTES.to_sentence}" unless VALID_ATTRIBUTES.include?(@attributes.to_sym)
+      raise RDF::WriterError, "Invalid attribute option '#{@attributes}', should be one of #{VALID_ATTRIBUTES.to_sentence}" unless VALID_ATTRIBUTES.include?(@attributes.to_sym)
       self.reset
 
       doc = Nokogiri::XML::Document.new
@@ -295,10 +295,16 @@ module RDF::RDFXML
     def subject(subject, parent_node)
       node = nil
       
+      raise RDF::WriterError, "Illegal use of subject #{subject.inspect}, not supported in RDF/XML" unless subject.resource?
+      
       if !is_done?(subject)
         subject_done(subject)
         properties = @graph.properties(subject)
         add_debug "subject: #{subject.inspect}, props: #{properties.inspect}"
+
+        @graph.query(:subject => subject).each do |st|
+          raise RDF::WriterError, "Illegal use of predicate #{st.predicate.inspect}, not supported in RDF/XML" unless st.predicate.uri?
+        end
 
         rdf_type, *rest = properties.fetch(RDF.type.to_s, [])
         qname = get_qname_string(rdf_type, :with_default => true)
@@ -335,6 +341,8 @@ module RDF::RDFXML
           prop_ref = RDF::URI.intern(prop)
           
           properties[prop].each do |object|
+            raise RDF::WriterError, "Illegal use of object #{object.inspect}, not supported in RDF/XML" unless object.resource? || object.literal?
+
             @depth += 1
             predicate(prop_ref, object, node, properties[prop].length == 1)
             @depth -= 1
@@ -495,6 +503,8 @@ module RDF::RDFXML
         [{"rdf:nodeID" => object.id}]
       when RDF::URI
         [{"rdf:resource" => object.to_s}]
+      else
+        raise RDF::WriterError, "Attempt to serialize #{object.inspect}, not supported in RDF/XML"
       end
     end
     

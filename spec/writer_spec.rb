@@ -366,7 +366,7 @@ describe "RDF::RDFXML::Writer" do
         @graph = parse(%(
           <http://example.org/eg#eric> a [ <http://example.org/eg#intersectionOf> (<http://example.org/eg#Person> <http://example.org/eg#Male>)] .
         ), :reader => RDF::N3::Reader)
-        graph_check = parse(serialize(:format => :rdfxml)).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+        graph_check = parse(serialize).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
       end
       
       it "should not generate extraneous BNode" do
@@ -382,10 +382,21 @@ describe "RDF::RDFXML::Writer" do
          [ a <http://www.w3.org/2002/07/owl#Class>;
             <http://www.w3.org/2002/07/owl#intersectionOf> (<a> <b>)] .
         ), :reader => RDF::N3::Reader)
-        graph_check = parse(serialize(:format => :rdfxml)).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+        graph_check = parse(serialize).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
       end
     end
   
+    describe "illegal RDF values" do
+      it "raises error with literal as subject" do
+        @graph << [RDF::Literal.new("literal"), RDF::DC.title, RDF::Literal.new("foo")]
+        lambda { serialize }.should raise_error(RDF::WriterError)
+      end
+      it "raises error with node as predicate" do
+        @graph << [RDF::URI("http://example.com"), RDF::Node.new, RDF::Literal.new("foo")]
+        lambda { serialize }.should raise_error(RDF::WriterError)
+      end
+    end
+    
     describe "w3c rdfcore tests" do
       require 'rdf_test'
 
@@ -408,7 +419,7 @@ describe "RDF::RDFXML::Writer" do
           specify "#{t.name}: " + (t.description || t.document) do
             @graph = parse(Kernel.open(t.document), :base_uri => t.subject, :format => :ntriples)
             lambda do
-              parse(serialize(:format => :rdfxml, :base_uri => t.subject), :base_uri => t.subject).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+              serialize(:format => :rdfxml, :base_uri => t.subject)
             end.should raise_error(RDF::WriterError)
           end
         end
