@@ -13,6 +13,8 @@ begin
     gemspec.authors = ["Gregg Kellogg"]
     gemspec.add_dependency('rdf', '>= 0.3.1')
     gemspec.add_dependency('nokogiri', '>= 1.4.4')
+    gemspec.add_development_dependency('open-uri-cached')
+    gemspec.add_development_dependency('spira', '>= 0.0.12')
     gemspec.add_development_dependency('rspec', '>= 2.5.0')
     gemspec.add_development_dependency('rdf-spec', '>= 0.3.1')
     gemspec.add_development_dependency('rdf-isomorphic', '>= 0.3.4')

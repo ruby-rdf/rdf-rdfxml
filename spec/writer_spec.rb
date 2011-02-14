@@ -387,20 +387,30 @@ describe "RDF::RDFXML::Writer" do
     end
   
     describe "w3c rdfcore tests" do
-      require 'rdf_helper'
+      require 'rdf_test'
 
-      def self.positive_tests
-        RdfHelper::TestCase.positive_parser_tests(RDFCORE_TEST, RDFCORE_DIR)
+      # Positive parser tests should raise errors.
+      describe "positive parser tests" do
+        Fixtures::TestCase::PositiveParserTest.each do |t|
+          next unless t.status == "APPROVED"
+          next if t.subject =~ /rdfms-xml-literal-namespaces|xml-canon/ # Literal serialization adds namespace definitions
+          specify "#{t.name}: " + (t.description || t.outputDocument) do
+            @graph = parse(t.output, :base_uri => t.subject, :format => :ntriples)
+            parse(serialize(:format => :rdfxml, :base_uri => t.subject), :base_uri => t.subject).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+          end
+        end
       end
 
-      positive_tests.each do |t|
-        #next unless t.about =~ /rdfms-not-id-and-resource-attr\/test001/
-        next if t.about =~ /rdfms-xml-literal-namespaces|xml-canon/ # Literal serialization adds namespace definitions
-        #next unless t.name =~ /11/
-        #puts t.inspect
-        specify "#{t.name}: " + (t.description || "#{t.outputDocument}") do
-          @graph = parse(t.output, :base_uri => t.about, :format => :ntriples)
-          parse(serialize(:format => :rdfxml, :base_uri => t.about), :base_uri => t.about).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+      # Miscellaneous parser tests should raise errors.
+      describe "positive parser tests" do
+        Fixtures::TestCase::MiscellaneousTest.each do |t|
+          next unless t.status == "APPROVED"
+          specify "#{t.name}: " + (t.description || t.document) do
+            @graph = parse(Kernel.open(t.document), :base_uri => t.subject, :format => :ntriples)
+            lambda do
+              parse(serialize(:format => :rdfxml, :base_uri => t.subject), :base_uri => t.subject).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+            end.should raise_error(RDF::WriterError)
+          end
         end
       end
     end

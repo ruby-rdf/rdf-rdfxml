@@ -296,108 +296,24 @@ EOF
     end
   end
 
-  context "parsing rdf files" do
-    def test_file(filepath, uri)
-      rdf_string = File.read(filepath)
-      graph = parse(rdf_string, :base_uri => uri, :validate => true)
-
-      nt_string = File.read(filepath.sub('.rdf', '.nt'))
-      nt_graph = RDF::Graph.new
-      nt_graph.load(filepath.sub('.rdf', '.nt'))
-
-      graph.should be_equivalent_graph(nt_graph, :about => uri, :trace => @debug)
-    end
-
-    before(:all) do
-      @rdf_dir = File.join(File.dirname(__FILE__), 'rdf_tests')
-    end
-
-    it "should parse Coldplay's BBC Music profile" do
-      gid = 'cc197bad-dc9c-440d-a5b5-d52ba2e14234'
-      file = File.join(@rdf_dir, "#{gid}.rdf")
-      test_file(file, "http://www.bbc.co.uk/music/artists/#{gid}")
-    end
-
-    it "should parse xml literal test" do
-     file = File.join(@rdf_dir, "xml-literal-mixed.rdf")
-     begin
-       test_file(file, "http://www.example.com/books#book12345")
-     rescue 
-       pending("NTriples support for multi-line quites") { raise }
-     end
-    end
-  end
-
   # W3C Test suite from http://www.w3.org/2000/10/rdf-tests/rdfcore/
   describe "w3c rdfcore tests" do
-    require 'rdf_helper'
+    require 'rdf_test'
     
-    def self.positive_tests
-      RdfHelper::TestCase.positive_parser_tests(RDFCORE_TEST, RDFCORE_DIR)
-    end
-
-    def self.negative_tests
-      RdfHelper::TestCase.negative_parser_tests(RDFCORE_TEST, RDFCORE_DIR) rescue []
-    end
-    
-    it "should parse testcase" do
-      sampledoc = <<-EOF;
-<?xml version="1.0" ?>
-<rdf:RDF
-		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-		xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-		xmlns:test="http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema#"
->
-<!-- amp-in-url/Manifest.rdf -->
-<test:PositiveParserTest rdf:about="http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/Manifest.rdf#test001">
-
-   <test:status>APPROVED</test:status>
-   <test:approval rdf:resource="http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Sep/0326.html" />
-   <!-- <test:discussion rdf:resource="pointer to archived email or other discussion" /> -->
-   <!-- <test:description>
-	-if we have a description, fill it in here -
-   </test:description> -->
-
-   <test:inputDocument>
-      <test:RDF-XML-Document rdf:about="http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/test001.rdf" />
-   </test:inputDocument>
-
-   <test:outputDocument>
-      <test:NT-Document rdf:about="http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/test001.nt" />
-   </test:outputDocument>
-
-</test:PositiveParserTest>
-</rdf:RDF>
-EOF
-
-      triples = <<-EOF
-<http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/Manifest.rdf#test001> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema#PositiveParserTest> .
-<http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/Manifest.rdf#test001> <http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema#approval> <http://lists.w3.org/Archives/Public/w3c-rdfcore-wg/2001Sep/0326.html> .
-<http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/Manifest.rdf#test001> <http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema#inputDocument> <http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/test001.rdf> .
-<http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/Manifest.rdf#test001> <http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema#outputDocument> <http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/test001.nt> .
-<http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/Manifest.rdf#test001> <http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema#status> "APPROVED" .
-<http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/test001.nt> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema#NT-Document> .
-<http://www.w3.org/2000/10/rdf-tests/rdfcore/amp-in-url/test001.rdf> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema#RDF-XML-Document> .
-EOF
-      uri = "http://www.w3.org/2000/10/rdf-tests/rdfcore/xmlbase/Manifest.rdf#test001"
-
-      graph = parse(sampledoc, :base_uri => uri, :validate => true)
-      graph.should be_equivalent_graph(triples, :about => uri, :trace => @debug)
-    end
-  
-    # Negative parser tests should raise errors.
+    # Positive parser tests should raise errors.
     describe "positive parser tests" do
-      positive_tests.each do |t|
+      Fixtures::TestCase::PositiveParserTest.each do |t|
+        next unless t.status == "APPROVED"
         #next unless t.about =~ /rdfms-rdf-names-use/
         #next unless t.name =~ /11/
         #puts t.inspect
         specify "#{t.name}: " + (t.description || "#{t.inputDocument} against #{t.outputDocument}") do
           begin
-            t.run_test do |rdf_string|
+            t.run_test do
               t.debug = []
               g = RDF::Graph.new
-              @reader.new(rdf_string,
-                  :base_uri => t.about,
+              @reader.new(t.input,
+                  :base_uri => t.inputDocument,
                   :validate => false,
                   :debug => t.debug).each do |statement|
                 g << statement
@@ -415,17 +331,19 @@ EOF
       end
     end
     
+    # Negative parser tests should raise errors.
     describe "negative parser tests" do
-      negative_tests.each do |t|
+      Fixtures::TestCase::NegativeParserTest.each do |t|
+        next unless t.status == "APPROVED"
         #next unless t.about =~ /rdfms-empty-property-elements/
         #next unless t.name =~ /1/
         #puts t.inspect
         specify "test #{t.name}: " + (t.description || t.inputDocument) do
-          t.run_test do |rdf_string, parser|
+          t.run_test do
             lambda do
               g = RDF::Graph.new
-              @reader.new(rdf_string,
-                  :base_uri => t.about,
+              @reader.new(t.input,
+                  :base_uri => t.inputDocument,
                   :validate => true).each do |statement|
                 g << statement
               end
