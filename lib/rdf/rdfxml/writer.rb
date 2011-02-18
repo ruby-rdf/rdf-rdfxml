@@ -308,7 +308,7 @@ module RDF::RDFXML
 
         rdf_type, *rest = properties.fetch(RDF.type.to_s, [])
         qname = get_qname_string(rdf_type, :with_default => true)
-        add_debug "subject: #{subject.inspect}, qname: #{qname.inspect}"
+        add_debug "=> qname: #{qname.inspect}"
         if rdf_type.is_a?(RDF::Node)
           # Must serialize with an element
           rdf_type = nil
@@ -318,6 +318,8 @@ module RDF::RDFXML
           properties[RDF.type.to_s] = [rest].flatten.compact
         end
         prop_list = order_properties(properties)
+        add_debug "=> property order: #{prop_list.to_sentence}"
+        
 
         if qname
           rdf_type = nil
@@ -332,7 +334,11 @@ module RDF::RDFXML
       
         if subject.is_a?(RDF::Node)
           # Only need nodeID if it's referenced elsewhere
-          node["rdf:nodeID"] = subject.id if ref_count(subject) > (@depth == 0 ? 0 : 1)
+          if ref_count(subject) > (@depth == 0 ? 0 : 1)
+            node["rdf:nodeID"] = subject.id
+          else
+            node.add_child(Nokogiri::XML::Comment.new(node.document, "Serialization for #{subject}")) if RDF::RDFXML::debug?
+          end
         else
           node["rdf:about"] = relativize(subject)
         end
@@ -351,7 +357,11 @@ module RDF::RDFXML
       elsif @force_RDF_about.include?(subject)
         add_debug "subject: #{subject.inspect}, force about"
         node = Nokogiri::XML::Element.new("rdf:Description", parent_node.document)
-        node["rdf:about"] = relativize(subject)
+        if subject.is_a?(RDF::Node)
+          node["rdf:nodeID"] = subject.id
+        else
+          node["rdf:about"] = relativize(subject)
+        end
       end
       @force_RDF_about.delete(subject)
 
@@ -371,22 +381,26 @@ module RDF::RDFXML
       #qname = "rdf:li" if qname.match(/rdf:_\d+/)
       pred_node = Nokogiri::XML::Element.new(qname, node.document)
       
-      col = RDF::List.new(object, @graph).to_a
-      conformant_list = col.all? {|item| !item.literal?}
       o_props = @graph.properties(object)
+
+      col = RDF::List.new(object, @graph).to_a
+      conformant_list = col.all? {|item| !item.literal?} && o_props[RDF.first.to_s]
       args = xml_args(object)
       attrs = args.pop
 
       # Check to see if it can be serialized as a collection
-      if conformant_list && o_props[RDF.first.to_s]
-        add_debug("predicate as collection")
+      if conformant_list
+        add_debug("=> as collection: [#{col.map(&:to_s).join(", ")}]")
         # Serialize list as parseType="Collection"
+        pred_node.add_child(Nokogiri::XML::Comment.new(node.document, "Serialization for #{object}")) if RDF::RDFXML::debug?
         pred_node["rdf:parseType"] = "Collection"
-        col.each do |item|
-          # Mark the BNode subject of each item as being complete, so that it is not serialized elsewhere
-          @graph.query(:predicate => RDF.first, :object => item) do |statement|
-            subject_done(statement.subject)
-          end
+        while o_props[RDF.first.to_s]
+          # Object is used only for referencing collection item and next
+          subject_done(object)
+          item = o_props[RDF.first.to_s].first
+          object = o_props[RDF.rest.to_s].first
+          o_props = @graph.properties(object)
+          add_debug("=> li first: #{item}, rest: #{object}")
           @force_RDF_about[item] = true
           subject(item, pred_node)
         end
@@ -395,31 +409,31 @@ module RDF::RDFXML
         pred_node.unlink
         pred_node = nil
         node[qname] = object.is_a?(RDF::URI) ? relativize(object) : object.value
-        add_debug("predicate as attribute: node[#{qname}]=#{node[qname]}, #{object.class}")
+        add_debug("=> as attribute: node[#{qname}]=#{node[qname]}, #{object.class}")
       elsif object.literal?
         # Serialize as element
         add_debug("predicate as element: #{attrs.inspect}")
         attrs.each_pair do |a, av|
           next if a.to_s == "xml:lang" && av.to_s == @lang # Lang already specified, don't repeat
-          add_debug "  elt attr #{a}=#{av}"
+          add_debug "=> elt attr #{a}=#{av}"
           pred_node[a] = av.to_s
         end
-        add_debug "  elt #{'xmllit ' if object.literal? && object.datatype == RDF.XMLLiteral}content=#{args.first}" if !args.empty?
+        add_debug "=> elt #{'xmllit ' if object.literal? && object.datatype == RDF.XMLLiteral}content=#{args.first}" if !args.empty?
         if object.datatype == RDF.XMLLiteral
           pred_node.inner_html = args.first.to_s
         elsif args.first
           pred_node.content = args.first
         end
       elsif @depth < @max_depth && !is_done?(object) && @subjects.include?(object)
-        add_debug("predicate as element (recurse)")
+        add_debug("  as element (recurse)")
         @depth += 1
         subject(object, pred_node)
         @depth -= 1
       elsif object.is_a?(RDF::Node)
-        add_debug("predicate as element (nodeID)")
+        add_debug("=> as element (nodeID)")
         pred_node["rdf:nodeID"] = object.id
       else
-        add_debug("predicate as element (resource)")
+        add_debug("=> as element (resource)")
         pred_node["rdf:resource"] = relativize(object)
       end
 
@@ -428,7 +442,7 @@ module RDF::RDFXML
 
     # Mark a subject as done.
     def subject_done(subject)
-      #add_debug("subject_done: #{subject}")
+      add_debug("subject_done: #{subject}")
       @serialized[subject] = true
     end
     
@@ -481,7 +495,6 @@ module RDF::RDFXML
         prop_list << prop.to_s
       end
       
-      add_debug "order_properties: #{prop_list.to_sentence}"
       prop_list
     end
 
@@ -512,7 +525,7 @@ module RDF::RDFXML
     #
     # @param [String] message::
     def add_debug(message)
-      STDERR.puts message if ::RDF::RDFXML.debug?
+      STDERR.puts ("    " * @depth) + message if ::RDF::RDFXML.debug?
       @debug << message if @debug.is_a?(Array)
     end
 

@@ -1,3 +1,7 @@
+=== 0.3.2.1
+* Fix collection serialization bug
+* Assert :xml as a format type (by creating RDF::RDFXML::XML as a sub-class of Format that uses RDFXML::Reader/Writer)
+
 === 0.3.2
 * Refactor rdfcore tests using Spira and open-uri-cached.
 * Improve detection and reporting of attempts to write illegal values.

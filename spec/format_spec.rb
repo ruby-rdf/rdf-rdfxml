@@ -19,5 +19,10 @@ describe RDF::RDFXML::Format do
         format.should == RDF::RDFXML::Format
       end
     end
+    
+    it "should discover 'xml'" do
+      RDF::Format.for(:xml).reader.should == RDF::RDFXML::Reader
+      RDF::Format.for(:xml).writer.should == RDF::RDFXML::Writer
+    end
   end
 end

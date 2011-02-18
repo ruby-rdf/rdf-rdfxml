@@ -361,6 +361,15 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/owl:equals/@rdf:nodeID" => /a$/
         )
       end
+      
+      it "should use rdf::nodeID for forced BNode generation" do
+        @graph = parse(%(
+          @prefix : <http://example/> .
+          _:bar :list (_:foo (_:foo)).
+        ))
+
+        graph_check = parse(serialize).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+      end
     
       it "should replicate rdfcore/rdfms-seq-representation" do
         @graph = parse(%(
