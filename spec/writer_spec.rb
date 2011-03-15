@@ -467,7 +467,7 @@ describe "RDF::RDFXML::Writer" do
 
     require 'rdf/n3'
     def parse(input, options = {})
-      reader_class = options.fetch(:reader, detect_format(input))
+      reader_class = options.fetch(:reader, RDF::Reader.for(detect_format(input)))
     
       graph = RDF::Graph.new
       reader_class.new(input, options).each do |statement|
