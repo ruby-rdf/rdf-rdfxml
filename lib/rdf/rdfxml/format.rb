@@ -33,7 +33,7 @@ module RDF::RDFXML
   # This allows the following:
   #
   # @example Obtaining an RDFXML format class
-  #   RDF::Format.for(:xml)         # RDF::RDFXML::XML::Format
+  #   RDF::Format.for(:xml)         # RDF::RDFXML::XML
   #   RDF::Format.for(:xml).reader  # RDF::RDFXML::Reader
   #   RDF::Format.for(:xml).writer  # RDF::RDFXML::Writer
   class XML < RDF::Format
