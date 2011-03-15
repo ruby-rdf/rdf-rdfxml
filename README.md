@@ -1,17 +1,17 @@
 # RDF::RDFXML reader/writer
 
-RDF/XML parser for RDF.rb.
+[RDF/XML][RDF/XML] parser for [RDF.rb][RDF.rb].
 
 ## DESCRIPTION
 
-RDF::RDFXML is an RDF/XML reader/writer for Ruby using the RDF.rb library suite.
+RDF::RDFXML is an [RDF/XML][RDF/XML] reader/writer for Ruby using the [RDF.rb][RDF.rb] library suite.
 
 ## FEATURES
-RDF::RDFXML parses RDF/XML into statements or triples and serializes triples, statements or graphs.
+RDF::RDFXML parses [RDF/XML][RDF/XML] into statements or triples and serializes triples, statements or graphs.
 
-Fully compliant RDF/XML parser and serializer.
+Fully compliant [RDF/XML][RDF/XML] parser and serializer.
 
-Install with 'gem install rdf-rdfxml'
+Install with `gem install rdf-rdfxml`
 
 ## Usage:
 Instantiate a parser and parse source, specifying type and base-URL
@@ -49,11 +49,11 @@ Full documentation available on [RubyForge](http://rdf.rubyforge.org/rdfxml)
 * Consider a SAX-based parser for improved performance
 
 ## Resources
-* [RDF.rb](http://rdf.rubyforge.org/) 
+* [RDF.rb][RDF.rb]
+* [RDF/XML][RDF/XML]
 * [Distiller](http://distiller.kellogg-assoc)
-* [Documentation](http://rdf.rubyforge.org/rdfa)
+* [Documentation](http://rdf.rubyforge.org/rdfxml)
 * [History](file:file.History.html)
-* [XHTML+RDFXML 1.1 Core](http://www.w3.org/TR/2010/WD-xhtml-rdfa-20100422/)
 * [RDF Tests](http://www.w3.org/2000/10/rdf-tests/rdfcore/allTestCases.html)
 
 ## AUTHOR
@@ -73,3 +73,6 @@ see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 * <http://rubygems.org/rdf-rdfxml>
 * <http://github.com/gkellogg/rdf-rdfxml>
 * <http://lists.w3.org/Archives/Public/public-rdf-ruby/>
+
+[RDF.rb]:   http://rdf.rubyforge.org/
+[RDF/XML]:  http://www.w3.org/TR/REC-rdf-syntax/  "RDF/XML Syntax Specification"
