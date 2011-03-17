@@ -63,7 +63,7 @@ module Fixtures
           #puts "parse #{self.outputDocument} as #{RDF::Reader.for(self.outputDocument)}"
           format = detect_format(self.output)
           output_graph = RDF::Graph.load(self.outputDocument, :format => format, :base_uri => self.inputDocument)
-          puts "result: #{CGI.escapeHTML(graph.to_ntriples)}" if ::RDF::N3::debug?
+          puts "result: #{CGI.escapeHTML(graph.dump(:ntriples))}" if ::RDF::N3::debug?
           graph.should Matchers::be_equivalent_graph(output_graph, self)
         end
       end

@@ -24,15 +24,6 @@ module RDF
   module Isomorphic
     alias_method :==, :isomorphic_with?
   end
-  class Graph
-    def to_ntriples
-      RDF::Writer.for(:ntriples).buffer do |writer|
-        self.each_statement do |statement|
-          writer << statement
-        end
-      end
-    end
-  end
 end
 
 ::RSpec.configure do |c|

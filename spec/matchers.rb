@@ -46,8 +46,8 @@ module Matchers
       "\n#{info + "\n" unless info.empty?}" +
       (@info.inputDocument ? "Input file: #{@info.inputDocument}\n" : "") +
       (@info.outputDocument ? "Output file: #{@info.outputDocument}\n" : "") +
-      "Unsorted Expected:\n#{@expected.to_ntriples}" +
-      "Unsorted Results:\n#{@actual.to_ntriples}" +
+      "Unsorted Expected:\n#{@expected.dump(:ntriples)}" +
+      "Unsorted Results:\n#{@actual.dump(:ntriples)}" +
       (@info.trace ? "\nDebug:\n#{@info.trace}" : "")
     end
     def negative_failure_message

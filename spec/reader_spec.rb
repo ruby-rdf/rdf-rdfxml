@@ -144,7 +144,7 @@ EOF
       graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
       #puts @debug
       graph.size.should == 10
-      # print graph.to_ntriples
+      # print graph.dump(:ntriples
       # TODO: add datatype parsing
       # TODO: make sure the BNode forging is done correctly - an internal element->nodeID mapping
       # TODO: proper test
