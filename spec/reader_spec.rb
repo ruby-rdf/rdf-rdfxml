@@ -309,17 +309,17 @@ EOF
         #puts t.inspect
         specify "#{t.name}: " + (t.description || "#{t.inputDocument} against #{t.outputDocument}") do
           begin
-            t.run_test do
-              t.debug = []
-              g = RDF::Graph.new
-              @reader.new(t.input,
-                  :base_uri => t.inputDocument,
-                  :validate => false,
-                  :debug => t.debug).each do |statement|
-                g << statement
-              end
-              g
-            end
+            graph = RDF::Graph.new << @reader.new(t.input,
+              :base_uri => t.inputDocument,
+              :validate => false,
+              :debug => t.debug)
+
+            # Parse result graph
+            #puts "parse #{self.outputDocument} as #{RDF::Reader.for(self.outputDocument)}"
+            format = detect_format(t.output)
+            output_graph = RDF::Graph.load(t.outputDocument, :format => format, :base_uri => t.inputDocument)
+            puts "result: #{CGI.escapeHTML(graph.dump(:ntriples))}" if ::RDF::N3::debug?
+            graph.should be_equivalent_graph(output_graph, t)
           rescue RSpec::Expectations::ExpectationNotMetError => e
             if t.inputDocument =~ %r(xml-literal|xml-canon)
               pending("XMLLiteral canonicalization not implemented yet")
@@ -339,17 +339,11 @@ EOF
         #next unless t.name =~ /1/
         #puts t.inspect
         specify "test #{t.name}: " + (t.description || t.inputDocument) do
-          t.run_test do
-            lambda do
-              g = RDF::Graph.new
-              @reader.new(t.input,
-                  :base_uri => t.inputDocument,
-                  :validate => true).each do |statement|
-                g << statement
-              end
-              g.should be_empty
-            end.should raise_error(RDF::ReaderError)
-          end
+          lambda do
+            RDF::Graph.new << @reader.new(t.input,
+              :base_uri => t.inputDocument,
+              :validate => true)
+          end.should raise_error(RDF::ReaderError)
         end
       end
     end

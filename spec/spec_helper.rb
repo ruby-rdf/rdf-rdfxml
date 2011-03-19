@@ -5,15 +5,12 @@ $:.unshift File.dirname(__FILE__)
 require 'rubygems'
 require 'rspec'
 require 'matchers'
-require 'bigdecimal'  # XXX Remove Me
 require 'rdf/rdfxml'
 require 'rdf/ntriples'
 require 'rdf/spec'
 require 'rdf/spec/matchers'
 require 'rdf/isomorphic'
 require 'open-uri/cached'
-
-include Matchers
 
 # Create and maintain a cache of downloaded URIs
 URI_CACHE = File.expand_path(File.join(File.dirname(__FILE__), "uri-cache"))
@@ -32,7 +29,6 @@ end
   c.exclusion_filter = {
     :ruby => lambda { |version| !(RUBY_VERSION.to_s =~ /^#{version.to_s}/) },
   }
-  c.include(Matchers)
   c.include(RDF::Spec::Matchers)
 end
 

@@ -1,61 +1,77 @@
-module Matchers
-  class BeEquivalentGraph
-    Info = Struct.new(:about, :information, :trace, :compare, :inputDocument, :outputDocument)
-    def normalize(graph)
-      case graph
-      when RDF::Graph then graph
-      when IO, StringIO
-        RDF::Graph.new.load(graph, :base_uri => @info.about)
-      else
-        # Figure out which parser to use
-        g = RDF::Graph.new
-        reader_class = RDF::Reader.for(detect_format(graph))
-        reader_class.new(graph, :base_uri => @info.about).each {|s| g << s}
-        g
-      end
-    end
-    
-    def initialize(expected, info)
-      @info = if info.respond_to?(:about)
-        info
-      elsif info.is_a?(Hash)
-        identifier = info[:identifier] || expected.is_a?(RDF::Graph) ? expected.context : info[:about]
-        trace = info[:trace]
-        trace = trace.join("\n") if trace.is_a?(Array)
-        Info.new(identifier, info[:information] || "", trace, info[:compare])
-      else
-        Info.new(expected.is_a?(RDF::Graph) ? expected.context : info, info.to_s)
-      end
-      @expected = normalize(expected)
-    end
+require 'rspec/matchers'
 
-    def matches?(actual)
-      @actual = normalize(actual)
-      @actual == @expected
-    end
-
-    def failure_message_for_should
-      info = @info.respond_to?(:information) ? @info.information : @info.inspect
-      if @expected.is_a?(RDF::Graph) && @actual.size != @expected.size
-        "Graph entry count differs:\nexpected: #{@expected.size}\nactual:   #{@actual.size}"
-      elsif @expected.is_a?(Array) && @actual.size != @expected.length
-        "Graph entry count differs:\nexpected: #{@expected.length}\nactual:   #{@actual.size}"
-      else
-        "Graph differs"
-      end +
-      "\n#{info + "\n" unless info.empty?}" +
-      (@info.inputDocument ? "Input file: #{@info.inputDocument}\n" : "") +
-      (@info.outputDocument ? "Output file: #{@info.outputDocument}\n" : "") +
-      "Unsorted Expected:\n#{@expected.dump(:ntriples)}" +
-      "Unsorted Results:\n#{@actual.dump(:ntriples)}" +
-      (@info.trace ? "\nDebug:\n#{@info.trace}" : "")
-    end
-    def negative_failure_message
-      "Graphs do not differ\n"
+RSpec::Matchers.define :have_xpath do |xpath, value|
+  match do |actual|
+    @doc = Nokogiri::XML.parse(actual)
+    @doc.should be_a(Nokogiri::XML::Document)
+    @doc.root.should be_a(Nokogiri::XML::Element)
+    @namespaces = @doc.namespaces.merge("xhtml" => "http://www.w3.org/1999/xhtml", "xml" => "http://www.w3.org/XML/1998/namespace")
+    @result = @doc.root.at_xpath(xpath, @namespaces)
+    case value
+    when false
+      @result.should be_nil
+    when Array
+      @result.to_s.split(" ").should include(*value)
+    when Regexp
+      @result.to_s.should =~ value
+    else
+      @result.to_s.should == value
     end
   end
   
-  def be_equivalent_graph(expected, info = nil)
-    BeEquivalentGraph.new(expected, info)
+  failure_message_for_should do |actual|
+    msg = "expected to that #{xpath.inspect} would be #{value.inspect} in:\n" + actual.to_s
+    msg += "was: #{@result}"
   end
+end
+
+def normalize(graph)
+  case graph
+  when RDF::Graph then graph
+  when IO, StringIO
+    RDF::Graph.new.load(graph, :base_uri => @info.about)
+  else
+    # Figure out which parser to use
+    g = RDF::Graph.new
+    reader_class = RDF::Reader.for(detect_format(graph))
+    reader_class.new(graph, :base_uri => @info.about).each {|s| g << s}
+    g
+  end
+end
+
+Info = Struct.new(:about, :information, :trace, :compare, :inputDocument, :outputDocument)
+
+RSpec::Matchers.define :be_equivalent_graph do |expected, info|
+  match do |actual|
+    @info = if info.respond_to?(:about)
+      info
+    elsif info.is_a?(Hash)
+      identifier = info[:identifier] || expected.is_a?(RDF::Graph) ? expected.context : info[:about]
+      trace = info[:trace]
+      trace = trace.join("\n") if trace.is_a?(Array)
+      Info.new(identifier, info[:information] || "", trace, info[:compare])
+    else
+      Info.new(expected.is_a?(RDF::Graph) ? expected.context : info, info.to_s)
+    end
+    @expected = normalize(expected)
+    @actual = normalize(actual)
+    @actual.isomorphic_with?(@expected)
+  end
+  
+  failure_message_for_should do |actual|
+    info = @info.respond_to?(:information) ? @info.information : @info.inspect
+    if @expected.is_a?(RDF::Graph) && @actual.size != @expected.size
+      "Graph entry count differs:\nexpected: #{@expected.size}\nactual:   #{@actual.size}"
+    elsif @expected.is_a?(Array) && @actual.size != @expected.length
+      "Graph entry count differs:\nexpected: #{@expected.length}\nactual:   #{@actual.size}"
+    else
+      "Graph differs"
+    end +
+    "\n#{info + "\n" unless info.empty?}" +
+    (@info.inputDocument ? "Input file: #{@info.inputDocument}\n" : "") +
+    (@info.outputDocument ? "Output file: #{@info.outputDocument}\n" : "") +
+    "Unsorted Expected:\n#{@expected.dump(:ntriples)}" +
+    "Unsorted Results:\n#{@actual.dump(:ntriples)}" +
+    (@info.trace ? "\nDebug:\n#{@info.trace}" : "")
+  end  
 end

@@ -525,8 +525,9 @@ module RDF::RDFXML
     #
     # @param [String] message::
     def add_debug(message)
-      STDERR.puts ("    " * @depth) + message if ::RDF::RDFXML.debug?
-      @debug << message if @debug.is_a?(Array)
+      msg = "#{indent}#{message}"
+      STDERR.puts msg if ::RDF::RDFXML.debug?
+      @debug << msg if @debug.is_a?(Array)
     end
 
     # Return string representation of QName pair
