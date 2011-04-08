@@ -485,7 +485,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => FOO.obj.to_s,
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {"foo" => FOO.to_s})
           end
         end
 
@@ -503,7 +503,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => FOO.obj.to_s,
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {"foo" => FOO.to_s})
           end
         end
 
@@ -700,11 +700,11 @@ describe "RDF::RDFXML::Writer" do
     subject { RDF::RDFXML::Writer.new }
     describe "with undefined predicate URIs" do
       {
-        "http://a/b"  => [:ns0, :b],
-        "dc:title"    => [:ns0, :title]
+        "http://a/b"  => "ns0:b",
+        "dc:title"    => "ns0:title"
       }.each_pair do |uri, qname|
         it "returns #{qname.inspect} given #{uri}" do
-          subject.get_qname(uri).should == qname
+          subject.get_qname(RDF::URI(uri)).should == qname
         end
       end
     end

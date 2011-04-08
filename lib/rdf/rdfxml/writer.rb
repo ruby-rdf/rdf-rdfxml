@@ -87,7 +87,7 @@ module RDF::RDFXML
       super do
         @graph = RDF::Graph.new
         @uri_to_qname = {}
-        prefix(nil, @options[:default_namespace]) if @options[:default_namespace]
+        @uri_to_prefix = {}
         block.call(self) if block_given?
       end
     end
@@ -138,7 +138,8 @@ module RDF::RDFXML
 
       doc = Nokogiri::XML::Document.new
 
-      add_debug "\nserialize: graph: #{@graph.size}"
+      add_debug "\nserialize: graph of size #{@graph.size}"
+      add_debug "options: #{@options.inspect}"
 
       preprocess
 
@@ -165,32 +166,46 @@ module RDF::RDFXML
         end
       end
 
+      add_debug "doc:\n #{doc.to_xml(:encoding => "UTF-8", :indent => 2)}"
       doc.write_xml_to(@output, :encoding => "UTF-8", :indent => 2)
     end
     
     # Return a QName for the URI, or nil. Adds namespace of QName to defined prefixes
-    # @param [URI,#to_s] uri
-    # @return [Array<Symbol,Symbol>, nil] Prefix, Suffix pair or nil, if none found
-    def get_qname(uri)
-      uri = RDF::URI.intern(uri.to_s) unless uri.is_a?(URI)
+    # @param [URI,#to_s] resource
+    # @param [Hash<Symbol => Object>] options
+    # @option [Boolean] :with_default (false) If a default mapping exists, use it, otherwise if a prefixed mapping exists, use it
+    # @return [String, nil] value to use to identify URI
+    def get_qname(resource, options = {})
+      case resource
+      when RDF::Node
+        add_debug "qname(#{resource.inspect}): #{resource}"
+        return resource.to_s
+      when RDF::URI
+        uri = resource.to_s
+      else
+        add_debug "qname(#{resource.inspect}): nil"
+        return nil
+      end
 
-      unless @uri_to_qname.has_key?(uri)
-        # Find in defined prefixes
-        prefixes.each_pair do |prefix, vocab|
-          if uri.to_s.index(vocab.to_s) == 0
-            local_name = uri.to_s[(vocab.to_s.length)..-1]
-            add_debug "get_qname(ns): #{prefix}:#{local_name}"
-            return @uri_to_qname[uri] = [prefix, local_name.to_sym]
-          end
-        end
-        
-        # Use a default vocabulary
-        if @options[:standard_prefixes] && vocab = RDF::Vocabulary.detect {|v| uri.to_s.index(v.to_uri.to_s) == 0}
-          prefix = vocab.__name__.to_s.split('::').last.downcase
-          prefixes[prefix.to_sym] = vocab.to_uri
-          suffix = uri.to_s[vocab.to_uri.to_s.size..-1]
-          return @uri_to_qname[uri] = [prefix.to_sym, suffix.empty? ? nil : suffix.to_sym] if prefix && suffix
-        end
+      qname = case
+      when options[:with_default] && prefix(nil) && uri.index(prefix(nil)) == 0
+        # Don't cache
+        add_debug "qname(#{resource.inspect}): #{uri.sub(prefix(nil), '').inspect} (default)"
+        return uri.sub(prefix(nil), '')
+      when @uri_to_qname.has_key?(uri)
+        add_debug "qname(#{resource.inspect}): #{@uri_to_qname[uri].inspect} (cached)"
+        return @uri_to_qname[uri]
+      when u = @uri_to_prefix.keys.detect {|u| uri.index(u.to_s) == 0}
+        # Use a defined prefix
+        prefix = @uri_to_prefix[u]
+        prefix(prefix.to_sym, u)  # Define for output
+        uri.sub(u.to_s, "#{prefix}:")
+      when @options[:standard_prefixes] && vocab = RDF::Vocabulary.detect {|v| uri.index(v.to_uri.to_s) == 0}
+        prefix = vocab.__name__.to_s.split('::').last.downcase
+        @uri_to_prefix[vocab.to_uri.to_s] = prefix
+        prefix(prefix.to_sym, vocab.to_uri) # Define for output
+        uri.sub(vocab.to_uri.to_s, "#{prefix}:")
+      else
         
         # No vocabulary found, invent one
         # Add bindings for predicates not already having bindings
@@ -200,20 +215,20 @@ module RDF::RDFXML
         #   in order to break a URI into a namespace name and a local name, split it after the last XML non-NCName
         #   character, ensuring that the first character of the name is a Letter or '_'. If the URI ends in a
         #   non-NCName character then throw a "this graph cannot be serialized in RDF/XML" exception or error.
-        separation = uri.to_s.rindex(%r{[^a-zA-Z_0-9-][a-zA-Z_][a-z0-9A-Z_-]*$})
+        separation = uri.rindex(%r{[^a-zA-Z_0-9-][a-zA-Z_][a-z0-9A-Z_-]*$})
         return @uri_to_qname[uri] = nil unless separation
         base_uri = uri.to_s[0..separation]
         suffix = uri.to_s[separation+1..-1]
         @gen_prefix = @gen_prefix ? @gen_prefix.succ : "ns0"
-        add_debug "create prefix definition for #{uri}"
+        @uri_to_prefix[base_uri] = @gen_prefix
         prefix(@gen_prefix, base_uri)
-        add_debug "get_qname(tmp_ns): #{@gen_prefix}:#{suffix}"
-        return @uri_to_qname[uri] = [@gen_prefix.to_sym, suffix.to_sym]
+        "#{@gen_prefix}:#{suffix}"
       end
       
-      @uri_to_qname[uri]
-    rescue Addressable::URI::InvalidURIError
-       @uri_to_qname[uri] = nil
+      add_debug "qname(#{resource.inspect}): #{qname.inspect}"
+      @uri_to_qname[uri] = qname
+    rescue Addressable::URI::InvalidURIError => e
+      raise RDF::WriterError, "Invalid URI #{uri.inspect}: #{e.message}"
     end
     
     protected
@@ -261,6 +276,19 @@ module RDF::RDFXML
     
     # Perform any preprocessing of statements required
     def preprocess
+      default_namespace = @options[:default_namespace] || prefix(nil)
+
+      # Load defined prefixes
+      (@options[:prefixes] || {}).each_pair do |k, v|
+        @uri_to_prefix[v.to_s] = k
+      end
+      @options[:prefixes] = {}  # Will define actual used when matched
+
+      if default_namespace
+        add_debug("preprocess: default_namespace: #{default_namespace}")
+        prefix(nil, default_namespace) 
+      end
+
       @graph.each {|statement| preprocess_statement(statement)}
     end
     
@@ -307,11 +335,10 @@ module RDF::RDFXML
         end
 
         rdf_type, *rest = properties.fetch(RDF.type.to_s, [])
-        qname = get_qname_string(rdf_type, :with_default => true)
-        add_debug "=> qname: #{qname.inspect}"
+        qname = get_qname(rdf_type, :with_default => true)
         if rdf_type.is_a?(RDF::Node)
           # Must serialize with an element
-          rdf_type = nil
+          qname = rdf_type = nil
         elsif rest.empty?
           properties.delete(RDF.type.to_s)
         else
@@ -319,7 +346,6 @@ module RDF::RDFXML
         end
         prop_list = order_properties(properties)
         add_debug "=> property order: #{prop_list.to_sentence}"
-        
 
         if qname
           rdf_type = nil
@@ -374,7 +400,7 @@ module RDF::RDFXML
     def predicate(prop, object, node, is_unique)
       as_attr = predicate_as_attribute?(prop, object) && is_unique
       
-      qname = get_qname_string(prop, :with_default => !as_attr)
+      qname = get_qname(prop, :with_default => !as_attr)
       raise RDF::WriterError, "No qname generated for <#{prop}>" unless qname
 
       add_debug "predicate: #{qname}, as_attr: #{as_attr}, object: #{object.inspect}, done: #{is_done?(object)}, subject: #{@subjects.include?(object)}"
@@ -475,8 +501,8 @@ module RDF::RDFXML
     def order_properties(properties)
       properties.keys.each do |k|
         properties[k] = properties[k].sort do |a, b|
-          a_li = a.is_a?(RDF::URI) && get_qname(a) && get_qname(a).last.to_s =~ /^_\d+$/ ? a.to_i : a.to_s
-          b_li = b.is_a?(RDF::URI) && get_qname(b) && get_qname(b).last.to_s =~ /^_\d+$/ ? b.to_i : b.to_s
+          a_li = a.is_a?(RDF::URI) && get_qname(a) && get_qname(a).to_s =~ /:_\d+$/ ? a.to_i : a.to_s
+          b_li = b.is_a?(RDF::URI) && get_qname(b) && get_qname(b).to_s =~ /:_\d+$/ ? b.to_i : b.to_s
           
           a_li <=> b_li
         end
@@ -528,22 +554,6 @@ module RDF::RDFXML
       msg = "#{indent}#{message}"
       STDERR.puts msg if ::RDF::RDFXML.debug?
       @debug << msg if @debug.is_a?(Array)
-    end
-
-    # Return string representation of QName pair
-    #
-    # @option [Boolean] :with_default (false) If a default mapping exists, use it, otherwise if a prefixed mapping exists, use it
-    def get_qname_string(uri, options = {})
-      if qname = get_qname(uri)
-        if options[:with_default]
-          qname[0] = nil if !qname.first.nil? && prefix(qname.first).to_s == prefix(nil).to_s
-        elsif qname.first.nil?
-          prefix = nil
-          prefixes.each_pair {|k, v| prefix = k if !k.nil? && v.to_s == prefix(nil).to_s}
-          qname[0] = prefix if prefix
-        end
-        qname.first == nil ? qname.last.to_s : qname.map(&:to_s).join(":")
-      end
     end
   end
 end

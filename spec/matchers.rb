@@ -1,11 +1,13 @@
 require 'rspec/matchers'
 
-RSpec::Matchers.define :have_xpath do |xpath, value|
+RSpec::Matchers.define :have_xpath do |xpath, value, namespaces = {}|
   match do |actual|
     @doc = Nokogiri::XML.parse(actual)
     @doc.should be_a(Nokogiri::XML::Document)
     @doc.root.should be_a(Nokogiri::XML::Element)
-    @namespaces = @doc.namespaces.merge("xhtml" => "http://www.w3.org/1999/xhtml", "xml" => "http://www.w3.org/XML/1998/namespace")
+    @namespaces = @doc.namespaces.
+      merge(namespaces).
+      merge("xhtml" => "http://www.w3.org/1999/xhtml", "xml" => "http://www.w3.org/XML/1998/namespace")
     @result = @doc.root.at_xpath(xpath, @namespaces)
     case value
     when false
