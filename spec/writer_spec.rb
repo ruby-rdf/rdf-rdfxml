@@ -697,11 +697,13 @@ describe "RDF::RDFXML::Writer" do
   end
   
   describe "#get_qname" do
-    subject { RDF::RDFXML::Writer.new }
-    describe "with undefined predicate URIs" do
+    subject { RDF::RDFXML::Writer.new(StringIO.new, :prefixes => {:foo => "http://foo/"}) }
+    context "with undefined predicate URIs" do
       {
-        "http://a/b"  => "ns0:b",
-        "dc:title"    => "ns0:title"
+        "http://a/b"      => "ns0:b",
+        "dc:title"        => "ns0:title",
+        "http://a/%b"     => "ns0:b",
+        "http://foo/%bar" => "ns0:bar"
       }.each_pair do |uri, qname|
         it "returns #{qname.inspect} given #{uri}" do
           subject.get_qname(RDF::URI(uri)).should == qname

@@ -8,7 +8,7 @@ RSpec::Matchers.define :have_xpath do |xpath, value, namespaces = {}|
     @namespaces = @doc.namespaces.
       merge(namespaces).
       merge("xhtml" => "http://www.w3.org/1999/xhtml", "xml" => "http://www.w3.org/XML/1998/namespace")
-    @result = @doc.root.at_xpath(xpath, @namespaces)
+    @result = @doc.root.at_xpath(xpath, @namespaces) rescue false
     case value
     when false
       @result.should be_nil

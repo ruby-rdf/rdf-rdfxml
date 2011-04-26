@@ -29,7 +29,21 @@ module RDF
     autoload :Writer,  'rdf/rdfxml/writer'
     autoload :VERSION, 'rdf/rdfxml/version'
     autoload :XML,     'rdf/rdfxml/vocab'
-    
+
+    # Regexp matching an NCName.
+    NC_REGEXP = Regexp.new(
+      %{^
+        (?!\\\\u0301)             # &#x301; is a non-spacing acute accent.
+                                  # It is legal within an XML Name, but not as the first character.
+        (  [a-zA-Z_]
+         | \\\\u[0-9a-fA-F]
+        )
+        (  [0-9a-zA-Z_\.-]
+         | \\\\u([0-9a-fA-F]{4})
+        )*
+      $},
+      Regexp::EXTENDED)
+  
     def self.debug?; @debug; end
     def self.debug=(value); @debug = value; end
   end

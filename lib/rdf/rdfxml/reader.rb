@@ -13,19 +13,6 @@ module RDF::RDFXML
     CORE_SYNTAX_TERMS = %w(RDF ID about parseType resource nodeID datatype).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
     OLD_TERMS = %w(aboutEach aboutEachPrefix bagID).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
 
-    NC_REGEXP = Regexp.new(
-      %{^
-        (?!\\\\u0301)             # &#x301; is a non-spacing acute accent.
-                                  # It is legal within an XML Name, but not as the first character.
-        (  [a-zA-Z_]
-         | \\\\u[0-9a-fA-F]
-        )
-        (  [0-9a-zA-Z_\.-]
-         | \\\\u([0-9a-fA-F]{4})
-        )*
-      $},
-      Regexp::EXTENDED)
-  
     # The Recursive Baggage
     class EvaluationContext # :nodoc:
       attr_reader :base

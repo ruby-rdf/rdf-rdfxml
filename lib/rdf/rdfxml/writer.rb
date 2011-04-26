@@ -195,12 +195,12 @@ module RDF::RDFXML
       when @uri_to_qname.has_key?(uri)
         add_debug "qname(#{resource.inspect}): #{@uri_to_qname[uri].inspect} (cached)"
         return @uri_to_qname[uri]
-      when u = @uri_to_prefix.keys.detect {|u| uri.index(u.to_s) == 0}
+      when u = @uri_to_prefix.keys.detect {|u| uri.index(u.to_s) == 0 && NC_REGEXP.match(uri[u.to_s.length..-1])}
         # Use a defined prefix
         prefix = @uri_to_prefix[u]
         prefix(prefix, u)  # Define for output
         uri.sub(u.to_s, "#{prefix}:")
-      when @options[:standard_prefixes] && vocab = RDF::Vocabulary.detect {|v| uri.index(v.to_uri.to_s) == 0}
+      when @options[:standard_prefixes] && vocab = RDF::Vocabulary.detect {|v| uri.index(v.to_uri.to_s) == 0 && NC_REGEXP.match(uri[v.to_uri.to_s.length..-1])}
         prefix = vocab.__name__.to_s.split('::').last.downcase
         @uri_to_prefix[vocab.to_uri.to_s] = prefix
         prefix(prefix, vocab.to_uri) # Define for output
