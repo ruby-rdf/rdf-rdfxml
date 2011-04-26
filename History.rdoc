@@ -1,3 +1,8 @@
+=== 0.3.3
+* Change licensing to UNLICENSE.
+* Only generate prefix definitions for prefixes actually used within a serialization.
+* Make sure that only valid QNames are generated in writer.
+
 === 0.3.2.1
 * Fix collection serialization bug
 * Assert :xml as a format type (by creating RDF::RDFXML::XML as a sub-class of Format that uses RDFXML::Reader/Writer)
