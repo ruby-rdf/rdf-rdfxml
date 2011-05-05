@@ -13,4 +13,19 @@ class Nokogiri::XML::Node
     when Nokogiri::XML::Attr then "#{parent.display_path}@#{name}"
     end
   end
+  
+  alias_method :attribute_with_ns_without_ffi_null, :attribute_with_ns
+  ##
+  # Monkey patch attribute_with_ns, to insure nil is returned for #null?
+  #
+  # Get the attribute node with name and namespace
+  #
+  # @param [String] name
+  # @param [String] namespace
+  # @return [Nokogiri::XML::Attr]
+  def attribute_with_ns(name, namespace)
+    a = attribute_with_ns_without_ffi_null(name, namespace)
+    
+    (a.respond_to?(:null?) && a.null?) ? nil : a # to ensure FFI Pointer compatibility
+  end
 end
