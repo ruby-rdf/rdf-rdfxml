@@ -59,7 +59,11 @@ module RDF::RDFXML
       # Extract Evaluation Context from an element
       def extract_from_element(el, &cb)
         b = el.attribute_with_ns("base", RDF::XML.to_s)
+        b = nil if b.respond_to?(:null?) && b.null? # to ensure FFI Pointer compatibility
+        
         lang = el.attribute_with_ns("lang", RDF::XML.to_s)
+        lang = nil if lang.respond_to?(:null?) && lang.null? # to make FFI Pointer compatibility
+        
         self.base = self.base.join(b) if b
         self.language = lang if lang
         self.uri_mappings.merge!(extract_mappings(el, &cb))
