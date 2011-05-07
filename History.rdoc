@@ -1,3 +1,7 @@
+=== 0.3.3.1
+* JRuby/FFI compatibility updates.
+* Simplify property value ordering in writer; this was causing unnecessary prefixes to be generated.
+
 === 0.3.3
 * Change licensing to UNLICENSE.
 * Only generate prefix definitions for prefixes actually used within a serialization.
