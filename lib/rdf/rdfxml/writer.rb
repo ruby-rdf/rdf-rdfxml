@@ -500,12 +500,7 @@ module RDF::RDFXML
     # @return [Array<String>}] Ordered list of properties. Uses predicate_order.
     def order_properties(properties)
       properties.keys.each do |k|
-        properties[k] = properties[k].sort do |a, b|
-          a_li = a.is_a?(RDF::URI) && get_qname(a) && get_qname(a).to_s =~ /:_\d+$/ ? a.to_i : a.to_s
-          b_li = b.is_a?(RDF::URI) && get_qname(b) && get_qname(b).to_s =~ /:_\d+$/ ? b.to_i : b.to_s
-          
-          a_li <=> b_li
-        end
+        properties[k] = properties[k].sort_by(&:to_s)
       end
       
       # Make sorted list of properties
