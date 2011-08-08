@@ -295,6 +295,39 @@ EOF
       graph.should be_equivalent_graph(triples, :about => "http://example.com/", :trace => @debug)
     end
   end
+  
+  context :entities do
+    it "decodes" do
+      sampledoc = <<-EOF;
+<?xml version="1.0"?>
+<!DOCTYPE rdf:RDF [<!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >]>
+<rdf:RDF xmlns:rdf="&rdf;"
+         xmlns:ex="http://example.org/stuff/1.0/"
+         xml:base="http://example.org/triples/">
+  <rdf:Description rdf:about="http://example.org/">
+    <ex:prop rdf:ID="triple1">blah</ex:prop>
+  </rdf:Description>
+</rdf:RDF>
+EOF
+
+      triples = <<-EOF
+<http://example.org/> <http://example.org/stuff/1.0/prop> \"blah\" .
+<http://example.org/triples/#triple1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement> .
+<http://example.org/triples/#triple1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#subject> <http://example.org/> .
+<http://example.org/triples/#triple1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate> <http://example.org/stuff/1.0/prop> .
+<http://example.org/triples/#triple1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#object> \"blah\" .
+EOF
+
+      graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
+      graph.should be_equivalent_graph(triples, :about => "http://example.com/", :trace => @debug)
+    end
+
+    it "processes OWL definition" do
+      @debug = []
+      graph = RDF::Graph.load("http://www.w3.org/2002/07/owl", :format => :rdfxml, :debug => @debug)
+      graph.count.should > 10
+    end
+  end
 
   # W3C Test suite from http://www.w3.org/2000/10/rdf-tests/rdfcore/
   describe "w3c rdfcore tests" do

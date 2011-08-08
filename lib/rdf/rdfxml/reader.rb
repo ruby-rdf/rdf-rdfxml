@@ -134,7 +134,11 @@ module RDF::RDFXML
             
         @doc = case input
         when Nokogiri::XML::Document then input
-        else Nokogiri::XML.parse(input, @base_uri.to_s)
+        else
+          Nokogiri::XML.parse(input, @base_uri.to_s) do |config|
+            config.noent
+            config.strict if options[:validate]
+          end
         end
         
         raise RDF::ReaderError, "Synax errors:\n#{@doc.errors}" if !@doc.errors.empty? && validate?
