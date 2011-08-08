@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{rdf-rdfxml}
-  s.version = "0.3.3.1"
+  s.version = "0.3.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Gregg Kellogg"]
-  s.date = %q{2011-05-06}
+  s.authors = [%q{Gregg Kellogg}]
+  s.date = %q{2011-08-08}
   s.description = %q{RDF::RDFXML is an RDF/XML reader and writer for the RDF.rb library suite.}
   s.email = %q{gregg@kellogg-assoc.com}
   s.extra_rdoc_files = [
@@ -59,19 +59,9 @@ Gem::Specification.new do |s|
     "spec/writer_spec.rb"
   ]
   s.homepage = %q{http://github.com/gkellogg/rdf-rdfxml}
-  s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
+  s.require_paths = [%q{lib}]
+  s.rubygems_version = %q{1.8.6}
   s.summary = %q{RDF/XML reader/writer for RDF.rb.}
-  s.test_files = [
-    "spec/format_spec.rb",
-    "spec/graph_spec.rb",
-    "spec/literal_spec.rb",
-    "spec/matchers.rb",
-    "spec/rdf_test.rb",
-    "spec/reader_spec.rb",
-    "spec/spec_helper.rb",
-    "spec/writer_spec.rb"
-  ]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3

@@ -1,3 +1,6 @@
+=== 0.3.4
+* Decode XML Entity declarations when parsing.
+
 === 0.3.3.1
 * JRuby/FFI compatibility updates.
 * Simplify property value ordering in writer; this was causing unnecessary prefixes to be generated.
