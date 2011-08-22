@@ -12,6 +12,8 @@ RSpec::Matchers.define :have_xpath do |xpath, value, namespaces = {}|
     case value
     when false
       @result.should be_nil
+    when true
+      @result.should_not be_nil
     when Array
       @result.to_s.split(" ").should include(*value)
     when Regexp

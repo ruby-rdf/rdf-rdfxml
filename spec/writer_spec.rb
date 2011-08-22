@@ -236,23 +236,40 @@ describe "RDF::RDFXML::Writer" do
 
     describe "with lists" do
       context "List rdf:first/rdf:rest" do
-        subject do
-          @graph = parse(%(
-            @prefix foo: <http://foo/> . foo:author foo:is (:Gregg :Barnum :Kellogg) .
-          ), :base_uri => "http://foo/", :reader => RDF::N3::Reader)
-          serialize({})
-        end
-
         {
-          "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
-          "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
-          %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Gregg"]) => /Gregg/,
-          %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Barnum"]) => /Barnum/,
-          %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Kellogg"]) => /Kellogg/,
-          %(//rdf:first)  => false
-        }.each do |path, value|
-          it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+          %q(<author> <is> (:Gregg :Barnum :Kellogg)) => {
+            "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
+            "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Gregg"]) => /Gregg/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Barnum"]) => /Barnum/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Kellogg"]) => /Kellogg/,
+            %(//rdf:first)  => false
+          },
+          %q(<author> <is> (_:Gregg _:Barnum _:Kellogg)) => {
+            "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
+            "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[1]) => /Desc/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[2]) => /Desc/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[3]) => /Desc/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[4]) => false,
+            %(//rdf:first)  => false
+          },
+          %q(<author> <is> ("Gregg" "Barnum" "Kellogg")) => {
+            "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
+            "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => false,
+            %(//rdf:first)  => /Gregg/
+          },
+        }.each do |ttl, match|
+          context ttl do
+            subject do
+              @graph = parse(ttl, :base_uri => "http://foo/", :reader => RDF::N3::Reader)
+              serialize({})
+            end
+            match.each do |path, value|
+              it "returns #{value.inspect} for xpath #{path}" do
+                subject.should have_xpath(path, value)
+              end
+            end
           end
         end
       end
