@@ -137,7 +137,6 @@ module RDF::RDFXML
         else
           Nokogiri::XML.parse(input, @base_uri.to_s) do |config|
             config.noent
-            config.strict if options[:validate]
           end
         end
         
@@ -229,9 +228,12 @@ module RDF::RDFXML
     
     # Add debug event to debug array, if specified
     #
-    # @param [XML Node, any] node:: XML Node or string for showing context
+    # @param [Nokogiri::XML::Node, #to_s] node:: XML Node or string for showing context
     # @param [String] message::
-    def add_debug(node, message)
+    # @yieldreturn [String] appended to message, to allow for lazy-evaulation of message
+    def add_debug(node, message = "")
+      return unless ::RDF::RDFXML.debug? || @debug
+      message = message + yield if block_given?
       puts "#{node_path(node)}: #{message}" if ::RDF::RDFXML::debug?
       @debug << "#{node_path(node)}: #{message}" if @debug.is_a?(Array)
     end
@@ -246,7 +248,7 @@ module RDF::RDFXML
     # @raise [RDF::ReaderError]:: Checks parameter types and raises if they are incorrect if validating.
     def add_triple(node, subject, predicate, object)
       statement = RDF::Statement.new(subject, predicate, object)
-      add_debug(node, "statement: #{statement}")
+      add_debug(node) {"statement: #{statement}"}
       @callback.call(statement)
     end
 
@@ -260,9 +262,9 @@ module RDF::RDFXML
       # subject
       subject = ec.subject || parse_subject(el, ec)
       
-      add_debug(el, "nodeElement, ec: #{ec.inspect}")
-      add_debug(el, "nodeElement, el: #{el.uri}")
-      add_debug(el, "nodeElement, subject: #{subject.nil? ? 'nil' : subject.to_s}")
+      add_debug(el) {"nodeElement, ec: #{ec.inspect}"}
+      add_debug(el) {"nodeElement, el: #{el.uri}"}
+      add_debug(el) {"nodeElement, subject: #{subject.nil? ? 'nil' : subject.to_s}"}
 
       unless el.uri.to_s == RDF.Description.to_s
         add_triple(el, subject, RDF.type, el.uri)
@@ -270,7 +272,7 @@ module RDF::RDFXML
 
       # produce triples for attributes
       el.attribute_nodes.each do |attr|
-        add_debug(el, "propertyAttr: #{attr.uri}='#{attr.value}'")
+        add_debug(el) {"propertyAttr: #{attr.uri}='#{attr.value}'"}
         if attr.uri.to_s == RDF.type.to_s
           # If there is an attribute a in propertyAttr with a.URI == rdf:type
           # then u:=uri(identifier:=resolve(a.string-value))
@@ -293,16 +295,16 @@ module RDF::RDFXML
           prefix(prefix, value)
         end
         predicate = child.uri
-        add_debug(child, "propertyElt, predicate: #{predicate}")
+        add_debug(child) {"propertyElt, predicate: #{predicate}"}
         propertyElementURI_check(child)
         
         # Determine the content type of this property element
         text_nodes = child.children.select {|e| e.text? && !e.blank?}
         element_nodes = child.children.select {|c| c.element? }
-        add_debug(child, "#{text_nodes.length} text nodes, #{element_nodes.length} element nodes")
+        add_debug(child) {"#{text_nodes.length} text nodes, #{element_nodes.length} element nodes"}
         if element_nodes.length > 1
           element_nodes.each do |node|
-            add_debug(child, "  node: #{node.to_s}")
+            add_debug(child) {"  node: #{node.to_s}"}
           end
         end
 
@@ -326,7 +328,7 @@ module RDF::RDFXML
             # RDF/XML documents specified in [RDF-MS] to remain valid;
             # new documents SHOULD NOT use these unqualified attributes and applications
             # MAY choose to warn when the unqualified form is seen in a document.
-            add_debug(el, "Unqualified attribute '#{attr}'")
+            add_debug(el) {"Unqualified attribute '#{attr}'"}
             #attrs[attr.to_s] = attr.value unless attr.to_s.match?(/^xml/)
           elsif attr.namespace.href == RDF::XML.to_s
             # No production. Lang and base elements already extracted
@@ -354,12 +356,12 @@ module RDF::RDFXML
         resourceAttr = RDF::NTriples.unescape(resourceAttr) if resourceAttr
         nodeID = nodeID_check(el, RDF::NTriples.unescape(nodeID)) if nodeID
 
-        add_debug(child, "attrs: #{attrs.inspect}")
-        add_debug(child, "datatype: #{datatype}") if datatype
-        add_debug(child, "parseType: #{parseType}") if parseType
-        add_debug(child, "resource: #{resourceAttr}") if resourceAttr
-        add_debug(child, "nodeID: #{nodeID}") if nodeID
-        add_debug(child, "id: #{id}") if id
+        add_debug(child) {"attrs: #{attrs.inspect}"}
+        add_debug(child) {"datatype: #{datatype}"} if datatype
+        add_debug(child) {"parseType: #{parseType}"} if parseType
+        add_debug(child) {"resource: #{resourceAttr}"} if resourceAttr
+        add_debug(child) {"nodeID: #{nodeID}"} if nodeID
+        add_debug(child) {"id: #{id}"} if id
         
         if attrs.empty? && datatype.nil? && parseType.nil? && element_nodes.length == 1
           # Production resourcePropertyElt
@@ -368,7 +370,7 @@ module RDF::RDFXML
             prefix(prefix, value)
           end
           new_node_element = element_nodes.first
-          add_debug(child, "resourcePropertyElt: #{node_path(new_node_element)}")
+          add_debug(child) {"resourcePropertyElt: #{node_path(new_node_element)}"}
           new_subject = nodeElement(new_node_element, new_ec)
           add_triple(child, subject, predicate, new_subject)
         elsif attrs.empty? && parseType.nil? && element_nodes.length == 0 && text_nodes.length > 0
@@ -487,7 +489,7 @@ module RDF::RDFXML
 
             # produce triples for attributes
             attrs.each_pair do |attr, val|
-              add_debug(el, "attr: #{attr.name}='#{val}'")
+              add_debug(el) {"attr: #{attr.name}='#{val}'"}
               
               if attr.uri.to_s == RDF.type.to_s
                 add_triple(child, resource, RDF.type, val)
@@ -542,16 +544,16 @@ module RDF::RDFXML
 
       case
       when id
-        add_debug(el, "parse_subject, id: '#{RDF::NTriples.unescape(id.value)}'")
+        add_debug(el) {"parse_subject, id: #{RDF::NTriples.unescape(id.value).inspect}"}
         id_check(el, RDF::NTriples.unescape(id.value), ec.base) # Returns URI
       when nodeID
         # The value of rdf:nodeID must match the XML Name production
         nodeID = nodeID_check(el, RDF::NTriples.unescape(nodeID.value))
-        add_debug(el, "parse_subject, nodeID: '#{nodeID}")
+        add_debug(el) {"parse_subject, nodeID: #{nodeID.inspect}"}
         bnode(nodeID)
       when about
         about = RDF::NTriples.unescape(about.value)
-        add_debug(el, "parse_subject, about: '#{about}'")
+        add_debug(el) {"parse_subject, about: #{about.inspect}"}
         ec.base.join(about)
       else
         add_debug(el, "parse_subject, BNode")
@@ -627,7 +629,7 @@ module RDF::RDFXML
     def old_property_check(el)
       el.attribute_nodes.each do |attr|
         if OLD_TERMS.include?(attr.uri.to_s)
-          add_debug(el, "Obsolete attribute '#{attr.uri}'")
+          add_debug(el) {"Obsolete attribute '#{attr.uri}'"}
           raise RDF::ReaderError.new("Obsolete attribute '#{attr.uri}'") if validate?
         end
       end

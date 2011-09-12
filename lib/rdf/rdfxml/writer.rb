@@ -138,15 +138,15 @@ module RDF::RDFXML
 
       doc = Nokogiri::XML::Document.new
 
-      add_debug "\nserialize: graph of size #{@graph.size}"
-      add_debug "options: #{@options.inspect}"
+      add_debug {"\nserialize: graph of size #{@graph.size}"}
+      add_debug {"options: #{@options.inspect}"}
 
       preprocess
 
       prefix(:rdf, RDF.to_uri)
       prefix(:xml, RDF::XML) if @base_uri || @lang
       
-      add_debug "\nserialize: graph namespaces: #{prefixes.inspect}"
+      add_debug {"\nserialize: graph namespaces: #{prefixes.inspect}"}
       
       doc.root = Nokogiri::XML::Element.new("rdf:RDF", doc)
       doc.root["xml:lang"] = @lang if @lang
@@ -154,7 +154,7 @@ module RDF::RDFXML
       
       # Add statements for each subject
       order_subjects.each do |subject|
-        #add_debug "subj: #{subject.inspect}"
+        #add_debug "{subj: #{subject.inspect}"}
         subject(subject, doc.root)
       end
 
@@ -166,7 +166,7 @@ module RDF::RDFXML
         end
       end
 
-      add_debug "doc:\n #{doc.to_xml(:encoding => "UTF-8", :indent => 2)}"
+      add_debug {"doc:\n #{doc.to_xml(:encoding => "UTF-8", :indent => 2)}"}
       doc.write_xml_to(@output, :encoding => "UTF-8", :indent => 2)
     end
     
@@ -178,22 +178,22 @@ module RDF::RDFXML
     def get_qname(resource, options = {})
       case resource
       when RDF::Node
-        add_debug "qname(#{resource.inspect}): #{resource}"
+        add_debug {"qname(#{resource.inspect}): #{resource}"}
         return resource.to_s
       when RDF::URI
         uri = resource.to_s
       else
-        add_debug "qname(#{resource.inspect}): nil"
+        add_debug {"qname(#{resource.inspect}): nil"}
         return nil
       end
 
       qname = case
       when options[:with_default] && prefix(nil) && uri.index(prefix(nil)) == 0
         # Don't cache
-        add_debug "qname(#{resource.inspect}): #{uri.sub(prefix(nil), '').inspect} (default)"
+        add_debug {"qname(#{resource.inspect}): #{uri.sub(prefix(nil), '').inspect} (default)"}
         return uri.sub(prefix(nil), '')
       when @uri_to_qname.has_key?(uri)
-        add_debug "qname(#{resource.inspect}): #{@uri_to_qname[uri].inspect} (cached)"
+        add_debug {"qname(#{resource.inspect}): #{@uri_to_qname[uri].inspect} (cached)"}
         return @uri_to_qname[uri]
       when u = @uri_to_prefix.keys.detect {|u| uri.index(u.to_s) == 0 && NC_REGEXP.match(uri[u.to_s.length..-1])}
         # Use a defined prefix
@@ -225,7 +225,7 @@ module RDF::RDFXML
         "#{@gen_prefix}:#{suffix}"
       end
       
-      add_debug "qname(#{resource.inspect}): #{qname.inspect}"
+      add_debug {"qname(#{resource.inspect}): #{qname.inspect}"}
       @uri_to_qname[uri] = qname
     rescue Addressable::URI::InvalidURIError => e
       raise RDF::WriterError, "Invalid URI #{uri.inspect}: #{e.message}"
@@ -259,7 +259,7 @@ module RDF::RDFXML
       
       top_classes.each do |class_uri|
         graph.query(:predicate => RDF.type, :object => class_uri).map {|st| st.subject}.sort.uniq.each do |subject|
-          #add_debug "order_subjects: #{subject.inspect}"
+          #add_debug "{order_subjects: #{subject.inspect}"}
           subjects << subject
           seen[subject] = @top_levels[subject] = true
         end
@@ -285,7 +285,7 @@ module RDF::RDFXML
       @options[:prefixes] = {}  # Will define actual used when matched
 
       if default_namespace
-        add_debug("preprocess: default_namespace: #{default_namespace}")
+        add_debug {"preprocess: default_namespace: #{default_namespace}"}
         prefix(nil, default_namespace) 
       end
 
@@ -296,7 +296,7 @@ module RDF::RDFXML
     # prefixes.
     # @param [Statement] statement
     def preprocess_statement(statement)
-      #add_debug "preprocess: #{statement.inspect}"
+      #add_debug {"preprocess: #{statement.inspect}"}
       references = ref_count(statement.object) + 1
       @references[statement.object] = references
       @subjects[statement.subject] = true
@@ -328,7 +328,7 @@ module RDF::RDFXML
       if !is_done?(subject)
         subject_done(subject)
         properties = @graph.properties(subject)
-        add_debug "subject: #{subject.inspect}, props: #{properties.inspect}"
+        add_debug {"subject: #{subject.inspect}, props: #{properties.inspect}"}
 
         @graph.query(:subject => subject).each do |st|
           raise RDF::WriterError, "Illegal use of predicate #{st.predicate.inspect}, not supported in RDF/XML" unless st.predicate.uri?
@@ -345,7 +345,7 @@ module RDF::RDFXML
           properties[RDF.type.to_s] = [rest].flatten.compact
         end
         prop_list = order_properties(properties)
-        add_debug "=> property order: #{prop_list.to_sentence}"
+        add_debug {"=> property order: #{prop_list.to_sentence}"}
 
         if qname
           rdf_type = nil
@@ -381,7 +381,7 @@ module RDF::RDFXML
           end
         end
       elsif @force_RDF_about.include?(subject)
-        add_debug "subject: #{subject.inspect}, force about"
+        add_debug {"subject: #{subject.inspect}, force about"}
         node = Nokogiri::XML::Element.new("rdf:Description", parent_node.document)
         if subject.is_a?(RDF::Node)
           node["rdf:nodeID"] = subject.id
@@ -403,7 +403,13 @@ module RDF::RDFXML
       qname = get_qname(prop, :with_default => !as_attr)
       raise RDF::WriterError, "No qname generated for <#{prop}>" unless qname
 
-      add_debug "predicate: #{qname}, as_attr: #{as_attr}, object: #{object.inspect}, done: #{is_done?(object)}, subject: #{@subjects.include?(object)}"
+      add_debug do
+        "predicate: #{qname}, " +
+        "as_attr: #{as_attr}, " +
+        "object: #{object.inspect}, " +
+        "done: #{is_done?(object)}, " +
+        "subject: #{@subjects.include?(object)}"
+      end
       #qname = "rdf:li" if qname.match(/rdf:_\d+/)
       pred_node = Nokogiri::XML::Element.new(qname, node.document)
       
@@ -416,7 +422,7 @@ module RDF::RDFXML
 
       # Check to see if it can be serialized as a collection
       if conformant_list
-        add_debug("=> as collection: [#{col.map(&:to_s).join(", ")}]")
+        add_debug {"=> as collection: [#{col.map(&:to_s).join(", ")}]"}
         # Serialize list as parseType="Collection"
         pred_node.add_child(Nokogiri::XML::Comment.new(node.document, "Serialization for #{object}")) if RDF::RDFXML::debug?
         pred_node["rdf:parseType"] = "Collection"
@@ -426,7 +432,7 @@ module RDF::RDFXML
           item = o_props[RDF.first.to_s].first
           object = o_props[RDF.rest.to_s].first
           o_props = @graph.properties(object)
-          add_debug("=> li first: #{item}, rest: #{object}")
+          add_debug {"=> li first: #{item}, rest: #{object}"}
           @force_RDF_about[item] = true
           subject(item, pred_node)
         end
@@ -435,16 +441,16 @@ module RDF::RDFXML
         pred_node.unlink
         pred_node = nil
         node[qname] = object.is_a?(RDF::URI) ? relativize(object) : object.value
-        add_debug("=> as attribute: node[#{qname}]=#{node[qname]}, #{object.class}")
+        add_debug {"=> as attribute: node[#{qname}]=#{node[qname]}, #{object.class}"}
       elsif object.literal?
         # Serialize as element
-        add_debug("predicate as element: #{attrs.inspect}")
+        add_debug {"predicate as element: #{attrs.inspect}"}
         attrs.each_pair do |a, av|
           next if a.to_s == "xml:lang" && av.to_s == @lang # Lang already specified, don't repeat
-          add_debug "=> elt attr #{a}=#{av}"
+          add_debug {"=> elt attr #{a}=#{av}"}
           pred_node[a] = av.to_s
         end
-        add_debug "=> elt #{'xmllit ' if object.literal? && object.datatype == RDF.XMLLiteral}content=#{args.first}" if !args.empty?
+        add_debug {"=> elt #{'xmllit ' if object.literal? && object.datatype == RDF.XMLLiteral}content=#{args.first}"} if !args.empty?
         if object.datatype == RDF.XMLLiteral
           pred_node.inner_html = args.first.to_s
         elsif args.first
@@ -468,7 +474,7 @@ module RDF::RDFXML
 
     # Mark a subject as done.
     def subject_done(subject)
-      add_debug("subject_done: #{subject}")
+      add_debug {"subject_done: #{subject}"}
       @serialized[subject] = true
     end
     
@@ -478,7 +484,7 @@ module RDF::RDFXML
     end
 
     def is_done?(subject)
-      #add_debug("is_done?(#{subject}): #{@serialized.include?(subject)}")
+      #add_debug {"is_done?(#{subject}): #{@serialized.include?(subject)}"}
       @serialized.include?(subject)
     end
     
@@ -544,9 +550,12 @@ module RDF::RDFXML
     
     # Add debug event to debug array, if specified
     #
-    # @param [String] message::
-    def add_debug(message)
-      msg = "#{indent}#{message}"
+    # @param [String] message
+    # @yieldreturn [String] appended to message, to allow for lazy-evaulation of message
+    def add_debug(message = "")
+      return unless ::RDF::RDFXML.debug? || @debug
+      message = message + yield if block_given?
+      msg = "#{'  ' * @depth}#{message}"
       STDERR.puts msg if ::RDF::RDFXML.debug?
       @debug << msg if @debug.is_a?(Array)
     end
