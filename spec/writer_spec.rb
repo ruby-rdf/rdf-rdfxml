@@ -8,7 +8,8 @@ class FOO < RDF::Vocabulary("http://foo/"); end
 describe "RDF::RDFXML::Writer" do
   before(:each) do
     @graph = RDF::Graph.new
-    @writer = RDF::RDFXML::Writer
+    @writer = RDF::RDFXML::Writer.new(StringIO.new)
+    @writer_class = RDF::RDFXML::Writer
   end
   
   it_should_behave_like RDF_Writer
@@ -26,7 +27,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -44,7 +45,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/rdf:type" => ""
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -63,7 +64,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/@rdf:type" => FOO.XtraRelease.to_s
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -83,7 +84,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.Release}"]) => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -104,7 +105,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.XXtraRelease}"]) => %r(#{FOO.XXtraRelease})
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -129,7 +130,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Contributor/@dc:title" => "bar"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -150,7 +151,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/foo:releaseContributor/foo:Contributor/@rdf:about" => "http://release/contributor"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -171,7 +172,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /second/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -190,7 +191,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -209,7 +210,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Bag/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -228,7 +229,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Alt/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -267,7 +268,7 @@ describe "RDF::RDFXML::Writer" do
             end
             match.each do |path, value|
               it "returns #{value.inspect} for xpath #{path}" do
-                subject.should have_xpath(path, value)
+                subject.should have_xpath(path, value, {})
               end
             end
           end
@@ -288,7 +289,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /second/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -306,7 +307,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title/text()" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -323,7 +324,7 @@ describe "RDF::RDFXML::Writer" do
             "/rdf:RDF/rdf:Description/@dc:title" => "foo"
           }.each do |path, value|
             it "returns #{value.inspect} for xpath #{path}" do
-              subject.should have_xpath(path, value)
+              subject.should have_xpath(path, value, {})
             end
           end
         end
@@ -340,7 +341,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -358,7 +359,7 @@ describe "RDF::RDFXML::Writer" do
             "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="en-us">foo</dc:title>)
           }.each do |path, value|
             it "returns #{value.inspect} for xpath #{path}" do
-              subject.should have_xpath(path, value)
+              subject.should have_xpath(path, value, {})
             end
           end
         end
@@ -376,7 +377,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -393,7 +394,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -410,7 +411,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -428,7 +429,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -444,7 +445,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">foo</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -460,7 +461,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -478,7 +479,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title[contains(., 'bar')]" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">bar</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -541,7 +542,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/foo:ref/@rdf:resource" => "b"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -559,7 +560,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@rdf:nodeID" => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -578,7 +579,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/owl:equals/@rdf:nodeID" => /a$/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value)
+            subject.should have_xpath(path, value, {})
           end
         end
       end
@@ -704,7 +705,7 @@ describe "RDF::RDFXML::Writer" do
     # Serialize  @graph to a string and compare against regexps
     def serialize(options = {})
       @debug = []
-      result = @writer.buffer({:debug => @debug, :standard_prefixes => true}.merge(options)) do |writer|
+      result = @writer_class.buffer({:debug => @debug, :standard_prefixes => true}.merge(options)) do |writer|
         writer << @graph
       end
       require 'cgi'

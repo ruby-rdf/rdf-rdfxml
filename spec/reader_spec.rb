@@ -7,7 +7,7 @@ require 'rdf/spec/reader'
 
 describe "RDF::RDFXML::Reader" do
   before :each do
-    @reader = RDF::RDFXML::Reader
+    @reader = RDF::RDFXML::Reader.new(StringIO.new(""))
   end
 
   it_should_behave_like RDF_Reader
@@ -26,7 +26,7 @@ describe "RDF::RDFXML::Reader" do
       "application/rdf+xml" => RDF::Reader.for(:content_type   => "application/rdf+xml"),
     }.each_pair do |label, format|
       it "should discover '#{label}'" do
-        format.should == @reader
+        format.should == RDF::RDFXML::Reader
       end
     end
   end
@@ -53,20 +53,20 @@ EOF
     
     it "should yield reader" do
       inner = mock("inner")
-      inner.should_receive(:called).with(@reader)
-      @reader.new(@sampledoc) do |reader|
+      inner.should_receive(:called).with(RDF::RDFXML::Reader)
+      RDF::RDFXML::Reader.new(@sampledoc) do |reader|
         inner.called(reader.class)
       end
     end
     
     it "should return reader" do
-      @reader.new(@sampledoc).should be_a(@reader)
+      RDF::RDFXML::Reader.new(@sampledoc).should be_a(RDF::RDFXML::Reader)
     end
     
     it "should yield statements" do
       inner = mock("inner")
       inner.should_receive(:called).with(RDF::Statement).twice
-      @reader.new(@sampledoc).each_statement do |statement|
+      RDF::RDFXML::Reader.new(@sampledoc).each_statement do |statement|
         inner.called(statement.class)
       end
     end
@@ -74,7 +74,7 @@ EOF
     it "should yield triples" do
       inner = mock("inner")
       inner.should_receive(:called).with(RDF::URI, RDF::URI, RDF::Literal).twice
-      @reader.new(@sampledoc).each_triple do |subject, predicate, object|
+      RDF::RDFXML::Reader.new(@sampledoc).each_triple do |subject, predicate, object|
         inner.called(subject.class, predicate.class, object.class)
       end
     end
@@ -342,7 +342,7 @@ EOF
         #puts t.inspect
         specify "#{t.name}: " + (t.description || "#{t.inputDocument} against #{t.outputDocument}") do
           begin
-            graph = RDF::Graph.new << @reader.new(t.input,
+            graph = RDF::Graph.new << RDF::RDFXML::Reader.new(t.input,
               :base_uri => t.inputDocument,
               :validate => false,
               :debug => t.debug)
@@ -373,7 +373,7 @@ EOF
         #puts t.inspect
         specify "test #{t.name}: " + (t.description || t.inputDocument) do
           lambda do
-            RDF::Graph.new << @reader.new(t.input,
+            RDF::Graph.new << RDF::RDFXML::Reader.new(t.input,
               :base_uri => t.inputDocument,
               :validate => true)
           end.should raise_error(RDF::ReaderError)
@@ -385,7 +385,7 @@ EOF
   def parse(input, options)
     @debug = []
     graph = RDF::Graph.new
-    @reader.new(input, options.merge(:debug => @debug)).each do |statement|
+    RDF::RDFXML::Reader.new(input, options.merge(:debug => @debug)).each do |statement|
       graph << statement
     end
     graph
