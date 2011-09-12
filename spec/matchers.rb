@@ -1,6 +1,6 @@
 require 'rspec/matchers'
 
-RSpec::Matchers.define :have_xpath do |xpath, value, namespaces = {}|
+RSpec::Matchers.define :have_xpath do |xpath, value, namespaces|
   match do |actual|
     @doc = Nokogiri::XML.parse(actual)
     @doc.should be_a(Nokogiri::XML::Document)
