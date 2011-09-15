@@ -26,6 +26,19 @@ module RDF::RDFXML
 
     reader { RDF::RDFXML::Reader }
     writer { RDF::RDFXML::Writer }
+
+    ##
+    # Sample detection to see if it matches RDF/XML (not Microdata or RDFa)
+    #
+    # Use a text sample to detect the format of an input file. Sub-classes implement
+    # a matcher sufficient to detect probably format matches, including disambiguating
+    # between other similar formats.
+    #
+    # @param [String] sample Beginning several bytes (~ 1K) of input.
+    # @result [Boolean]
+    def self.detect(sample)
+      sample.match(/<(\w+:)?(RDF)/)
+    end
   end
   
   # Aliases for this format
