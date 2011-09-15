@@ -24,12 +24,12 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 1.8.1'
   gem.requirements          = []
 
-  gem.add_dependency             'rdf',             '>= 0.3.3'
+  gem.add_dependency             'rdf',             '>= 0.3.4'
   gem.add_runtime_dependency     'nokogiri',        '>= 1.4.4'
   gem.add_development_dependency 'open-uri-cached'
   gem.add_development_dependency 'spira',           '>= 0.0.12'
   gem.add_development_dependency 'rspec',           '>= 2.5.0'
-  gem.add_development_dependency 'rdf-spec',        '>= 0.3.2'
+  gem.add_development_dependency 'rdf-spec',        '>= 0.3.4'
   gem.add_development_dependency 'yard' ,           '>= 0.6.0'
   gem.post_install_message  = nil
 end

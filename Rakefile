@@ -46,4 +46,5 @@ namespace :spec do
   end
 end
 
+task :specs => :spec
 task :default => :spec

@@ -23,11 +23,11 @@ Instantiate a parser and parse source, specifying type and base-URL
     end
 
 ## Dependencies
-* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.1)
+* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.4)
 * [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.4.4)
 
 ## Documentation
-Full documentation available on [RubyForge](http://rdf.rubyforge.org/rdfxml)
+Full documentation available on [RubyForge](http://rubydoc.info/github/gkellogg/rdf-rdfxml/master/frames)
 
 ### Principle Classes
 * {RDF::RDFXML}
