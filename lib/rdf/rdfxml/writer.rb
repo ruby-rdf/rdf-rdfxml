@@ -55,6 +55,8 @@ module RDF::RDFXML
 
     # @return [Graph] Graph of statements serialized
     attr_accessor :graph
+    # @return [URI] Base URI used for relativizing URIs
+    attr_accessor :base_uri
     
     ##
     # Initializes the RDF/XML writer instance.
@@ -127,6 +129,7 @@ module RDF::RDFXML
     def write_epilogue
       @force_RDF_about = {}
       @max_depth = @options[:max_depth] || 3
+      @base_uri = @options[:base_uri]
       @lang = @options[:lang]
       @attributes = @options[:attributes] || :none
       @debug = @options[:debug]
