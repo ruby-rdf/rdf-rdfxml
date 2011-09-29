@@ -10,7 +10,7 @@ class Nokogiri::XML::Node
     @display_path ||= case self
     when Nokogiri::XML::Document then ""
     when Nokogiri::XML::Element then parent ? "#{parent.display_path}/#{name}" : name
-    when Nokogiri::XML::Attr then "#{parent.display_path}@#{name}"
+    when Nokogiri::XML::Attr then "#{parent && parent.display_path}@#{name}"
     end
   end
   
