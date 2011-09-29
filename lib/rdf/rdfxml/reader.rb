@@ -412,7 +412,7 @@ module RDF::RDFXML
           # end-element()
           add_debug(child, "compose new sequence with rdf:Description")
           node = child.clone
-          pt_attr = node.attribute("parseType")
+          pt_attr = node.attribute_with_ns("parseType", RDF.to_uri.to_s)
           node.namespace = pt_attr.namespace
           node.attributes.keys.each {|a| node.remove_attribute(a)}
           node.node_name = "Description"
@@ -530,9 +530,9 @@ module RDF::RDFXML
       old_property_check(el)
       
       nodeElementURI_check(el)
-      about = el.attribute("about")
-      id = el.attribute("ID")
-      nodeID = el.attribute("nodeID")
+      about = el.attribute_with_ns("about", RDF.to_uri.to_s)
+      id = el.attribute_with_ns("ID", RDF.to_uri.to_s)
+      nodeID = el.attribute_with_ns("nodeID", RDF.to_uri.to_s)
       
       if nodeID && about
         add_debug(el, "Cannot have rdf:nodeID and rdf:about.")
