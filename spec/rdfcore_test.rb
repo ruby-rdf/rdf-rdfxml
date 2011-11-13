@@ -1,6 +1,7 @@
 # Spira class for manipulating test-manifest style test suites.
 # Used for SWAP tests
 require 'spira'
+require 'rdf/rdfxml'
 require 'rdf/n3'
 require 'open-uri'
 

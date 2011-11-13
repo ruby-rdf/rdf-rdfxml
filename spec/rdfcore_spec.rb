@@ -2,13 +2,13 @@
 $:.unshift "."
 require File.join(File.dirname(__FILE__), 'spec_helper')
 require 'rdf/spec/reader'
+require 'rdfcore_test'
 
 # w3c test suite: http://www.w3.org/TR/rdf-testcases/
 
 describe "RDF::RDFXML::Reader" do
   # W3C Test suite from http://www.w3.org/2000/10/rdf-tests/rdfcore/
   describe "w3c rdfcore tests" do
-    require 'rdf_test'
     
     # Positive parser tests should raise errors.
     describe "positive parser tests" do
