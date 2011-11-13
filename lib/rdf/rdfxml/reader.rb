@@ -1,4 +1,9 @@
-require 'nokogiri'  # FIXME: Implement using different modules as in RDF::TriX
+begin
+  require 'nokogiri'
+rescue LoadError => e
+  :rexml
+end
+require 'rdf/xsd'
 
 module RDF::RDFXML
   ##
@@ -58,8 +63,8 @@ module RDF::RDFXML
 
       # Extract Evaluation Context from an element
       def extract_from_element(el, &cb)
-        b = el.attribute_with_ns("base", RDF::XML.to_s)
-        lang = el.attribute_with_ns("lang", RDF::XML.to_s)
+        b = el.base
+        lang = el.language
         self.base = self.base.join(b) if b
         self.language = lang if lang
         self.uri_mappings.merge!(extract_mappings(el, &cb))
@@ -101,6 +106,11 @@ module RDF::RDFXML
       end
     end
 
+    # Returns the XML implementation module for this reader instance.
+    #
+    # @attr_reader [Module]
+    attr_reader :implementation
+
     ##
     # Initializes the RDF/XML reader instance.
     #
@@ -108,6 +118,8 @@ module RDF::RDFXML
     #   the input stream to read
     # @param  [Hash{Symbol => Object}] options
     #   any additional options
+    # @option options [Symbol] :library
+    #   One of :nokogiri or :rexml. If nil/unspecified uses :nokogiri if available, :rexml otherwise.
     # @option options [Encoding] :encoding     (Encoding::UTF_8)
     #   the encoding of the input stream (Ruby 1.9+)
     # @option options [Boolean]  :validate     (false)
@@ -132,16 +144,27 @@ module RDF::RDFXML
         @debug = options[:debug]
         @base_uri = uri(options[:base_uri]) if options[:base_uri]
             
-        @doc = case input
-        when Nokogiri::XML::Document then input
-        else
-          Nokogiri::XML.parse(input, @base_uri.to_s) do |config|
-            config.noent
-          end
+        @library = case options[:library]
+          when nil
+            # Use Nokogiri when available, and REXML otherwise:
+            (defined?(::Nokogiri) && RUBY_PLATFORM != 'java') ? :nokogiri : :rexml
+          when :nokogiri, :rexml
+            options[:library]
+          else
+            raise ArgumentError.new("expected :rexml or :nokogiri, but got #{options[:library].inspect}")
         end
-        
-        raise RDF::ReaderError, "Synax errors:\n#{@doc.errors}" if !@doc.errors.empty? && validate?
-        raise RDF::ReaderError, "Empty document" if (@doc.nil? || @doc.root.nil?) && validate?
+
+        require "rdf/rdfxml/reader/#{@library}"
+        @implementation = case @library
+          when :nokogiri then Nokogiri
+          when :rexml    then REXML
+        end
+        self.extend(@implementation)
+
+        initialize_xml(input, options) rescue raise RDF::ReaderError.new($!.message)
+
+        raise RDF::ReaderError, "Empty document" if root.nil? && validate?
+        raise RDF::ReaderError, "Synax errors:\n#{doc_errors}" if !doc_errors.empty? && validate?
 
         block.call(self) if block_given?
       end
@@ -163,7 +186,7 @@ module RDF::RDFXML
       # Block called from add_statement
       @callback = block
 
-      root = @doc.root
+      raise "root must be a proxy not a #{root.class}" unless root.is_a?(@implementation::NodeProxy)
 
       add_debug(root, "base_uri: #{@base_uri || 'nil'}")
       
@@ -178,6 +201,7 @@ module RDF::RDFXML
         nodeElement(root, ec)
       else
         rdf_nodes.each do |node|
+          raise "node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
           # XXX Skip this element if it's contained within another rdf:RDF element
 
           # Extract base, lang and namespaces from parents to create proper evaluation context
@@ -187,6 +211,7 @@ module RDF::RDFXML
           ec.extract_from_ancestors(node)
           node.children.each {|el|
             next unless el.elem?
+            raise "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
             new_ec = ec.clone(el) do |prefix, value|
               prefix(prefix, value)
             end
@@ -220,10 +245,7 @@ module RDF::RDFXML
     
     # Figure out the document path, if it is a Nokogiri::XML::Element or Attribute
     def node_path(node)
-      case node
-      when Nokogiri::XML::Node then node.display_path
-      else node.to_s
-      end
+      "<#{base_uri}>#{node.respond_to?(:display_path) ? node.display_path : node}"
     end
     
     # Add debug event to debug array, if specified
@@ -259,6 +281,7 @@ module RDF::RDFXML
     # @return [RDF::URI] subject:: The subject found for the node
     # @raise [RDF::ReaderError]:: Raises Exception if validating
     def nodeElement(el, ec)
+      raise "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
       # subject
       subject = ec.subject || parse_subject(el, ec)
       
@@ -290,6 +313,7 @@ module RDF::RDFXML
       # Handle the propertyEltList children events in document order
       li_counter = 0 # this will increase for each li we iterate through
       el.children.each do |child|
+        raise "child must be a proxy not a #{child.class}" unless child.is_a?(@implementation::NodeProxy)
         next unless child.elem?
         child_ec = ec.clone(child) do |prefix, value|
           prefix(prefix, value)
@@ -299,15 +323,25 @@ module RDF::RDFXML
         propertyElementURI_check(child)
         
         # Determine the content type of this property element
+        raise "child must be a proxy not a #{child.class}" unless child.is_a?(@implementation::NodeProxy)
+
         text_nodes = child.children.select {|e| e.text? && !e.blank?}
         element_nodes = child.children.select {|c| c.element? }
         add_debug(child) {"#{text_nodes.length} text nodes, #{element_nodes.length} element nodes"}
+
+        text_nodes.each do |node|
+          raise "text node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
+        end
+        element_nodes.each do |node|
+          raise "element node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
+        end
+
         if element_nodes.length > 1
           element_nodes.each do |node|
             add_debug(child) {"  node: #{node.to_s}"}
           end
         end
-
+        
         # List expansion
         predicate = ec.li_next if predicate == RDF.li
         
@@ -370,6 +404,7 @@ module RDF::RDFXML
             prefix(prefix, value)
           end
           new_node_element = element_nodes.first
+          raise "new_node_element must be a proxy not a #{new_node_element.class}" unless new_node_element.is_a?(@implementation::NodeProxy)
           add_debug(child) {"resourcePropertyElt: #{node_path(new_node_element)}"}
           new_subject = nodeElement(new_node_element, new_ec)
           add_triple(child, subject, predicate, new_subject)
@@ -412,10 +447,10 @@ module RDF::RDFXML
           # end-element()
           add_debug(child, "compose new sequence with rdf:Description")
           node = child.clone
-          pt_attr = node.attribute_with_ns("parseType", RDF.to_uri.to_s)
-          node.namespace = pt_attr.namespace
           node.attributes.keys.each {|a| node.remove_attribute(a)}
           node.node_name = "Description"
+          node.add_namespace(nil, RDF.to_uri.to_s)
+          add_debug(node) { "uri: #{node.uri}, namespace: #{node.namespace.inspect}"}
           new_ec = child_ec.clone(nil, :subject => n) do |prefix, value|
             prefix(prefix, value)
           end
@@ -466,13 +501,27 @@ module RDF::RDFXML
             raise RDF::ReaderError.new(warn) if validate?
           end
 
-          object = RDF::Literal.new(child.children, :datatype => RDF.XMLLiteral, :namespaces => child_ec.uri_mappings, :language => ec.language)
-          add_triple(child, subject, predicate, object)
+          begin
+            c14nxl = child.children.c14nxl(
+              :library => @library,
+              :language => ec.language,
+              :namespaces => child_ec.uri_mappings)
+            object = RDF::Literal.new(c14nxl,
+              :library => @library,
+              :datatype => RDF.XMLLiteral,
+              :validate => validate?,
+              :canonicalize => canonicalize?)
+
+            add_triple(child, subject, predicate, object)
+          rescue ArgumentError => e
+            add_error(child, e.message)
+          end
         elsif text_nodes.length == 0 && element_nodes.length == 0
           # Production emptyPropertyElt
           add_debug(child, "emptyPropertyElt")
 
           if attrs.empty? && resourceAttr.nil? && nodeID.nil?
+            
             literal = RDF::Literal.new("", :language => ec.language)
             add_triple(child, subject, predicate, literal)
             
