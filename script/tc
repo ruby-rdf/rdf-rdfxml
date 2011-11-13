@@ -2,49 +2,88 @@
 require 'rubygems'
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", 'lib')))
 require 'rdf/rdfxml'
-require File.expand_path(File.join(File.dirname(__FILE__), "..", 'spec', 'rdf_helper'))
+require 'linkeddata'
+require File.expand_path(File.join(File.dirname(__FILE__), "..", 'spec', 'rdfcore_test'))
 require 'getoptlong'
+require 'open-uri/cached'
 
-def run_tc(tc)
-  puts "run #{tc.name}"
-  puts tc.input if $verbose
-  puts RDF::Writer.for($output_format.to_sym).buffer { |writer|
-    RDF::RDFXML::Reader.new(tc.input, :base_uri => tc.about, :validate => $validate).each do |statement|
-      writer << statement
+# Create and maintain a cache of downloaded URIs
+URI_CACHE = File.expand_path(File.join(File.dirname(__FILE__), "..", "spec", "uri-cache"))
+Dir.mkdir(URI_CACHE) unless File.directory?(URI_CACHE)
+OpenURI::Cache.class_eval { @cache_path = URI_CACHE }
+
+def run_tc(tc, options)
+  input_uri = tc.inputDocument
+
+  STDOUT.write "run #{tc.name}"
+
+  if options[:verbose]
+    puts("\nTestCase: #{tc.inspect}") 
+    puts("\nInput:\n" + Kernel.open(input_uri) {|f| f.read}) 
+  end
+
+  begin
+    reader = RDF::RDFXML::Reader.new(Kernel.open(input_uri),
+      :base_uri => input_uri,
+      :validate => options[:validate])
+
+    graph = RDF::Graph.new << reader
+  rescue Exception => e
+    puts "#{"exception:" unless options[:quiet]}: #{e}"
+    if options[:quiet]
+      return
+    else
+      raise
     end
-  }
+  end
+
+  puts("\nResult:\n" + graph.dump(options[:format])) unless options[:quiet]
 end
 
-$verbose = false
-$output_format = :ntriples
-$validate = false
-suite = "rdfxml"
+options = {
+  :verbose         => false,
+  :quite           => false,
+  :validate        => false,
+  :format          => :ntriples,
+  :processor_graph => nil,
+  :host_language   => "xhtml1",
+}
+
 opts = GetoptLong.new(
-  ["--debug", GetoptLong::NO_ARGUMENT],
-  ["--verbose", GetoptLong::NO_ARGUMENT],
+  ["--help", "-?", GetoptLong::NO_ARGUMENT],
+  ["--dbg", GetoptLong::NO_ARGUMENT],
+  ["--format", GetoptLong::REQUIRED_ARGUMENT],
   ["--quiet", GetoptLong::NO_ARGUMENT],
-  ["--suite", GetoptLong::OPTIONAL_ARGUMENT],
   ["--validate", GetoptLong::NO_ARGUMENT],
-  ["--format", GetoptLong::REQUIRED_ARGUMENT]
+  ["--verbose", GetoptLong::NO_ARGUMENT]
 )
+
+def help(options)
+  puts "Usage: #{$0} [options] [test-number ...]"
+  puts "Options:"
+  puts "      --dump:               Dump raw output, otherwise serialize to Ruby"
+  puts "      --debug:              Display detailed debug output"
+  puts "      --format:             Format for output, defaults to #{options[:format].inspect}"
+  puts "      --quiet:              Minimal output"
+  puts "      --validate:           Validate input"
+  puts "      --verbose:            Verbose processing"
+  puts "      --help,-?:            This message"
+  exit(0)
+end
+
 opts.each do |opt, arg|
   case opt
-  when '--verbose' then $verbose = true
-  when '--quiet' then $quiet = true
-  when '--debug' then ::RDF::RDFXML::debug = true
-  when '--format' then $output_format = arg
-  when '--suite' then suite = arg
-  when '--validate' then $validate = true
+  when '--help'             then help(options)
+  when '--verbose'          then options[:verbose] = true
+  when '--quiet'            then options[:quiet] = true
+  when '--dbg'              then ::RDF::RDFXML::debug = true
+  when '--format'           then options[:format] = arg.to_sym
+  when '--validate'         then options[:validate] = true
   end
 end
 
 # Test URI and directory for different suites
-TEST_PARAMS = {
-  "rdfxml"  => [RDFCORE_TEST, RDFCORE_DIR],
-}
-test_cases = RdfHelper::TestCase.test_cases(*TEST_PARAMS[suite])
-
-test_cases = test_cases.detect do |tc|
-  next unless ARGV.empty? || ARGV.any? {|n| tc.name.match(/#{n}/)}
-  run_tc(tc)
+Fixtures::TestCase::PositiveParserTest.each do |tc|
+  next unless ARGV.empty? || ARGV.any? {|n| tc.subject.to_s.match(n)}
+  run_tc(tc, options)
 end
