@@ -23,7 +23,6 @@ module RDF
     require 'rdf/rdfxml/format'
     require 'rdf/rdfxml/vocab'
     require 'rdf/rdfxml/patches/array_hacks'
-    require 'rdf/rdfxml/patches/nokogiri_hacks'
     autoload :Reader,  'rdf/rdfxml/reader'
     autoload :Writer,  'rdf/rdfxml/writer'
     autoload :VERSION, 'rdf/rdfxml/version'

@@ -13,6 +13,7 @@ describe "RDF::RDFXML::Reader" do
     # Positive parser tests should raise errors.
     describe "positive parser tests" do
       Fixtures::TestCase::PositiveParserTest.each do |t|
+        t.inspect
         next unless t.status == "APPROVED"
         #next unless t.about =~ /rdfms-rdf-names-use/
         #next unless t.name =~ /11/

@@ -147,7 +147,7 @@ module RDF::RDFXML
         @library = case options[:library]
           when nil
             # Use Nokogiri when available, and REXML otherwise:
-            (defined?(::Nokogiri) && RUBY_PLATFORM != 'java') ? :nokogiri : :rexml
+            defined?(::Nokogiri) ? :nokogiri : :rexml
           when :nokogiri, :rexml
             options[:library]
           else
