@@ -1,8 +1,7 @@
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-$:.unshift(File.join(File.dirname(__FILE__), '..', '..', 'rdf-n3', 'lib'))
 $:.unshift File.dirname(__FILE__)
 
-require 'rubygems'
+require "bundler/setup"
 require 'rspec'
 require 'matchers'
 require 'rdf/rdfxml'
@@ -10,6 +9,7 @@ require 'rdf/ntriples'
 require 'rdf/spec'
 require 'rdf/spec/matchers'
 require 'rdf/isomorphic'
+require 'rdf/n3'
 require 'yaml'    # XXX should be in open-uri/cached
 require 'open-uri/cached'
 
