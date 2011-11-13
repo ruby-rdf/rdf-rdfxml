@@ -633,7 +633,7 @@ describe "RDF::RDFXML::Writer" do
     end
     
     describe "w3c rdfcore tests" do
-      require 'rdf_test'
+      require 'rdfcore_test'
 
       # Positive parser tests should raise errors.
       describe "positive parser tests" do
