@@ -78,7 +78,7 @@ describe "RDF::RDFXML::Reader" do
     end
   end
   
-  [:nokogiri].each do |library|
+  [:nokogiri, :rexml].each do |library|
     context library.to_s, :library => library do
       before(:all) {@library = library}
       

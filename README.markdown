@@ -24,7 +24,7 @@ Instantiate a parser and parse source, specifying type and base-URL
 
 ## Dependencies
 * [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.4)
-* [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.4.4)
+* Soft dependency on [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.5.0)
 
 ## Documentation
 Full documentation available on [RubyForge](http://rubydoc.info/github/gkellogg/rdf-rdfxml/master/frames)
