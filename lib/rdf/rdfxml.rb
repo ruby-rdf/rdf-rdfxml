@@ -34,7 +34,7 @@ module RDF
         (?!\\\\u0301)             # &#x301; is a non-spacing acute accent.
                                   # It is legal within an XML Name, but not as the first character.
         (  [a-zA-Z_]
-         | \\\\u[0-9a-fA-F]
+         | \\\\u[0-9a-fA-F]{4}
         )
         (  [0-9a-zA-Z_\.-]
          | \\\\u([0-9a-fA-F]{4})
