@@ -327,7 +327,7 @@ module RDF::RDFXML
 
         text_nodes = child.children.select {|e| e.text? && !e.blank?}
         element_nodes = child.children.select {|c| c.element? }
-        add_debug(child) {"#{text_nodes.length} text nodes, #{element_nodes.length} element nodes"}
+        add_debug(child) {"#{text_nodes.to_a.length} text nodes, #{element_nodes.to_a.length} element nodes"}
 
         text_nodes.each do |node|
           raise "text node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)

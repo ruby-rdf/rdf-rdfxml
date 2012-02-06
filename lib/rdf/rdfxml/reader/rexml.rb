@@ -34,7 +34,7 @@ module RDF::RDFXML
         #
         # @return [String]
         def language
-          l@node.attribute("lang", RDF::XML.to_s)
+          @node.attribute("lang", RDF::XML.to_s)
         end
 
         ##
@@ -43,6 +43,10 @@ module RDF::RDFXML
         # @return [String]
         def base
           @node.attribute("base", RDF::XML.to_s)
+        end
+
+        def attribute_with_ns(name, namespace)
+          @node.attribute(name, namespace)
         end
 
         def display_path
@@ -58,9 +62,11 @@ module RDF::RDFXML
           end
         end
 
-        # URI of namespace + node_name
+        # URI of namespace + name
         def uri
-          raise "Not Implemented"
+          ns = namespace || RDF::XML.to_s
+          ns = ns.href if ns.respond_to?(:href)
+          RDF::URI.intern(ns + @node.name)
         end
 
         ##
@@ -91,7 +97,12 @@ module RDF::RDFXML
         def children
           NodeSetProxy.new(@node.children, self)
         end
-        
+
+        # Ancestors of this element, in order
+        def ancestors
+          @ancestors ||= parent ? parent.ancestors + [parent] : []
+        end
+
         ##
         # Inner text of an element
         #
@@ -109,6 +120,19 @@ module RDF::RDFXML
         #
         # @return [Boolean]
         def element?
+          @node.is_a?(::REXML::Element)
+        end
+
+        def attribute_nodes
+          @attribute_nodes ||= NodeSetProxy.new(@node.children.select {|n| n.is_a?(::REXML::Attribute)}, self)
+        end
+
+        def xpath(*args)
+          #NodeSetProxy.new(::REXML::XPath.match(@node, path, namespaces), self)
+          ::REXML::XPath.match(@node, *args).map {|n| NodeProxy.new(n)}
+        end
+
+        def elem?
           @node.is_a?(::REXML::Element)
         end
 
