@@ -44,8 +44,8 @@ def detect_format(stream)
     string = stream.to_s
   end
   case string
-  when /<\w+:RDF/ then :rdf
-  when /<RDF/     then :rdf
+  when /<\w+:RDF/ then :rdfxml
+  when /<RDF/     then :rdfxml
   #when /<html/i   then :rdfa
   when /@prefix/i then :n3
   else                 :ntriples

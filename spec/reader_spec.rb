@@ -14,7 +14,6 @@ describe "RDF::RDFXML::Reader" do
 
   context "discovery" do
     {
-      "rdf" => RDF::Reader.for(:rdf),
       "rdfxml" => RDF::Reader.for(:rdfxml),
       "etc/foaf.rdf" => RDF::Reader.for("etc/foaf.rdf"),
       "foaf.rdf" => RDF::Reader.for(:file_name      => "foaf.rdf"),
