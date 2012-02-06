@@ -20,7 +20,6 @@ module RDF::RDFXML
   #
   # @see http://www.w3.org/TR/rdf-testcases/#ntriples
   class Format < RDF::Format
-    content_type     'application/xml', :extension => :xml
     content_type     'application/rdf+xml', :extension => :rdf
     content_encoding 'utf-8'
 
@@ -39,18 +38,5 @@ module RDF::RDFXML
     def self.detect(sample)
       sample.match(/<(\w+:)?(RDF)/)
     end
-  end
-  
-  # Aliases for this format
-  #
-  # This allows the following:
-  #
-  # @example Obtaining an RDFXML format class
-  #   RDF::Format.for(:xml)         # RDF::RDFXML::XML
-  #   RDF::Format.for(:xml).reader  # RDF::RDFXML::Reader
-  #   RDF::Format.for(:xml).writer  # RDF::RDFXML::Writer
-  class XML < RDF::Format
-    reader { RDF::RDFXML::Reader }
-    writer { RDF::RDFXML::Writer }
   end
 end

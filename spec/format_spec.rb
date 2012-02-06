@@ -12,11 +12,9 @@ describe RDF::RDFXML::Format do
   describe ".for" do
     formats = [
       :rdfxml,
-      'etc/doap.rdf', 'etc/doap.xml',
+      'etc/doap.rdf',
       {:file_name      => 'etc/doap.rdf'},
-      {:file_name      => 'etc/doap.xml'},
       {:file_extension => 'rdf'},
-      {:file_extension => 'xml'},
       {:content_type   => 'application/rdf+xml'},
     ].each do |arg|
       it "discovers with #{arg.inspect}" do
@@ -30,11 +28,6 @@ describe RDF::RDFXML::Format do
       it "detects #{sym}" do
         @format_class.for {str}.should == @format_class
       end
-    end
-
-    it "should discover 'xml'" do
-      RDF::Format.for(:xml).reader.should == RDF::RDFXML::Reader
-      RDF::Format.for(:xml).writer.should == RDF::RDFXML::Writer
     end
   end
 

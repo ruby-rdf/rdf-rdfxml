@@ -16,13 +16,9 @@ describe "RDF::RDFXML::Reader" do
     {
       "rdf" => RDF::Reader.for(:rdf),
       "rdfxml" => RDF::Reader.for(:rdfxml),
-      "etc/foaf.xml" => RDF::Reader.for("etc/foaf.xml"),
       "etc/foaf.rdf" => RDF::Reader.for("etc/foaf.rdf"),
-      "foaf.xml" => RDF::Reader.for(:file_name      => "foaf.xml"),
       "foaf.rdf" => RDF::Reader.for(:file_name      => "foaf.rdf"),
-      ".xml" => RDF::Reader.for(:file_extension => "xml"),
       ".rdf" => RDF::Reader.for(:file_extension => "rdf"),
-      "application/xml" => RDF::Reader.for(:content_type   => "application/xml"),
       "application/rdf+xml" => RDF::Reader.for(:content_type   => "application/rdf+xml"),
     }.each_pair do |label, format|
       it "should discover '#{label}'" do
