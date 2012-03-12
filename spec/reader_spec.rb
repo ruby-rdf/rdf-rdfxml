@@ -285,7 +285,7 @@ describe "RDF::RDFXML::Reader" do
       end
   
       context :entities do
-        it "decodes" do
+        it "decodes attribute value" do
           sampledoc = %q(<?xml version="1.0"?>
             <!DOCTYPE rdf:RDF [<!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >]>
             <rdf:RDF xmlns:rdf="&rdf;"
@@ -304,6 +304,25 @@ describe "RDF::RDFXML::Reader" do
               rdf:subject <http://example.org/>;
               rdf:predicate ex:prop;
               rdf:object "blah" .
+          )
+
+          graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
+          graph.should be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
+        end
+
+        it "decodes element content" do
+          sampledoc = %q(<?xml version="1.0"?>
+            <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                     xmlns:ex="http://example.org/stuff/1.0/">
+              <rdf:Description rdf:about="http://example.org/">
+                <ex:prop>&gt;</ex:prop>
+              </rdf:Description>
+            </rdf:RDF>)
+
+          expected = %q(
+            @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+            @prefix ex: <http://example.org/stuff/1.0/> .
+            <http://example.org/> ex:prop ">" .
           )
 
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)

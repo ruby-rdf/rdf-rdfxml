@@ -101,6 +101,15 @@ module RDF::RDFXML
           @ancestors ||= parent ? parent.ancestors + [parent] : []
         end
 
+        ##
+        # Inner text of an element. Decode Entities
+        #
+        # @return [String]
+        #def inner_text
+        #  coder = HTMLEntities.new
+        #  coder.decode(@node.inner_text)
+        #end
+
         def attribute_nodes
           @attribute_nodes ||= NodeSetProxy.new(@node.attribute_nodes, self)
         end

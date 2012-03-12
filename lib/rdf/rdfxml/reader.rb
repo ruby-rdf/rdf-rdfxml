@@ -418,7 +418,7 @@ module RDF::RDFXML
           else
             literal_opts[:language] = child_ec.language
           end
-          literal = RDF::Literal.new(child.inner_html, literal_opts)
+          literal = RDF::Literal.new(child.inner_text, literal_opts)
           add_triple(child, subject, predicate, literal)
           reify(id, child, subject, predicate, literal, ec) if id
         elsif parseType == "Resource"
