@@ -41,7 +41,6 @@ Full documentation available on [RubyForge](http://rubydoc.info/github/gkellogg/
 ### Patches
 * {Array}
 * {RDF::Graph}
-* {RDF::Literal::XML}
 * {Nokogiri::XML::Node}
 
 ## TODO

@@ -1,3 +1,8 @@
+### 0.3.6
+* Attempt at JRuby and REXML support; not quite there yet.
+* Element content uses `#inner_text`, rather than `#inner_html`; this performs entity decoding.
+* Use rdf-xsd gem instead of internal support for XMLLiterals.
+
 ### 0.3.5
 * RDF.rb 0.3.4 compatibility.
 * Added format detection.
