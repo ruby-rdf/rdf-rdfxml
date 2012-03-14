@@ -128,6 +128,14 @@ module RDF::RDFXML
           def namespace
             @def_namespace || @node.namespace
           end
+        else
+          def add_namespace(prefix, href)
+            @node.add_namespace(prefix, href)
+          end
+
+          def namespace
+            @node.namespace
+          end
         end
 
         # URI of namespace + node_name
