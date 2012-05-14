@@ -132,6 +132,7 @@ module RDF::RDFXML
       @base_uri = @options[:base_uri]
       @lang = @options[:lang]
       @attributes = @options[:attributes] || :none
+      @stylesheet = @options[:stylesheet]
       @debug = @options[:debug]
       raise RDF::WriterError, "Invalid attribute option '#{@attributes}', should be one of #{VALID_ATTRIBUTES.to_sentence}" unless VALID_ATTRIBUTES.include?(@attributes.to_sym)
       self.reset
@@ -151,6 +152,14 @@ module RDF::RDFXML
       doc.root = Nokogiri::XML::Element.new("rdf:RDF", doc)
       doc.root["xml:lang"] = @lang if @lang
       doc.root["xml:base"] = base_uri if base_uri
+
+      if @stylesheet
+        pi = Nokogiri::XML::ProcessingInstruction.new(
+          doc, "xml-stylesheet",
+          "type=\"text/xsl\" href=\"#{@stylesheet}\""
+        )
+        doc.root.add_previous_sibling pi
+      end
       
       # Add statements for each subject
       order_subjects.each do |subject|
