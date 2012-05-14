@@ -81,6 +81,8 @@ module RDF::RDFXML
     #   Add standard prefixes to _prefixes_, if necessary.
     # @option options [String]   :default_namespace (nil)
     #   URI to use as default namespace, same as prefix(nil)
+    # @option options [String] :stylesheet (nil)
+    #   URI to use as @href for output stylesheet processing instruction.
     # @yield  [writer]
     # @yieldparam [RDF::Writer] writer
     def initialize(output = $stdout, options = {}, &block)
@@ -132,7 +134,6 @@ module RDF::RDFXML
       @base_uri = @options[:base_uri]
       @lang = @options[:lang]
       @attributes = @options[:attributes] || :none
-      @stylesheet = @options[:stylesheet]
       @debug = @options[:debug]
       raise RDF::WriterError, "Invalid attribute option '#{@attributes}', should be one of #{VALID_ATTRIBUTES.to_sentence}" unless VALID_ATTRIBUTES.include?(@attributes.to_sym)
       self.reset
@@ -153,10 +154,10 @@ module RDF::RDFXML
       doc.root["xml:lang"] = @lang if @lang
       doc.root["xml:base"] = base_uri if base_uri
 
-      if @stylesheet
+      if @options[:stylesheet]
         pi = Nokogiri::XML::ProcessingInstruction.new(
           doc, "xml-stylesheet",
-          "type=\"text/xsl\" href=\"#{@stylesheet}\""
+          "type=\"text/xsl\" href=\"#{@options[:stylesheet]}\""
         )
         doc.root.add_previous_sibling pi
       end
