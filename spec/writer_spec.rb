@@ -620,6 +620,18 @@ describe "RDF::RDFXML::Writer" do
         parse(serialize).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
       end
     end
+
+    describe "with a stylesheet" do
+      subject do
+        @graph << [RDF::URI.new("http://release/a"), FOO.ref, RDF::URI.new("http://release/b")]
+        serialize(:stylesheet => "/path/to/rdfxml.xsl")
+      end
+
+      it "should have a stylesheet as a processing instruction in the second line of the XML" do
+        lines = subject.split(/[\r\n]+/)
+        lines[1].should == '<?xml-stylesheet type="text/xsl" href="/path/to/rdfxml.xsl"?>'
+      end
+    end
   
     describe "illegal RDF values" do
       it "raises error with literal as subject" do
