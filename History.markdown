@@ -1,3 +1,7 @@
+### 0.3.8
+* If rdf:RDF is found in a deaper element, look to ancestors for xml:base and xml:lang.
+### 0.3.7
+* Added :stylesheet option to RDF::RDFXML::Writer to allow writing of an XSL stylesheet processing instruction.
 ### 0.3.6
 * Attempt at JRuby and REXML support; not quite there yet.
 * Element content uses `#inner_text`, rather than `#inner_html`; this performs entity decoding.
