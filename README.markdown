@@ -51,7 +51,7 @@ Full documentation available on [RubyForge](http://rubydoc.info/github/ruby-rdf/
 * [RDF.rb][RDF.rb]
 * [RDF/XML][RDF/XML]
 * [Distiller](http://distiller.kellogg-assoc)
-* [Documentation](http://rdf.rubyforge.org/rdfxml)
+* [Documentation](http://rubygems.org/gems/rdf-rdfxml)
 * [History](file:file.History.html)
 * [RDF Tests](http://www.w3.org/2000/10/rdf-tests/rdfcore/allTestCases.html)
 
@@ -87,7 +87,7 @@ see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 * <http://github.com/ruby-rdf/rdf-rdfxml>
 * <http://lists.w3.org/Archives/Public/public-rdf-ruby/>
 
-[RDF.rb]:   http://rdf.rubyforge.org/
+[RDF.rb]:   http://rubygems.org/gems/rdf
 [RDF/XML]:  http://www.w3.org/TR/REC-rdf-syntax/  "RDF/XML Syntax Specification"
 [YARD]:     http://yardoc.org/
 [YARD-GS]:  http://rubydoc.info/docs/yard/file/docs/GettingStarted.md

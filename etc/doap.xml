@@ -3,7 +3,7 @@
   <doap:Project rdf:about="http://rubygems.org/gems/rdf-rdfxml">
     <dc:creator rdf:resource="http://greggkellogg.net/foaf#me"/>
     <doap:blog rdf:resource="http://greggkellogg.net/"/>
-    <doap:bug-database rdf:resource="http://github.com/gkellogg/rdf-rdfxml/issues"/>
+    <doap:bug-database rdf:resource="http://github.com/ruby-rdf/rdf-rdfxml/issues"/>
     <doap:category rdf:resource="http://dbpedia.org/resource/Resource_Description_Framework"/>
     <doap:category>
       <rdf:Description rdf:about="http://dbpedia.org/resource/Ruby_(programming_language)">

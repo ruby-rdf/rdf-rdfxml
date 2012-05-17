@@ -138,7 +138,7 @@ module RDF::RDFXML
     # @yield  [reader] `self`
     # @yieldparam  [RDF::Reader] reader
     # @yieldreturn [void] ignored
-    # @raise [Error]:: Raises RDF::ReaderError if _validate_
+    # @raise [Error] Raises RDF::ReaderError if _validate_
     def initialize(input = $stdin, options = {}, &block)
       super do
         @debug = options[:debug]
@@ -250,8 +250,8 @@ module RDF::RDFXML
     
     # Add debug event to debug array, if specified
     #
-    # @param [Nokogiri::XML::Node, #to_s] node:: XML Node or string for showing context
-    # @param [String] message::
+    # @param [Nokogiri::XML::Node, #to_s] node XML Node or string for showing context
+    # @param [String] message
     # @yieldreturn [String] appended to message, to allow for lazy-evaulation of message
     def add_debug(node, message = "")
       return unless ::RDF::RDFXML.debug? || @debug
@@ -262,12 +262,12 @@ module RDF::RDFXML
 
     # add a statement, object can be literal or URI or bnode
     #
-    # @param [Nokogiri::XML::Node, any] node:: XML Node or string for showing context
-    # @param [URI, BNode] subject:: the subject of the statement
-    # @param [URI] predicate:: the predicate of the statement
-    # @param [URI, BNode, Literal] object:: the object of the statement
-    # @return [Statement]:: Added statement
-    # @raise [RDF::ReaderError]:: Checks parameter types and raises if they are incorrect if validating.
+    # @param [Nokogiri::XML::Node, any] node XML Node or string for showing context
+    # @param [URI, BNode] subject the subject of the statement
+    # @param [URI] predicate the predicate of the statement
+    # @param [URI, BNode, Literal] object the object of the statement
+    # @return [Statement] Added statement
+    # @raise [RDF::ReaderError] Checks parameter types and raises if they are incorrect if validating.
     def add_triple(node, subject, predicate, object)
       statement = RDF::Statement.new(subject, predicate, object)
       add_debug(node) {"statement: #{statement}"}
@@ -276,10 +276,10 @@ module RDF::RDFXML
 
     # XML nodeElement production
     #
-    # @param [XML Element] el:: XMl Element to parse
-    # @param [EvaluationContext] ec:: Evaluation context
-    # @return [RDF::URI] subject:: The subject found for the node
-    # @raise [RDF::ReaderError]:: Raises Exception if validating
+    # @param [XML Element] el XMl Element to parse
+    # @param [EvaluationContext] ec Evaluation context
+    # @return [RDF::URI] subject The subject found for the node
+    # @raise [RDF::ReaderError] Raises Exception if validating
     def nodeElement(el, ec)
       raise "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
       # subject
