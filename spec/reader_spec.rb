@@ -165,7 +165,37 @@ describe "RDF::RDFXML::Reader" do
           graph.predicates.map(&:to_s).should include("http://www.w3.org/1999/02/22-rdf-syntax-ns#_1", "http://www.w3.org/1999/02/22-rdf-syntax-ns#_2")
         end
       end
-  
+
+      it "extracts embedded RDF/XML" do
+        svg = %(<?xml version="1.0" encoding="UTF-8"?>
+          <svg width="12cm" height="4cm" viewBox="0 0 1200 400"
+          xmlns:dc="http://purl.org/dc/terms/"
+          xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+          xml:base="http://example.net/"
+          xml:lang="fr"
+          xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny">
+            <desc property="dc:description">A yellow rectangle with sharp corners.</desc>
+            <metadata>
+              <rdf:RDF>
+                <rdf:Description rdf:about="">
+                  <dc:title>Test 0304</dc:title>
+                </rdf:Description>
+              </rdf:RDF>
+            </metadata>
+            <!-- Show outline of canvas using 'rect' element -->
+            <rect x="1" y="1" width="1198" height="398"
+                  fill="none" stroke="blue" stroke-width="2"/>
+            <rect x="400" y="100" width="400" height="200"
+                  fill="yellow" stroke="navy" stroke-width="10"  />
+          </svg>
+        )
+        expected = %(
+        	<http://example.net/> <http://purl.org/dc/terms/title> "Test 0304"@fr .
+        )
+        graph = parse(svg, :base_uri => "http://example.com/", :validate => true)
+        graph.should be_equivalent_graph(expected, :trace => @debug)
+      end
+
       context :exceptions do
         it "should raise an error if rdf:aboutEach is used, as per the negative parser test rdfms-abouteach-error001 (rdf:aboutEach attribute)" do
           sampledoc = %q(<?xml version="1.0" ?>

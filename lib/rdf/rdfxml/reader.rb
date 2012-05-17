@@ -29,7 +29,7 @@ module RDF::RDFXML
 
       def initialize(base, element, graph, &cb)
         # Initialize the evaluation context, [5.1]
-        self.base = RDF::URI.intern(base)
+        self.base = RDF::URI(base)
         @uri_mappings = {}
         @language = nil
         @graph = graph
@@ -188,7 +188,7 @@ module RDF::RDFXML
 
       raise "root must be a proxy not a #{root.class}" unless root.is_a?(@implementation::NodeProxy)
 
-      add_debug(root, "base_uri: #{@base_uri || 'nil'}")
+      add_debug(root, "base_uri: #{@base_uri.inspect}")
       
       rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF.to_uri.to_s)
       if rdf_nodes.length == 0

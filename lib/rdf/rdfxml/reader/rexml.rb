@@ -42,7 +42,13 @@ module RDF::RDFXML
         #
         # @return [String]
         def base
-          @node.attribute("base", RDF::XML.to_s)
+          if @base.nil?
+            @base = attributes['xml:base'] ||
+            (parent && parent.element? && parent.base) ||
+            false
+          end
+
+          @base == false ? nil : @base
         end
 
         def attribute_with_ns(name, namespace)
@@ -129,7 +135,13 @@ module RDF::RDFXML
 
         def xpath(*args)
           #NodeSetProxy.new(::REXML::XPath.match(@node, path, namespaces), self)
-          ::REXML::XPath.match(@node, *args).map {|n| NodeProxy.new(n)}
+          ::REXML::XPath.match(@node, *args).map do |n|
+            # Get node ancestors
+            parent = n.ancestors.reverse.inject(nil) do |p,node|
+              NodeProxy.new(node, p)
+            end
+            NodeProxy.new(n, parent)
+          end
         end
 
         def elem?

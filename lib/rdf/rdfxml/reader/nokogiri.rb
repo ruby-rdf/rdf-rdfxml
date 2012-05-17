@@ -38,11 +38,17 @@ module RDF::RDFXML
         end
 
         ##
-        # Return xml:base on element, if defined
+        # Get any xml:base in effect for this element
         #
         # @return [String]
         def base
-          attribute_with_ns("base", RDF::XML.to_s)
+          if @base.nil?
+            @base = attribute_with_ns("base", RDF::XML.to_s) ||
+            (parent && parent.element? && parent.base) ||
+            false
+          end
+
+          @base == false ? nil : @base
         end
 
         ##
@@ -115,7 +121,13 @@ module RDF::RDFXML
         end
 
         def xpath(*args)
-          @node.xpath(*args).map {|n| NodeProxy.new(n)}
+          @node.xpath(*args).map do |n|
+            # Get node ancestors
+            parent = n.ancestors.reverse.inject(nil) do |p,node|
+              NodeProxy.new(node, p)
+            end
+            NodeProxy.new(n, parent)
+          end
         end
 
         # For jRuby, there is a bug that prevents the namespace from being set on an element
