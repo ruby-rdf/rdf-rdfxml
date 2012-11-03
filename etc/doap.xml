@@ -15,6 +15,7 @@
       RDF::RDFXML is an RDF/XML reader/writer for Ruby using the RDF.rb library suite.
     </doap:description>
     <doap:developer rdf:resource="http://greggkellogg.net/foaf#me"/>
+    <doap:helper rdf:resource="http://njh.me/"/>
     <doap:documenter rdf:resource="http://greggkellogg.net/foaf#me"/>
     <doap:download-page rdf:resource="http://rubygems.org/gems/rdf-rdfxml"/>
     <doap:homepage rdf:resource="http://github.com/gkellogg/rdf-rdfxml"/>

@@ -56,10 +56,10 @@ Full documentation available on [RubyForge](http://rubydoc.info/github/ruby-rdf/
 * [RDF Tests](http://www.w3.org/2000/10/rdf-tests/rdfcore/allTestCases.html)
 
 ## Author
-* [Gregg Kellogg](http://github.com/gkellogg) - <http://kellogg-assoc.com/>
+* [Gregg Kellogg](http://github.com/gkellogg) - <http://greggkellogg.net/>
 
 ## Contributors
-* [Nicholas Humfrey](http://github.com/njh)
+* [Nicholas Humfrey](http://github.com/njh) - <http://njh.me/>
 
 ## Contributing
 
