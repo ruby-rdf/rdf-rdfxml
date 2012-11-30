@@ -39,4 +39,19 @@ module RDF::RDFXML
       sample.match(/<(\w+:)?(RDF)/)
     end
   end
+
+  # Aliases for RDF::Format
+  #
+  # This allows the following:
+  #
+  # @example Obtaining an HTML format class
+  #   RDF::Format.for(:rdf)         # RDF::RDFXML::Lite
+  #   RDF::Format.for(:rdf).reader  # RDF::RDFXML::Reader
+  #   RDF::Format.for(:rdf).writer  # RDF::RDFXML::Writer
+  class RDFFormat < RDF::Format
+    reader { RDF::RDFXML::Reader }
+    writer { RDF::RDFXML::Writer }
+    
+    def self.to_sym; :rdf; end
+  end
 end

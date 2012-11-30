@@ -62,5 +62,16 @@ describe RDF::RDFXML::Format do
         @format_class.detect(str).should be_false
       end
     end
+
+    describe RDF::RDFXML::RDFFormat do
+      it "discovers with :rdf" do
+        RDF::Format.for(:rdf).should == RDF::RDFXML::RDFFormat
+      end
+
+      it "should discover :rdf" do
+        RDF::Format.for(:rdf).reader.should == RDF::RDFXML::Reader
+        RDF::Format.for(:rdf).writer.should == RDF::RDFXML::Writer
+      end
+    end
   end
 end
