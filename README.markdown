@@ -25,6 +25,7 @@ Instantiate a parser and parse source, specifying type and base-URL
 ## Dependencies
 * [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.4)
 * Soft dependency on [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.5.0)
+* Does not run properly on jRuby due to [Nokogiri][] issues.
 
 ## Documentation
 Full documentation available on [RubyForge](http://rubydoc.info/github/ruby-rdf/rdf-rdfxml/master/frames)
@@ -46,6 +47,7 @@ Full documentation available on [RubyForge](http://rubydoc.info/github/ruby-rdf/
 ## TODO
 * Add support for LibXML and REXML bindings, and use the best available
 * Consider a SAX-based parser for improved performance
+* jRuby integration awaiting improvements in Nokogiri
 
 ## Resources
 * [RDF.rb][RDF.rb]
