@@ -1,5 +1,8 @@
+### 0.3.9
+* Allow discovery with format :rdf in addition to :rdfxml
+
 ### 0.3.8
-* If rdf:RDF is found in a deaper element, look to ancestors for xml:base and xml:lang.
+* If rdf:RDF is found in a deeper element, look to ancestors for xml:base and xml:lang.
 ### 0.3.7
 * Added :stylesheet option to RDF::RDFXML::Writer to allow writing of an XSL stylesheet processing instruction.
 ### 0.3.6
