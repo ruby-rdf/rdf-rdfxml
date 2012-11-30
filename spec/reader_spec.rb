@@ -10,7 +10,7 @@ describe "RDF::RDFXML::Reader" do
     @reader = RDF::RDFXML::Reader.new(StringIO.new(""))
   end
 
-  it_should_behave_like RDF_Reader
+  include RDF_Reader
 
   context "discovery" do
     {

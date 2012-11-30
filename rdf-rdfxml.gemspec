@@ -29,18 +29,18 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 1.8.1'
   gem.requirements          = []
 
-  gem.add_runtime_dependency     'rdf',             '>= 0.3.4'
-  gem.add_runtime_dependency     'rdf-xsd',         '>= 0.3.5'
+  gem.add_runtime_dependency     'rdf',             '>= 0.3.11'
+  gem.add_runtime_dependency     'rdf-xsd',         '>= 0.3.8'
 
-  gem.add_development_dependency 'nokogiri' ,       '>= 1.5.0'
+  gem.add_development_dependency 'nokogiri' ,       '>= 1.5.5'
   gem.add_development_dependency 'equivalent-xml' , '>= 0.2.8'
   gem.add_development_dependency 'open-uri-cached', '>= 0.0.4'
   gem.add_development_dependency 'spira',           '>= 0.0.12'
-  gem.add_development_dependency 'rspec',           '>= 2.8.0'
+  gem.add_development_dependency 'rspec',           '>= 2.12.0'
   gem.add_development_dependency 'rdf-isomorphic',  '>= 0.3.4'
-  gem.add_development_dependency 'rdf-n3',          '>= 0.3.4'
-  gem.add_development_dependency 'rdf-spec',        '>= 0.3.4'
-  gem.add_development_dependency 'yard' ,           '>= 0.6.0'
+  gem.add_development_dependency 'rdf-n3',          '>= 0.3.7'
+  gem.add_development_dependency 'rdf-spec',        '>= 0.3.11'
+  gem.add_development_dependency 'yard' ,           '>= 0.8.3'
   gem.post_install_message  = nil
 end
 

@@ -12,7 +12,7 @@ describe "RDF::RDFXML::Writer" do
     @writer_class = RDF::RDFXML::Writer
   end
   
-  it_should_behave_like RDF_Writer
+  include RDF_Writer
   
   describe "#buffer" do
     context "typed resources" do
