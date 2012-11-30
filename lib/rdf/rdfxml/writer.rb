@@ -255,7 +255,7 @@ module RDF::RDFXML
     def top_classes; []; end
 
     # Defines order of predicates to to emit at begninning of a resource description. Defaults to
-    # [rdf:type, rdfs:label, dc:title]
+    # `\[rdf:type, rdfs:label, dc:title\]`
     # @return [Array<URI>]
     def predicate_order; [RDF.type, RDF::RDFS.label, RDF::DC.title]; end
     

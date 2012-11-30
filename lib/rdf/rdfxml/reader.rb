@@ -19,7 +19,8 @@ module RDF::RDFXML
     OLD_TERMS = %w(aboutEach aboutEachPrefix bagID).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
 
     # The Recursive Baggage
-    class EvaluationContext # :nodoc:
+    # @private
+    class EvaluationContext
       attr_reader :base
       attr :subject, true
       attr :uri_mappings, true
