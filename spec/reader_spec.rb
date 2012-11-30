@@ -359,7 +359,7 @@ describe "RDF::RDFXML::Reader" do
           graph.should be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
         end
 
-        it "processes OWL definition" do
+        it "processes OWL definition", :pending => ENV['CI'] do
           @debug = []
           graph = RDF::Graph.load("http://www.w3.org/2002/07/owl", :format => :rdfxml, :debug => @debug)
           graph.count.should > 10
