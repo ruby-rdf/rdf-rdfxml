@@ -22,11 +22,11 @@ module RDF::RDFXML
     # @private
     class EvaluationContext
       attr_reader :base
-      attr :subject, true
-      attr :uri_mappings, true
-      attr :language, true
-      attr :graph, true
-      attr :li_counter, true
+      attr_accessor :subject
+      attr_accessor :uri_mappings
+      attr_accessor :language
+      attr_accessor :graph
+      attr_accessor :li_counter
 
       def initialize(base, element, graph, &cb)
         # Initialize the evaluation context, [5.1]
