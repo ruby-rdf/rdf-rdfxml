@@ -109,7 +109,8 @@ module RDF::RDFXML
 
     # Returns the XML implementation module for this reader instance.
     #
-    # @attr_reader [Module]
+    # @!attribute [r] implementation
+    # @return [Module]
     attr_reader :implementation
 
     ##
