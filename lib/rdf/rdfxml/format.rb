@@ -49,6 +49,8 @@ module RDF::RDFXML
   #   RDF::Format.for(:rdf).reader  # RDF::RDFXML::Reader
   #   RDF::Format.for(:rdf).writer  # RDF::RDFXML::Writer
   class RDFFormat < RDF::Format
+    content_type     'application/rdf+xml'
+    content_encoding 'utf-8'
     reader { RDF::RDFXML::Reader }
     writer { RDF::RDFXML::Writer }
     
