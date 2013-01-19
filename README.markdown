@@ -23,7 +23,7 @@ Instantiate a parser and parse source, specifying type and base-URL
     end
 
 ## Dependencies
-* [RDF.rb](http://rubygems.org/gems/rdf) (>= 0.3.4)
+* [RDF.rb](http://rubygems.org/gems/rdf) (>= 1.0)
 * Soft dependency on [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.5.0)
 * Does not run properly on jRuby due to [Nokogiri][] issues.
 

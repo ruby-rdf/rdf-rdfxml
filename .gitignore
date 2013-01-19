@@ -4,3 +4,4 @@
 /.yardoc
 /user-test-cases
 /.rbx/
+Gemfile.lock
