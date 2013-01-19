@@ -1,3 +1,4 @@
+# -*- encoding: utf-8 -*-
 # Spira class for manipulating test-manifest style test suites.
 # Used for SWAP tests
 require 'spira'

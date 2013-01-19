@@ -68,4 +68,4 @@ describe "RDF::RDFXML::Reader" do
     end
     graph
   end
-end
+end unless ENV['CI'] # Not for continuous integration
