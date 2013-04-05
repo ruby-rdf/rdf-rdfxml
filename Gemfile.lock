@@ -37,6 +37,7 @@ GEM
     nokogiri (1.5.6)
     open-uri-cached (0.0.5)
     promise (0.3.0)
+    rake (10.0.4)
     rdf-isomorphic (0.3.4)
       rdf (>= 0.2.3)
     rdf-n3 (0.3.8)
@@ -63,6 +64,7 @@ DEPENDENCIES
   equivalent-xml (>= 0.2.8)
   nokogiri (>= 1.5.5)
   open-uri-cached (>= 0.0.5)
+  rake
   rdf!
   rdf-isomorphic
   rdf-n3
