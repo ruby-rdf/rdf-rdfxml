@@ -36,6 +36,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'equivalent-xml' , '>= 0.2.8'
   gem.add_development_dependency 'open-uri-cached', '>= 0.0.5'
   gem.add_development_dependency 'spira'
+  gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec',           '>= 2.12.0'
   gem.add_development_dependency 'rdf-isomorphic'
   gem.add_development_dependency 'rdf-n3'
