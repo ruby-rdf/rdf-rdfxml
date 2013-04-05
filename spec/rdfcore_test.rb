@@ -3,7 +3,6 @@
 # Used for SWAP tests
 require 'spira'
 require 'rdf/rdfxml'
-require 'rdf/n3'
 require 'open-uri'
 
 module Fixtures

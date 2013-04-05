@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), "..", 'lib')))
+require "bundler/setup"
 require 'rdf/rdfxml'
-require 'linkeddata'
+require 'rdf/turtle'
+require 'rdf/ntriples'
 require 'getoptlong'
 require 'open-uri'
 

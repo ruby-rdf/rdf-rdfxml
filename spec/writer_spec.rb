@@ -241,9 +241,9 @@ describe "RDF::RDFXML::Writer" do
           %q(<author> <is> (:Gregg :Barnum :Kellogg)) => {
             "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
             "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
-            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Gregg"]) => /Gregg/,
-            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Barnum"]) => /Barnum/,
-            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/#Kellogg"]) => /Kellogg/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/Gregg"]) => /Gregg/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/Barnum"]) => /Barnum/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/Kellogg"]) => /Kellogg/,
             %(//rdf:first)  => false
           },
           %q(<author> <is> (_:Gregg _:Barnum _:Kellogg)) => {
@@ -263,7 +263,7 @@ describe "RDF::RDFXML::Writer" do
         }.each do |ttl, match|
           context ttl do
             subject do
-              @graph = parse(ttl, :base_uri => "http://foo/", :reader => RDF::N3::Reader)
+              @graph = parse(ttl, :base_uri => "http://foo/", :reader => RDF::Turtle::Reader)
               serialize({})
             end
             match.each do |path, value|
@@ -600,7 +600,7 @@ describe "RDF::RDFXML::Writer" do
       it "should replicate rdfcore/rdfms-seq-representation" do
         @graph = parse(%(
           <http://example.org/eg#eric> a [ <http://example.org/eg#intersectionOf> (<http://example.org/eg#Person> <http://example.org/eg#Male>)] .
-        ), :reader => RDF::N3::Reader)
+        ), :reader => RDF::Turtle::Reader)
         parse(serialize).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
       end
       
@@ -616,7 +616,7 @@ describe "RDF::RDFXML::Writer" do
                 <http://www.w3.org/2002/07/owl#someValuesFrom> <a>])] .
          [ a <http://www.w3.org/2002/07/owl#Class>;
             <http://www.w3.org/2002/07/owl#intersectionOf> (<a> <b>)] .
-        ), :reader => RDF::N3::Reader)
+        ), :reader => RDF::Turtle::Reader)
         parse(serialize).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
       end
     end
@@ -712,7 +712,6 @@ describe "RDF::RDFXML::Writer" do
       end
     end
 
-    require 'rdf/n3'
     def parse(input, options = {})
       reader_class = options.fetch(:reader, RDF::Reader.for(detect_format(input)))
     

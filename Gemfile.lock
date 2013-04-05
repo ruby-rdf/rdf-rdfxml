@@ -1,13 +1,13 @@
 GIT
   remote: git://github.com/ruby-rdf/rdf-spec.git
-  revision: a740e2db2ef6368a3e0ce080fbda7293b24890cf
+  revision: da95d11de45eb26da27657bcc3ca36ef69579ead
   specs:
-    rdf-spec (1.0.0)
-      rspec (>= 2.12.0)
+    rdf-spec (1.0.4)
+      rspec (>= 2.12)
 
 GIT
   remote: git://github.com/ruby-rdf/rdf-xsd.git
-  revision: e07284f84e837599e007b74911cdc9d55406dad7
+  revision: 9cc42e4978d9db12281411c44e43d8ae483590c7
   specs:
     rdf-xsd (1.0.0)
       nokogiri (>= 1.5.0)
@@ -15,10 +15,10 @@ GIT
 
 GIT
   remote: git://github.com/ruby-rdf/rdf.git
-  revision: 607d5f738e32bb7bd1a5a81089caffdbcfdf9d61
+  revision: f27f5d9734cc0950d1ef8e0236e23e3d956b62ec
   specs:
-    rdf (1.0.0)
-      addressable (>= 2.2.6)
+    rdf (1.0.5)
+      addressable (>= 2.2)
 
 PATH
   remote: .
@@ -30,18 +30,25 @@ PATH
 GEM
   remote: http://rubygems.org/
   specs:
-    addressable (2.3.2)
+    addressable (2.3.3)
     diff-lcs (1.2.2)
+    ebnf (0.2.3)
+      rdf
+      sxp
     equivalent-xml (0.3.0)
       nokogiri (>= 1.4.3)
+    json (1.7.7)
     nokogiri (1.5.9)
     open-uri-cached (0.0.5)
     promise (0.3.0)
     rake (10.0.4)
-    rdf-isomorphic (0.3.4)
-      rdf (>= 0.2.3)
-    rdf-n3 (0.3.8)
-      rdf (>= 0.3.11)
+    rdf-isomorphic (1.0.0)
+      rdf (>= 1.0)
+    rdf-n3 (1.0.0)
+      rdf (>= 1.0)
+    rdf-turtle (1.0.3)
+      ebnf (>= 0.2.1)
+      rdf (>= 1.0)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
@@ -54,8 +61,10 @@ GEM
       promise (>= 0.3.0)
       rdf (>= 0.2.3)
       rdf-isomorphic (>= 0.3.0)
+    sxp (0.1.2)
+      json (>= 1.1.1)
     wirble (0.1.3)
-    yard (0.8.3)
+    yard (0.8.5.2)
 
 PLATFORMS
   ruby
@@ -70,8 +79,9 @@ DEPENDENCIES
   rdf-n3
   rdf-rdfxml!
   rdf-spec!
+  rdf-turtle
   rdf-xsd!
   rspec (>= 2.12.0)
-  spira
+  spira (= 0.0.12)
   wirble
   yard (>= 0.8.3)

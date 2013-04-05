@@ -29,7 +29,6 @@ describe "RDF::RDFXML::Reader" do
             #puts "parse #{self.outputDocument} as #{RDF::Reader.for(self.outputDocument)}"
             format = detect_format(t.output)
             output_graph = RDF::Graph.load(t.outputDocument, :format => format, :base_uri => t.inputDocument)
-            puts "result: #{CGI.escapeHTML(graph.dump(:ntriples))}" if ::RDF::N3::debug?
             graph.should be_equivalent_graph(output_graph, t)
           rescue RSpec::Expectations::ExpectationNotMetError => e
             if t.inputDocument =~ %r(xml-literal|xml-canon)

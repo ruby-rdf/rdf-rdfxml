@@ -6,11 +6,10 @@ require 'rspec'
 require 'matchers'
 require 'rdf/rdfxml'
 require 'rdf/ntriples'
+require 'rdf/turtle'
 require 'rdf/spec'
 require 'rdf/spec/matchers'
 require 'rdf/isomorphic'
-require 'rdf/n3'
-require 'yaml'    # XXX should be in open-uri/cached
 require 'open-uri/cached'
 
 # Create and maintain a cache of downloaded URIs
@@ -47,7 +46,7 @@ def detect_format(stream)
   when /<\w+:RDF/ then :rdfxml
   when /<RDF/     then :rdfxml
   #when /<html/i   then :rdfa
-  when /@prefix/i then :n3
+  when /@prefix/i then :ttl
   else                 :ntriples
   end
 end
