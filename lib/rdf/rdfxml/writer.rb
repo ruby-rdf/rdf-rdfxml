@@ -237,7 +237,7 @@ module RDF::RDFXML
       
       add_debug {"qname(#{resource.inspect}): #{qname.inspect}"}
       @uri_to_qname[uri] = qname
-    rescue Addressable::URI::InvalidURIError => e
+    rescue ArgumentError => e
       raise RDF::WriterError, "Invalid URI #{uri.inspect}: #{e.message}"
     end
     

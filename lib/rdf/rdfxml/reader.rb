@@ -95,9 +95,7 @@ module RDF::RDFXML
 
       # Set XML base. Ignore any fragment
       def base=(b)
-        base = Addressable::URI.parse(b)
-        base.fragment = nil
-        @base = RDF::URI.intern(base)
+        @base = RDF::URI.intern(b.to_s.split('#').first)
       end
 
       def inspect
