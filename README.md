@@ -2,7 +2,7 @@
 
 [RDF/XML][RDF/XML] parser for [RDF.rb][RDF.rb].
 
-[![Gem Version](https://badge.fury.io/rb/rdf-rdfxml.png)][gem]
+[![Gem Version](https://badge.fury.io/rb/rdf-rdfxml.png)](http://badge.fury.io/rb/rdf-rdfxml)
 [![Build Status](https://secure.travis-ci.org/ruby-rdf/rdf-rdfxml.png?branch=master)](http://travis-ci.org/ruby-rdf/rdf-rdfxml)
 
 ## DESCRIPTION
