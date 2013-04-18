@@ -1,6 +1,9 @@
-# RDF::RDFXML reader/writer  [![Build Status](https://secure.travis-ci.org/ruby-rdf/rdf-rdfxml.png?branch=master)](http://travis-ci.org/ruby-rdf/rdf-rdfxml)
+# RDF::RDFXML reader/writer 
 
 [RDF/XML][RDF/XML] parser for [RDF.rb][RDF.rb].
+
+[![Gem Version](https://badge.fury.io/rb/rdf-rdfxml.png)][gem]
+[![Build Status](https://secure.travis-ci.org/ruby-rdf/rdf-rdfxml.png?branch=master)](http://travis-ci.org/ruby-rdf/rdf-rdfxml)
 
 ## DESCRIPTION
 
