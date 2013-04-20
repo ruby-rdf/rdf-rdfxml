@@ -5,7 +5,7 @@ autoload :CGI, 'cgi'
 
 class FOO < RDF::Vocabulary("http://foo/"); end
 
-describe "RDF::RDFXML::Writer" do
+describe "RDF::RDFXML::Writer", :no_jruby => true do
   before(:each) do
     @graph = RDF::Graph.new
     @writer = RDF::RDFXML::Writer.new(StringIO.new)
