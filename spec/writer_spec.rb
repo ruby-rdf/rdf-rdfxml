@@ -442,7 +442,7 @@ describe "RDF::RDFXML::Writer" do
 
         {
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">foo</dc:title>)
+          "/rdf:RDF/rdf:Description/@dc:title" => %(foo)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
             subject.should have_xpath(path, value, {})
@@ -475,8 +475,8 @@ describe "RDF::RDFXML::Writer" do
 
         {
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/dc:title[contains(., 'foo')]" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">foo</dc:title>),
-          "/rdf:RDF/rdf:Description/dc:title[contains(., 'bar')]" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">bar</dc:title>)
+          "/rdf:RDF/rdf:Description/dc:title[contains(., 'foo')]" => %(<dc:title>foo</dc:title>),
+          "/rdf:RDF/rdf:Description/dc:title[contains(., 'bar')]" => %(<dc:title>bar</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
             subject.should have_xpath(path, value, {})
@@ -646,36 +646,22 @@ describe "RDF::RDFXML::Writer" do
 
     unless ENV['CI'] # Not for continuous integration
       describe "w3c rdfcore tests" do
-        require 'rdfcore_test'
+        require 'suite_helper'
 
-        # Positive parser tests should raise errors.
-        describe "positive parser tests" do
-          Fixtures::TestCase::PositiveParserTest.each do |t|
-            next unless t.status == "APPROVED"
-            next if t.subject =~ /rdfms-xml-literal-namespaces|xml-canon/ # Literal serialization adds namespace definitions
-            specify "#{t.name}: " + (t.description || t.outputDocument) do
-              @graph = parse(t.output, :base_uri => t.subject, :format => :ntriples)
+        %w(manifest.rdf).each do |man|
+          Fixtures::SuiteTest::Manifest.open(Fixtures::SuiteTest::BASE + man) do |t|
+            next unless t.parser_test? && t.positive_test? && t.status == "APPROVED"
+            # Literal serialization adds namespace definitions
+            next if t.subject =~ /rdfms-xml-literal-namespaces|xml-canon/
+            specify t.id do
+              @graph = parse(t.result, :base_uri => t.id, :format => :ntriples)
 
-              serialized = serialize(:format => :rdfxml, :base_uri => t.subject)
+              serialized = serialize(:format => :rdfxml, :base_uri => t.id)
               # New RBX failure :(
               trace = @debug.map do |s|
-                s = s.force_encoding(Encoding::UTF_8) if s.respond_to?(:force_encoding)
-                s
+                s.force_encoding(Encoding::UTF_8)
               end.join("\n")
               parse(serialized, :base_uri => t.subject).should be_equivalent_graph(@graph, :trace => trace)
-            end
-          end
-        end
-
-        # Miscellaneous parser tests should raise errors.
-        describe "positive parser tests" do
-          Fixtures::TestCase::MiscellaneousTest.each do |t|
-            next unless t.status == "APPROVED"
-            specify "#{t.name}: " + (t.description || t.document) do
-              @graph = parse(Kernel.open(t.document), :base_uri => t.subject, :format => :ntriples)
-              lambda do
-                serialize(:format => :rdfxml, :base_uri => t.subject)
-              end.should raise_error(RDF::WriterError)
             end
           end
         end

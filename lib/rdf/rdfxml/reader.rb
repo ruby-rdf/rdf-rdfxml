@@ -257,7 +257,7 @@ module RDF::RDFXML
       return unless ::RDF::RDFXML.debug? || @debug
       message = message + yield if block_given?
       puts "#{node_path(node)}: #{message}" if ::RDF::RDFXML::debug?
-      @debug << "#{node_path(node)}: #{message}" if @debug.is_a?(Array)
+      @debug << "#{node_path(node)}: #{message}".force_encoding("utf-8") if @debug.is_a?(Array)
     end
 
     # add a statement, object can be literal or URI or bnode

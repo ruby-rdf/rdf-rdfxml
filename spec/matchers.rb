@@ -59,7 +59,7 @@ RSpec::Matchers.define :be_equivalent_graph do |expected, info|
     else
       Info.new(expected.is_a?(RDF::Graph) ? expected.context : info, info.to_s)
     end
-    @info.format ||= :n3
+    @info.format ||= :ttl
     @expected = normalize(expected)
     @actual = normalize(actual)
     @actual.isomorphic_with?(@expected)
@@ -81,4 +81,17 @@ RSpec::Matchers.define :be_equivalent_graph do |expected, info|
     "Unsorted Results:\n#{@actual.dump(@info.format, :standard_prefixes => true)}" +
     (@info.trace ? "\nDebug:\n#{@info.trace}" : "")
   end  
+end
+
+RSpec::Matchers.define :produce do |expected, info|
+  match do |actual|
+    actual.should == expected
+  end
+  
+  failure_message_for_should do |actual|
+    "Expected: #{[Array, Hash].include?(expected.class) ? expected.to_json(JSON_STATE) : expected.inspect}\n" +
+    "Actual  : #{[Array, Hash].include?(actual.class) ? actual.to_json(JSON_STATE) : actual.inspect}\n" +
+    #(expected.is_a?(Hash) && actual.is_a?(Hash) ? "Diff: #{expected.diff(actual).to_json(JSON_STATE)}\n" : "") +
+    "Processing results:\n#{info.map {|s| s.force_encoding("utf-8")}.join("\n")}"
+  end
 end
