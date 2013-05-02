@@ -9,5 +9,5 @@ gem "rdf-xsd",        :git => "git://github.com/ruby-rdf/rdf-xsd.git", :branch =
 
 group :debug do
   gem "wirble"
-  gem "debugger", :platform => :ruby_19
+  gem "debugger", :platforms => [:mri_19]
 end
