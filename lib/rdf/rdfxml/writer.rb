@@ -506,7 +506,7 @@ module RDF::RDFXML
       [:untyped, :typed].include?(@attributes) && (
         prop == RDF.type ||
         [:typed].include?(@attributes) && object.literal? && object.typed? ||
-        (object.literal? && object.plain? || @lang && object.language.to_s == @lang.to_s)
+        (object.literal? && object.simple? || @lang && object.language.to_s == @lang.to_s)
       )
     end
     
@@ -540,7 +540,7 @@ module RDF::RDFXML
     def xml_args(object)
       case object
       when RDF::Literal
-        if object.plain?
+        if object.simple?
           [object.value, {}]
         elsif object.has_language?
           [object.value, {"xml:lang" => object.language}]
