@@ -268,7 +268,7 @@ describe "RDF::RDFXML::Writer" do
             end
             match.each do |path, value|
               it "returns #{value.inspect} for xpath #{path}" do
-                subject.should have_xpath(path, value, {})
+                subject.should have_xpath(path, value, {}, @debug)
               end
             end
           end

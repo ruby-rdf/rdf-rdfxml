@@ -425,8 +425,9 @@ module RDF::RDFXML
       
       o_props = @graph.properties(object)
 
-      col = RDF::List.new(object, @graph).to_a
-      conformant_list = col.all? {|item| !item.literal?} && o_props[RDF.first.to_s]
+      list = RDF::List.new(object, @graph)
+      col = list.to_a
+      conformant_list = list.valid? && col.none?(&:literal?)
       args = xml_args(object)
       attrs = args.pop
 
