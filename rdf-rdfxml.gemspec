@@ -32,7 +32,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency     'rdf',             '>= 1.0'
   gem.add_runtime_dependency     'rdf-xsd',         '>= 1.0'
 
-  gem.add_development_dependency 'nokogiri' ,       (RUBY_VERSION < "1.9" ? '~> 1.5' : '>= 1.6')
+  gem.add_development_dependency 'nokogiri' ,       '>= 1.5.0'
   gem.add_development_dependency 'equivalent-xml' , '>= 0.2.8'
   gem.add_development_dependency 'open-uri-cached', '>= 0.0.5'
   gem.add_development_dependency 'spira',           '= 0.0.12'
