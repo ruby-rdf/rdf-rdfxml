@@ -32,12 +32,12 @@ end
 
 def normalize(graph)
   case graph
-  when RDF::Graph then graph
+  when RDF::Enumerable then graph
   when IO, StringIO
-    RDF::Graph.new.load(graph, :base_uri => @info.about)
+    RDF::Repository.new.load(graph, :base_uri => @info.about)
   else
     # Figure out which parser to use
-    g = RDF::Graph.new
+    g = RDF::Repository.new
     reader_class = RDF::Reader.for(detect_format(graph))
     reader_class.new(graph, :base_uri => @info.about).each {|s| g << s}
     g
@@ -60,7 +60,7 @@ RSpec::Matchers.define :be_equivalent_graph do |expected, info|
     else
       Info.new(expected.is_a?(RDF::Graph) ? expected.context : info, info.to_s)
     end
-    @info.format ||= :n3
+    @info.format ||= :ttl
     @expected = normalize(expected)
     @actual = normalize(actual)
     @actual.isomorphic_with?(@expected)

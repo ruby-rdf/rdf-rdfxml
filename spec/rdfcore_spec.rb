@@ -20,7 +20,7 @@ describe "RDF::RDFXML::Reader" do
         #puts t.inspect
         specify "#{t.name}: " + (t.description || "#{t.inputDocument} against #{t.outputDocument}") do
           begin
-            graph = RDF::Graph.new << RDF::RDFXML::Reader.new(t.input,
+            graph = RDF::Repository.new << RDF::RDFXML::Reader.new(t.input,
               :base_uri => t.inputDocument,
               :validate => false,
               :debug => t.debug)
@@ -28,7 +28,7 @@ describe "RDF::RDFXML::Reader" do
             # Parse result graph
             #puts "parse #{self.outputDocument} as #{RDF::Reader.for(self.outputDocument)}"
             format = detect_format(t.output)
-            output_graph = RDF::Graph.load(t.outputDocument, :format => format, :base_uri => t.inputDocument)
+            output_graph = RDF::Repository.load(t.outputDocument, :format => format, :base_uri => t.inputDocument)
             graph.should be_equivalent_graph(output_graph, t)
           rescue RSpec::Expectations::ExpectationNotMetError => e
             if t.inputDocument =~ %r(xml-literal|xml-canon)
@@ -50,7 +50,7 @@ describe "RDF::RDFXML::Reader" do
         #puts t.inspect
         specify "test #{t.name}: #{t.description || t.inputDocument}" do
           lambda do
-            RDF::Graph.new << RDF::RDFXML::Reader.new(t.input,
+            RDF::Repository.new << RDF::RDFXML::Reader.new(t.input,
               :base_uri => t.inputDocument,
               :validate => true)
           end.should raise_error(RDF::ReaderError)
@@ -61,7 +61,7 @@ describe "RDF::RDFXML::Reader" do
   
   def parse(input, options)
     @debug = []
-    graph = RDF::Graph.new
+    graph = RDF::Repository.new
     RDF::RDFXML::Reader.new(input, options.merge(:debug => @debug)).each do |statement|
       graph << statement
     end

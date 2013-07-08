@@ -361,7 +361,7 @@ describe "RDF::RDFXML::Reader" do
 
         it "processes OWL definition", :pending => ENV['CI'] do
           @debug = []
-          graph = RDF::Graph.load("http://www.w3.org/2002/07/owl", :format => :rdfxml, :debug => @debug)
+          graph = RDF::Repository.load("http://www.w3.org/2002/07/owl", :format => :rdfxml, :debug => @debug)
           graph.count.should > 10
         end
       end
@@ -370,7 +370,7 @@ describe "RDF::RDFXML::Reader" do
 
   def parse(input, options)
     @debug = []
-    graph = RDF::Graph.new
+    graph = RDF::Repository.new
     RDF::RDFXML::Reader.new(input, options.merge(:debug => @debug, :library => @library)).each do |statement|
       graph << statement
     end

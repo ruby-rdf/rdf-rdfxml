@@ -27,7 +27,7 @@ def run_tc(tc, options)
       :base_uri => input_uri,
       :validate => options[:validate])
 
-    graph = RDF::Graph.new << reader
+    graph = RDF::Repository.new << reader
   rescue Exception => e
     puts "#{"exception:" unless options[:quiet]}: #{e}"
     if options[:quiet]
