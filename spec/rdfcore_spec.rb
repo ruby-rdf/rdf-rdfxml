@@ -49,11 +49,11 @@ describe "RDF::RDFXML::Reader" do
         #next unless t.name =~ /1/
         #puts t.inspect
         specify "test #{t.name}: #{t.description || t.inputDocument}" do
-          lambda do
+          expect do
             RDF::Repository.new << RDF::RDFXML::Reader.new(t.input,
               :base_uri => t.inputDocument,
               :validate => true)
-          end.should raise_error(RDF::ReaderError)
+          end.to raise_error(RDF::ReaderError)
         end
       end
     end

@@ -45,7 +45,7 @@ describe "RDF::RDFXML::Reader" do
     end
     
     it "should yield reader" do
-      inner = mock("inner")
+      inner = double("inner")
       inner.should_receive(:called).with(RDF::RDFXML::Reader)
       RDF::RDFXML::Reader.new(@sampledoc) do |reader|
         inner.called(reader.class)
@@ -57,7 +57,7 @@ describe "RDF::RDFXML::Reader" do
     end
     
     it "should yield statements" do
-      inner = mock("inner")
+      inner = double("inner")
       inner.should_receive(:called).with(RDF::Statement).twice
       RDF::RDFXML::Reader.new(@sampledoc).each_statement do |statement|
         inner.called(statement.class)
@@ -65,7 +65,7 @@ describe "RDF::RDFXML::Reader" do
     end
     
     it "should yield triples" do
-      inner = mock("inner")
+      inner = double("inner")
       inner.should_receive(:called).with(RDF::URI, RDF::URI, RDF::Literal).twice
       RDF::RDFXML::Reader.new(@sampledoc).each_triple do |subject, predicate, object|
         inner.called(subject.class, predicate.class, object.class)
@@ -213,9 +213,9 @@ describe "RDF::RDFXML::Reader" do
 
             </rdf:RDF>)
   
-          lambda do
+          expect do
             graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.should raise_error(RDF::ReaderError, /Obsolete attribute .*aboutEach/)
+          end.to raise_error(RDF::ReaderError, /Obsolete attribute .*aboutEach/)
         end
 
         it "should raise an error if rdf:aboutEachPrefix is used, as per the negative parser test rdfms-abouteach-error002 (rdf:aboutEachPrefix attribute)" do
@@ -234,9 +234,9 @@ describe "RDF::RDFXML::Reader" do
 
             </rdf:RDF>)
   
-          lambda do
+          expect do
             graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.should raise_error(RDF::ReaderError, /Obsolete attribute .*aboutEachPrefix/)
+          end.to raise_error(RDF::ReaderError, /Obsolete attribute .*aboutEachPrefix/)
         end
 
         it "should fail if given a non-ID as an ID (as per rdfcore-rdfms-rdf-id-error001)" do
@@ -245,9 +245,9 @@ describe "RDF::RDFXML::Reader" do
               <rdf:Description rdf:ID='333-555-666' />
             </rdf:RDF>)
   
-          lambda do
+          expect do
             graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.should raise_error(RDF::ReaderError, /ID addtribute '.*' must be a NCName/)
+          end.to raise_error(RDF::ReaderError, /ID addtribute '.*' must be a NCName/)
         end
 
         it "should make sure that the value of rdf:ID attributes match the XML Name production (child-element version)" do
@@ -259,9 +259,9 @@ describe "RDF::RDFXML::Reader" do
              </rdf:Description>
             </rdf:RDF>)
   
-          lambda do
+          expect do
             graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.should raise_error(RDF::ReaderError, /ID addtribute '.*' must be a NCName/)
+          end.to raise_error(RDF::ReaderError, /ID addtribute '.*' must be a NCName/)
         end
 
         it "should make sure that the value of rdf:ID attributes match the XML Name production (data attribute version)" do
@@ -271,9 +271,9 @@ describe "RDF::RDFXML::Reader" do
               <rdf:Description rdf:ID="a/b" eg:prop="val" />
             </rdf:RDF>)
   
-          lambda do
+          expect do
             graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.should raise_error(RDF::ReaderError, "ID addtribute 'a/b' must be a NCName")
+          end.to raise_error(RDF::ReaderError, "ID addtribute 'a/b' must be a NCName")
         end
   
         it "should detect bad bagIDs" do
@@ -282,9 +282,9 @@ describe "RDF::RDFXML::Reader" do
               <rdf:Description rdf:bagID='333-555-666' />
             </rdf:RDF>)
     
-          lambda do
+          expect do
             graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.should raise_error(RDF::ReaderError, /Obsolete attribute .*bagID/)
+          end.to raise_error(RDF::ReaderError, /Obsolete attribute .*bagID/)
         end
       end
   
