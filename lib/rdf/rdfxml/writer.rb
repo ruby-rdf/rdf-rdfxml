@@ -87,7 +87,7 @@ module RDF::RDFXML
     # @yieldparam [RDF::Writer] writer
     def initialize(output = $stdout, options = {}, &block)
       super do
-        @graph = RDF::Graph.new
+        @graph = RDF::Repository.new
         @uri_to_qname = {}
         @uri_to_prefix = {}
         block.call(self) if block_given?
@@ -352,7 +352,7 @@ module RDF::RDFXML
         elsif rest.empty?
           properties.delete(RDF.type.to_s)
         else
-          properties[RDF.type.to_s] = [rest].flatten.compact
+          properties[RDF.type.to_s] = Array(rest)
         end
         prop_list = order_properties(properties)
         add_debug {"=> property order: #{prop_list.to_sentence}"}

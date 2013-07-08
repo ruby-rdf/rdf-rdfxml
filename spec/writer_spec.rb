@@ -7,7 +7,7 @@ class FOO < RDF::Vocabulary("http://foo/"); end
 
 describe "RDF::RDFXML::Writer" do
   before(:each) do
-    @graph = RDF::Graph.new
+    @graph = RDF::Repository.new
     @writer = RDF::RDFXML::Writer.new(StringIO.new)
     @writer_class = RDF::RDFXML::Writer
   end
@@ -636,11 +636,11 @@ describe "RDF::RDFXML::Writer" do
     describe "illegal RDF values" do
       it "raises error with literal as subject" do
         @graph << [RDF::Literal.new("literal"), RDF::DC.title, RDF::Literal.new("foo")]
-        lambda { serialize }.should raise_error(RDF::WriterError)
+        expect { serialize }.to raise_error(RDF::WriterError)
       end
       it "raises error with node as predicate" do
         @graph << [RDF::URI("http://example.com"), RDF::Node.new, RDF::Literal.new("foo")]
-        lambda { serialize }.should raise_error(RDF::WriterError)
+        expect { serialize }.to raise_error(RDF::WriterError)
       end
     end
 
@@ -673,9 +673,9 @@ describe "RDF::RDFXML::Writer" do
             next unless t.status == "APPROVED"
             specify "#{t.name}: " + (t.description || t.document) do
               @graph = parse(Kernel.open(t.document), :base_uri => t.subject, :format => :ntriples)
-              lambda do
+              expect do
                 serialize(:format => :rdfxml, :base_uri => t.subject)
-              end.should raise_error(RDF::WriterError)
+              end.to raise_error(RDF::WriterError)
             end
           end
         end
@@ -706,7 +706,7 @@ describe "RDF::RDFXML::Writer" do
     
       # Parse generated graph and compare to source
       if paths[:reparse]
-        graph = RDF::Graph.new
+        graph = RDF::Repository.new
         RDF::RDFXML::Reader.new(doc, :base_uri => "http://release/", :format => :rdfxml).each {|st| graph << st}
         graph.should be_equivalent_graph(@graph, :about => "http://release/", :trace => @debug.join("\n"))
       end
@@ -715,7 +715,7 @@ describe "RDF::RDFXML::Writer" do
     def parse(input, options = {})
       reader_class = options.fetch(:reader, RDF::Reader.for(detect_format(input)))
     
-      graph = RDF::Graph.new
+      graph = RDF::Repository.new
       reader_class.new(input, options).each do |statement|
         graph << statement
       end
