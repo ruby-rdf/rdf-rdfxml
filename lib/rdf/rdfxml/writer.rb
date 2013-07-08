@@ -352,7 +352,7 @@ module RDF::RDFXML
         elsif rest.empty?
           properties.delete(RDF.type.to_s)
         else
-          properties[RDF.type.to_s] = [rest].flatten.compact
+          properties[RDF.type.to_s] = Array(rest)
         end
         prop_list = order_properties(properties)
         add_debug {"=> property order: #{prop_list.to_sentence}"}
