@@ -1,5 +1,5 @@
 module RDF
-  class Graph
+  module Queryable
     # Resource properties
     #
     # Properties arranged as a hash with the predicate Term as index to an array of resources or literals

@@ -44,7 +44,7 @@ Full documentation available on [RubyForge](http://rubydoc.info/github/ruby-rdf/
 
 ### Patches
 * {Array}
-* {RDF::Graph}
+* {RDF::Queryable}
 * {Nokogiri::XML::Node}
 
 ## TODO
