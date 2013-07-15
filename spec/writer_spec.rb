@@ -636,11 +636,11 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
     describe "illegal RDF values" do
       it "raises error with literal as subject" do
         @graph << [RDF::Literal.new("literal"), RDF::DC.title, RDF::Literal.new("foo")]
-        lambda { serialize }.should raise_error(RDF::WriterError)
+        expect { serialize }.to raise_error(RDF::WriterError)
       end
       it "raises error with node as predicate" do
         @graph << [RDF::URI("http://example.com"), RDF::Node.new, RDF::Literal.new("foo")]
-        lambda { serialize }.should raise_error(RDF::WriterError)
+        expect { serialize }.to raise_error(RDF::WriterError)
       end
     end
 
