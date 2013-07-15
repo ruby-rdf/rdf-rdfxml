@@ -1,6 +1,6 @@
 require 'rspec/matchers'
 
-RSpec::Matchers.define :have_xpath do |xpath, value, namespaces|
+RSpec::Matchers.define :have_xpath do |xpath, value, namespaces, trace|
   match do |actual|
     @doc = Nokogiri::XML.parse(actual)
     @doc.should be_a(Nokogiri::XML::Document)
@@ -26,6 +26,7 @@ RSpec::Matchers.define :have_xpath do |xpath, value, namespaces|
   failure_message_for_should do |actual|
     msg = "expected to that #{xpath.inspect} would be #{value.inspect} in:\n" + actual.to_s
     msg += "was: #{@result}"
+    msg +=  "\nDebug:#{trace.join("\n")}" if trace
   end
 end
 
