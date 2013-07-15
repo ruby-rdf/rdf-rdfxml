@@ -15,7 +15,7 @@ describe "RDF::RDFXML::Reader" do
         specify t.id do
           t.debug = [t.inspect, "source:", t.input.read]
 
-          graph = RDF::Graph.new
+          graph = RDF::Repository.new
 
           if t.positive_test?
             begin
@@ -30,7 +30,7 @@ describe "RDF::RDFXML::Reader" do
               e.message.should produce("Not exception #{e.inspect}", t.debug)
             end
 
-            output_graph = RDF::Graph.load(t.outputDocument, :format => :ntriples)
+            output_graph = RDF::Repository.load(t.outputDocument, :format => :ntriples)
             graph.should be_equivalent_graph(output_graph, t)
           else
             lambda {

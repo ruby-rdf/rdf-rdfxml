@@ -7,7 +7,7 @@ class FOO < RDF::Vocabulary("http://foo/"); end
 
 describe "RDF::RDFXML::Writer", :no_jruby => true do
   before(:each) do
-    @graph = RDF::Graph.new
+    @graph = RDF::Repository.new
     @writer = RDF::RDFXML::Writer.new(StringIO.new)
     @writer_class = RDF::RDFXML::Writer
   end
@@ -692,7 +692,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
     
       # Parse generated graph and compare to source
       if paths[:reparse]
-        graph = RDF::Graph.new
+        graph = RDF::Repository.new
         RDF::RDFXML::Reader.new(doc, :base_uri => "http://release/", :format => :rdfxml).each {|st| graph << st}
         graph.should be_equivalent_graph(@graph, :about => "http://release/", :trace => @debug.join("\n"))
       end
@@ -701,7 +701,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
     def parse(input, options = {})
       reader_class = options.fetch(:reader, RDF::Reader.for(detect_format(input)))
     
-      graph = RDF::Graph.new
+      graph = RDF::Repository.new
       reader_class.new(input, options).each do |statement|
         graph << statement
       end

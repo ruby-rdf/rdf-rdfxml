@@ -16,7 +16,7 @@ end
 describe RDF::RDFXML::Writer do
   context "resource without type" do
     subject do
-      @graph = RDF::Graph.new << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
+      @graph = RDF::Repository.new << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
       serialize(:max_depth => 1, :attributes => :untyped)
     end
 

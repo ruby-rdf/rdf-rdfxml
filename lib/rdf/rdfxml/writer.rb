@@ -87,7 +87,7 @@ module RDF::RDFXML
     # @yieldparam [RDF::Writer] writer
     def initialize(output = $stdout, options = {}, &block)
       super do
-        @graph = RDF::Graph.new
+        @graph = RDF::Repository.new
         @uri_to_qname = {}
         @uri_to_prefix = {}
         block.call(self) if block_given?
