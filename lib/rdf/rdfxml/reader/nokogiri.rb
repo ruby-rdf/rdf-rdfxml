@@ -215,6 +215,7 @@ module RDF::RDFXML
           
           # Otherwise, default is utf-8
           options[:encoding] ||= 'utf-8'
+          options[:encoding] = options[:encoding].to_s if options[:encoding]
 
           ::Nokogiri::XML.parse(input, base_uri.to_s, options[:encoding]) do |config|
             config.noent
