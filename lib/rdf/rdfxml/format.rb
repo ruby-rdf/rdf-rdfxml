@@ -38,6 +38,11 @@ module RDF::RDFXML
     def self.detect(sample)
       sample.match(/<(\w+:)?(RDF)/)
     end
+
+    # Override name of format
+    def self.name
+      "RDF/XML"
+    end
   end
 
   # Aliases for RDF::Format

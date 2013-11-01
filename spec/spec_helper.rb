@@ -28,6 +28,7 @@ end
   c.run_all_when_everything_filtered = true
   c.exclusion_filter = {
     :ruby => lambda { |version| !(RUBY_VERSION.to_s =~ /^#{version.to_s}/) },
+    :no_jruby => lambda { |version| !(RUBY_PLATFORM.to_s != 'java') },
   }
   c.include(RDF::Spec::Matchers)
 end

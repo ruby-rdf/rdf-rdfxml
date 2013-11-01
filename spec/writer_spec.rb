@@ -5,7 +5,7 @@ autoload :CGI, 'cgi'
 
 class FOO < RDF::Vocabulary("http://foo/"); end
 
-describe "RDF::RDFXML::Writer" do
+describe "RDF::RDFXML::Writer", :no_jruby => true do
   before(:each) do
     @graph = RDF::Repository.new
     @writer = RDF::RDFXML::Writer.new(StringIO.new)
@@ -442,7 +442,7 @@ describe "RDF::RDFXML::Writer" do
 
         {
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">foo</dc:title>)
+          "/rdf:RDF/rdf:Description/@dc:title" => %(foo)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
             subject.should have_xpath(path, value, {})
@@ -475,8 +475,8 @@ describe "RDF::RDFXML::Writer" do
 
         {
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/dc:title[contains(., 'foo')]" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">foo</dc:title>),
-          "/rdf:RDF/rdf:Description/dc:title[contains(., 'bar')]" => %(<dc:title rdf:datatype="#{RDF::XSD.string}">bar</dc:title>)
+          "/rdf:RDF/rdf:Description/dc:title[contains(., 'foo')]" => %(<dc:title>foo</dc:title>),
+          "/rdf:RDF/rdf:Description/dc:title[contains(., 'bar')]" => %(<dc:title>bar</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
             subject.should have_xpath(path, value, {})
