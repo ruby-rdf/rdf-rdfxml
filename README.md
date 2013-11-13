@@ -26,7 +26,7 @@ Instantiate a parser and parse source, specifying type and base-URL
     end
 
 ## Dependencies
-* [RDF.rb](http://rubygems.org/gems/rdf) (>= 1.0)
+* [RDF.rb](http://rubygems.org/gems/rdf) (>= 1.1)
 * Soft dependency on [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.5.9)
 * Does not run properly on jRuby due to [Nokogiri][] issues.
 
@@ -67,6 +67,7 @@ Full documentation available on [RubyForge](http://rubydoc.info/github/ruby-rdf/
 * [Nicholas Humfrey](http://github.com/njh) - <http://njh.me/>
 
 ## Contributing
+This repository uses [Git Flow](https://github.com/nvie/gitflow) to mange development and release activity. All submissions _must_ be on a feature branch based on the _develop_ branch to ease staging and integration.
 
 * Do your best to adhere to the existing coding conventions and idioms.
 * Don't use hard tabs, and don't leave trailing whitespace on any line.
