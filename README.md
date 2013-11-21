@@ -88,7 +88,7 @@ see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 
 ## FEEDBACK
 
-* gregg@kellogg-assoc.com
+* gregg@greggkellogg.net
 * <http://rubygems.org/rdf-rdfxml>
 * <http://github.com/ruby-rdf/rdf-rdfxml>
 * <http://lists.w3.org/Archives/Public/public-rdf-ruby/>
