@@ -39,6 +39,8 @@ Gem::Specification.new do |gem|
 
   # Rubinius has it's own dependencies
   if RUBY_ENGINE == "rbx" && RUBY_VERSION >= "2.1.0"
+    gem.add_runtime_dependency     "rubysl-base64"
+    gem.add_runtime_dependency     "rubysl-bigdecimal"
     gem.add_runtime_dependency     "rubysl-rexml"
     gem.add_runtime_dependency     "racc"
     gem.add_development_dependency "rubysl-open-uri"
