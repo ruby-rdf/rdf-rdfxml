@@ -5,7 +5,7 @@ RSpec::Matchers.define :have_xpath do |xpath, value, namespaces, trace|
     @doc = Nokogiri::XML.parse(actual)
     @doc.should be_a(Nokogiri::XML::Document)
     @doc.root.should be_a(Nokogiri::XML::Element)
-    @namespaces = @doc.namespaces.
+    @namespaces = @doc.namespaces.inject({}) {|memo, (k,v)| memo[k.to_s.sub(/xmlns:?/, '')] = v; memo}.
       merge(namespaces).
       merge("xhtml" => "http://www.w3.org/1999/xhtml", "xml" => "http://www.w3.org/XML/1998/namespace")
     @result = @doc.root.at_xpath(xpath, @namespaces) rescue false

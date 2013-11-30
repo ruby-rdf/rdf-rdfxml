@@ -5,7 +5,7 @@ autoload :CGI, 'cgi'
 
 class FOO < RDF::Vocabulary("http://foo/"); end
 
-describe "RDF::RDFXML::Writer", :no_jruby => true do
+describe "RDF::RDFXML::Writer", :pending => ("work with JRuby" if RUBY_ENGINE == "jruby") do
   before(:each) do
     @graph = RDF::Repository.new
     @writer = RDF::RDFXML::Writer.new(StringIO.new)
@@ -19,7 +19,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
       context "resource without type" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:max_depth => 1, :attributes => :untyped)
+          serialize(:attributes => :untyped)
         end
 
         {
@@ -27,7 +27,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -36,16 +36,16 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:max_depth => 1, :attributes => :untyped)
+          serialize(:attributes => :untyped)
         end
 
         {
           "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
           "/rdf:RDF/foo:Release/@dc:title" =>"foo",
-          "/rdf:RDF/foo:Release/rdf:type" => ""
+          "/rdf:RDF/foo:Release/rdf:type" => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -55,16 +55,16 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:max_depth => 1, :attributes => :untyped)
+          serialize(:attributes => :untyped)
         end
 
         {
           "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
           "/rdf:RDF/foo:Release/@dc:title" => "foo",
-          "/rdf:RDF/foo:Release/@rdf:type" => FOO.XtraRelease.to_s
+          "/rdf:RDF/foo:Release/rdf:type/@rdf:resource" => FOO.XtraRelease.to_s
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -74,7 +74,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:max_depth => 1, :attributes => :none)
+          serialize(:attributes => :none)
         end
 
         {
@@ -84,7 +84,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.Release}"]) => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -95,7 +95,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XXtraRelease]
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:max_depth => 1, :attributes => :typed)
+          serialize(:attributes => :typed)
         end
 
         {
@@ -105,54 +105,29 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.XXtraRelease}"]) => %r(#{FOO.XXtraRelease})
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
     end
   
     context "with children" do
-      context "referenced resource by ref" do
-        subject do
-          @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
-          @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          @graph << [RDF::URI.new("http://release/contributor"), RDF.type, FOO.Contributor]
-          @graph << [RDF::URI.new("http://release/contributor"), RDF::DC.title, "bar"]
-          @graph << [RDF::URI.new("http://release/"), FOO.releaseContributor, RDF::URI.new("http://release/contributor")]
-          serialize(:max_depth => 1, :attributes => :untyped)
-        end
-
-        {
-          "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
-          "/rdf:RDF/foo:Release/@dc:title" => "foo",
-          "/rdf:RDF/foo:Release/foo:releaseContributor/@rdf:resource" => "http://release/contributor",
-          "/rdf:RDF/foo:Contributor/@rdf:about" => "http://release/contributor",
-          "/rdf:RDF/foo:Contributor/@dc:title" => "bar"
-        }.each do |path, value|
-          it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
-          end
-        end
+      subject do
+        @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
+        @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
+        @graph << [RDF::URI.new("http://release/contributor"), RDF.type, FOO.Contributor]
+        @graph << [RDF::URI.new("http://release/contributor"), RDF::DC.title, "bar"]
+        @graph << [RDF::URI.new("http://release/"), FOO.releaseContributor, RDF::URI.new("http://release/contributor")]
+        serialize(:attributes => :untyped)
       end
-  
-      context "referenced resource by inclusion" do
-        subject do
-          @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
-          @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          @graph << [RDF::URI.new("http://release/contributor"), RDF.type, FOO.Contributor]
-          @graph << [RDF::URI.new("http://release/contributor"), RDF::DC.title, "bar"]
-          @graph << [RDF::URI.new("http://release/"), FOO.releaseContributor, RDF::URI.new("http://release/contributor")]
-          serialize(:max_depth => 3, :attributes => :untyped)
-        end
 
-        {
-          "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
-          "/rdf:RDF/foo:Release/@dc:title" => "foo",
-          "/rdf:RDF/foo:Release/foo:releaseContributor/foo:Contributor/@rdf:about" => "http://release/contributor"
-        }.each do |path, value|
-          it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
-          end
+      {
+        "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
+        "/rdf:RDF/foo:Release/@dc:title" => "foo",
+        "/rdf:RDF/foo:Release/foo:releaseContributor/foo:Contributor/@rdf:about" => "http://release/contributor"
+      }.each do |path, value|
+        it "returns #{value.inspect} for xpath #{path}" do
+          subject.should have_xpath(path, value, {}, @debug)
         end
       end
     end
@@ -163,7 +138,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Seq]
           @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
           @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
-          serialize(:max_depth => 1, :attributes => :none)
+          serialize
         end
 
         {
@@ -172,7 +147,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /second/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -182,7 +157,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Seq]
           @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
           @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
-          serialize(:max_depth => 1, :attributes => :none)
+          serialize
         end
 
         {
@@ -191,7 +166,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -201,7 +176,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Bag]
           @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
           @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
-          serialize(:max_depth => 1, :attributes => :none)
+          serialize
         end
 
         {
@@ -210,7 +185,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           %(/rdf:RDF/rdf:Bag/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -220,7 +195,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Alt]
           @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
           @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
-          serialize(:max_depth => 1, :attributes => :none)
+          serialize
         end
 
         {
@@ -229,7 +204,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           %(/rdf:RDF/rdf:Alt/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -280,7 +255,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Seq]
           @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
           @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
-          serialize(:max_depth => 1, :attributes => :none)
+          serialize
         end
 
         {
@@ -289,7 +264,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /second/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -307,7 +282,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/dc:title/text()" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -324,12 +299,12 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
             "/rdf:RDF/rdf:Description/@dc:title" => "foo"
           }.each do |path, value|
             it "returns #{value.inspect} for xpath #{path}" do
-              subject.should have_xpath(path, value, {})
+              subject.should have_xpath(path, value, {}, @debug)
             end
           end
         end
       end
-
+  
       context "untyped without lang if attribute lang set" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
@@ -341,7 +316,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -359,7 +334,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
             "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="en-us">foo</dc:title>)
           }.each do |path, value|
             it "returns #{value.inspect} for xpath #{path}" do
-              subject.should have_xpath(path, value, {})
+              subject.should have_xpath(path, value, {}, @debug)
             end
           end
         end
@@ -377,7 +352,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -394,7 +369,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -429,7 +404,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -445,7 +420,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/@dc:title" => %(foo)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -461,7 +436,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -479,7 +454,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/dc:title[contains(., 'bar')]" => %(<dc:title>bar</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -494,8 +469,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
 
       context "default namespace" do
         subject do
-          serialize(:max_depth => 1, :attributes => :none,
-                    :default_namespace => FOO.to_s,
+          serialize(:default_namespace => FOO.to_s,
                     :prefixes => {:foo => FOO.to_s})
         end
 
@@ -503,7 +477,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => FOO.obj.to_s,
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {"foo" => FOO.to_s})
+            subject.should have_xpath(path, value, {"foo" => FOO.to_s}, @debug)
           end
         end
 
@@ -513,15 +487,14 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
 
       context "nil namespace" do
         subject do
-          serialize(:max_depth => 1, :attributes => :none,
-                    :prefixes => {nil => FOO.to_s, :foo => FOO.to_s})
+          serialize(:prefixes => {nil => FOO.to_s})
         end
 
         {
           "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => FOO.obj.to_s,
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {"foo" => FOO.to_s})
+            subject.should have_xpath(path, value, {"foo" => FOO.to_s}, @debug)
           end
         end
 
@@ -542,7 +515,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/foo:ref/@rdf:resource" => "b"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -560,7 +533,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/@rdf:nodeID" => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -579,45 +552,42 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
           "/rdf:RDF/rdf:Description/owl:sameAs/@rdf:nodeID" => /a$/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            subject.should have_xpath(path, value, {}, @debug)
           end
         end
       end
       
       context "rdf:nodeID for forced BNode generation" do
         subject do
-          bn = RDF::Node.new("a")
           @graph = parse(%(
             @prefix : <http://example/> .
-            _:bar :list (_:foo (_:foo)).
+            :foo :list (:bar (:baz)).
           ))
           serialize
         end
 
-        specify { parse(subject).should be_equivalent_graph(@graph, :trace => @debug.join("\n")) }
+        specify { parse(subject).should be_equivalent_graph(@graph, :trace => @debug.unshift(subject).join("\n")) }
       end
     
-      it "should replicate rdfcore/rdfms-seq-representation" do
-        @graph = parse(%(
-          <http://example.org/eg#eric> a [ <http://example.org/eg#intersectionOf> (<http://example.org/eg#Person> <http://example.org/eg#Male>)] .
-        ), :reader => RDF::Turtle::Reader)
-        parse(serialize).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
-      end
-      
       it "should not generate extraneous BNode" do
         @graph = parse(%(
-        <part_of> a <http://www.w3.org/2002/07/owl#ObjectProperty> .
-        <a> a <http://www.w3.org/2002/07/owl#Class> .
-        <b> a <http://www.w3.org/2002/07/owl#Class> .
-         [ a <http://www.w3.org/2002/07/owl#Class>;
-            <http://www.w3.org/2002/07/owl#intersectionOf> (<b> [ a <http://www.w3.org/2002/07/owl#Class>,
-                <http://www.w3.org/2002/07/owl#Restriction>;
-                <http://www.w3.org/2002/07/owl#onProperty> <part_of>;
-                <http://www.w3.org/2002/07/owl#someValuesFrom> <a>])] .
-         [ a <http://www.w3.org/2002/07/owl#Class>;
-            <http://www.w3.org/2002/07/owl#intersectionOf> (<a> <b>)] .
+          @prefix owl: <http://www.w3.org/2002/07/owl#> .
+          <part_of> a owl:ObjectProperty .
+          <a> a owl:Class .
+          <b> a owl:Class .
+          [ a owl:Class;
+            owl:intersectionOf (
+              <b>
+              [ a owl:Class, owl:Restriction;
+                owl:onProperty <part_of>;
+                owl:someValuesFrom <a>]
+            )
+          ] .
+          [ a owl:Class; owl:intersectionOf (<a> <b>)] .
         ), :reader => RDF::Turtle::Reader)
-        parse(serialize).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+        doc = serialize
+        @debug.unshift(doc)
+        parse(doc).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
       end
     end
 
@@ -636,11 +606,11 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
     describe "illegal RDF values" do
       it "raises error with literal as subject" do
         @graph << [RDF::Literal.new("literal"), RDF::DC.title, RDF::Literal.new("foo")]
-        expect { serialize }.to raise_error(RDF::WriterError)
+        expect { serialize(:validate => true) }.to raise_error(RDF::WriterError)
       end
       it "raises error with node as predicate" do
         @graph << [RDF::URI("http://example.com"), RDF::Node.new, RDF::Literal.new("foo")]
-        expect { serialize }.to raise_error(RDF::WriterError)
+        expect { serialize(:validate => true) }.to raise_error(RDF::WriterError)
       end
     end
 
@@ -658,7 +628,7 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
 
               serialized = serialize(:format => :rdfxml, :base_uri => t.id)
               # New RBX failure :(
-              trace = @debug.map do |s|
+              trace = @debug.unshift(serialized).map do |s|
                 s.force_encoding(Encoding::UTF_8)
               end.join("\n")
               parse(serialized, :base_uri => t.subject).should be_equivalent_graph(@graph, :trace => trace)
@@ -717,22 +687,6 @@ describe "RDF::RDFXML::Writer", :no_jruby => true do
       require 'cgi'
       puts CGI.escapeHTML(result) if $verbose
       result
-    end
-  end
-  
-  describe "#get_qname" do
-    subject { RDF::RDFXML::Writer.new(StringIO.new, :prefixes => {:foo => "http://foo/"}) }
-    context "with undefined predicate URIs" do
-      {
-        "http://a/b"      => "ns0:b",
-        "dc:title"        => "ns0:title",
-        "http://a/%b"     => "ns0:b",
-        "http://foo/%bar" => "ns0:bar"
-      }.each_pair do |uri, qname|
-        it "returns #{qname.inspect} given #{uri}" do
-          subject.get_qname(RDF::URI(uri)).should == qname
-        end
-      end
     end
   end
 end
