@@ -59,7 +59,7 @@ module RDF::RDFXML
         - haml_tag(property, :"<", "xml:lang" => object.language, "rdf:datatype" => (object.datatype unless object.plain?)) do
           = object.value
       - elsif object.node?
-        - haml_tag(property, :"/", "rdf:nodeID" => object.id)
+        - haml_tag(property, :"/", "rdf:nodeID" => (object.id if ref_count(object) > 0))
       - else
         - haml_tag(property, :"/", "rdf:resource" => relativize(object))
       ),
@@ -75,7 +75,7 @@ module RDF::RDFXML
             - if res = yield(object)
               = res
             - elsif object.node?
-              - haml_tag(get_qname(RDF.Description), :"/", "rdf:nodeID" => object.id)
+              - haml_tag(get_qname(RDF.Description), :"/", "rdf:nodeID" => (object.id if ref_count(object) > 0))
             - else
               - haml_tag(get_qname(RDF.Description), :"/", "rdf:about" => relativize(object))
       ),
