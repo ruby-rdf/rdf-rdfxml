@@ -227,6 +227,21 @@ describe "RDF::RDFXML::Writer", :pending => ("work with JRuby" if RUBY_ENGINE ==
             %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[1]) => /Desc/,
             %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[2]) => /Desc/,
             %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[3]) => /Desc/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[1]/@rdf:nodeID) => false,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[2]/@rdf:nodeID) => false,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[3]/@rdf:nodeID) => false,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[4]) => false,
+            %(//rdf:first)  => false
+          },
+          %q(<author> <is> (_:Gregg _:Barnum _:Kellogg); <and> _:Gregg, _:Barnum, _:Kellogg) => {
+            "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
+            "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[1]) => /Desc/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[2]) => /Desc/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[3]) => /Desc/,
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[1]/@rdf:nodeID) => "Gregg",
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[2]/@rdf:nodeID) => "Barnum",
+            %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[3]/@rdf:nodeID) => "Kellogg",
             %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[4]) => false,
             %(//rdf:first)  => false
           },
@@ -537,7 +552,7 @@ describe "RDF::RDFXML::Writer", :pending => ("work with JRuby" if RUBY_ENGINE ==
           end
         end
       end
-    
+
       context "nodeID attribute if node is referenced as an object" do
         subject do
           bn = RDF::Node.new("a")
