@@ -17,6 +17,14 @@ URI_CACHE = File.expand_path(File.join(File.dirname(__FILE__), "uri-cache"))
 Dir.mkdir(URI_CACHE) unless File.directory?(URI_CACHE)
 OpenURI::Cache.class_eval { @cache_path = URI_CACHE }
 
+# For testing, modify RDF::Util::File.open_file to use Kernel.open, so we can just use open-uri-cached
+module RDF::Util::File
+  def self.open_file(filename_or_url, options = {}, &block)
+    options = options[:headers] || {} if filename_or_url.start_with?('http')
+    Kernel.open(filename_or_url, options, &block)
+  end
+end
+
 module RDF
   module Isomorphic
     alias_method :==, :isomorphic_with?
@@ -28,6 +36,7 @@ end
   c.run_all_when_everything_filtered = true
   c.exclusion_filter = {
     :ruby => lambda { |version| !(RUBY_VERSION.to_s =~ /^#{version.to_s}/) },
+    :no_jruby => lambda { |version| !(RUBY_PLATFORM.to_s != 'java') },
   }
   c.include(RDF::Spec::Matchers)
 end

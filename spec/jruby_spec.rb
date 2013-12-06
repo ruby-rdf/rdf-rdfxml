@@ -33,7 +33,7 @@ describe RDF::RDFXML::Writer do
   # Serialize  @graph to a string and compare against regexps
   def serialize(options = {})
     @debug = []
-    result = RDF::RDFXML::Writer.buffer({:debug => @debug, :standard_prefixes => true}.merge(options)) do |writer|
+    result = RDF::RDFXML::Writer.buffer({:debug => true, :standard_prefixes => true}.merge(options)) do |writer|
       writer << @graph
     end
     require 'cgi'

@@ -1,20 +1,24 @@
 # RDF::RDFXML reader/writer 
 
-[RDF/XML][RDF/XML] parser for [RDF.rb][RDF.rb].
+[RDF/XML][] reader/writer for [RDF.rb][].
 
 [![Gem Version](https://badge.fury.io/rb/rdf-rdfxml.png)](http://badge.fury.io/rb/rdf-rdfxml)
 [![Build Status](https://secure.travis-ci.org/ruby-rdf/rdf-rdfxml.png?branch=master)](http://travis-ci.org/ruby-rdf/rdf-rdfxml)
 
 ## DESCRIPTION
 
-RDF::RDFXML is an [RDF/XML][RDF/XML] reader/writer for Ruby using the [RDF.rb][RDF.rb] library suite.
+RDF::RDFXML is an [RDF/XML][RDF/XML] reader/writer for [Ruby][] using the [RDF.rb][RDF.rb] library suite.
 
 ## FEATURES
-RDF::RDFXML parses [RDF/XML][RDF/XML] into statements or triples and serializes triples, statements or graphs.
+RDF::RDFXML parses [RDF/XML][] into statements or triples and serializes triples, statements or graphs. It also serializes graphs to [RDF/XML][].
 
-Fully compliant [RDF/XML][RDF/XML] parser and serializer.
+Fully compliant [RDF/XML][] parser and serializer.
 
 Install with `gem install rdf-rdfxml`
+
+* 100% free and unencumbered [public domain](http://unlicense.org/) software.
+* Implements a complete parser for [RDF/XML][].
+* Compatible with Ruby >= 1.9.2.
 
 ## Usage:
 Instantiate a parser and parse source, specifying type and base-URL
@@ -25,13 +29,22 @@ Instantiate a parser and parse source, specifying type and base-URL
       end
     end
 
+Define `xml:base` and `xmlns` definitions, and use for serialization using `:base_uri` an `:prefixes` options.
+
+Canonicalize and validate using `:canonicalize` and `:validate` options.
+
+Write a graph to a file:
+
+    RDF::RDFXML::Writer.open("etc/test.ttl") do |writer|
+       writer << graph
+    end
+
 ## Dependencies
-* [RDF.rb](http://rubygems.org/gems/rdf) (>= 1.0)
-* Soft dependency on [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.5.9)
-* Does not run properly on jRuby due to [Nokogiri][] issues.
+* [RDF.rb](http://rubygems.org/gems/rdf) (>= 1.1)
+* Soft dependency on [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.6.0)
 
 ## Documentation
-Full documentation available on [RubyForge](http://rubydoc.info/github/ruby-rdf/rdf-rdfxml/master/frames)
+Full documentation available on [Rubydoc.info][RDF/XML doc])
 
 ### Principle Classes
 * {RDF::RDFXML}
@@ -42,22 +55,14 @@ Full documentation available on [RubyForge](http://rubydoc.info/github/ruby-rdf/
 ### Additional vocabularies
 * {RDF::XML}
 
-### Patches
-* {Array}
-* {RDF::Queryable}
-* {Nokogiri::XML::Node}
-
 ## TODO
-* Add support for LibXML and REXML bindings, and use the best available
 * Consider a SAX-based parser for improved performance
-* jRuby integration awaiting improvements in Nokogiri
 
 ## Resources
 * [RDF.rb][RDF.rb]
 * [RDF/XML][RDF/XML]
-* [Distiller](http://distiller.kellogg-assoc)
-* [Documentation](http://rubygems.org/gems/rdf-rdfxml)
-* [History](file:file.History.html)
+* [Distiller](http://rdf.greggkellogg.net)
+* [Documentation][RDF/XML doc]
 * [RDF Tests](http://www.w3.org/2000/10/rdf-tests/rdfcore/allTestCases.html)
 
 ## Author
@@ -67,6 +72,7 @@ Full documentation available on [RubyForge](http://rubydoc.info/github/ruby-rdf/
 * [Nicholas Humfrey](http://github.com/njh) - <http://njh.me/>
 
 ## Contributing
+This repository uses [Git Flow](https://github.com/nvie/gitflow) to mange development and release activity. All submissions _must_ be on a feature branch based on the _develop_ branch to ease staging and integration.
 
 * Do your best to adhere to the existing coding conventions and idioms.
 * Don't use hard tabs, and don't leave trailing whitespace on any line.
@@ -87,13 +93,16 @@ see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 
 ## FEEDBACK
 
-* gregg@kellogg-assoc.com
+* gregg@greggkellogg.net
 * <http://rubygems.org/rdf-rdfxml>
 * <http://github.com/ruby-rdf/rdf-rdfxml>
 * <http://lists.w3.org/Archives/Public/public-rdf-ruby/>
 
-[RDF.rb]:   http://rubygems.org/gems/rdf
-[RDF/XML]:  http://www.w3.org/TR/REC-rdf-syntax/  "RDF/XML Syntax Specification"
-[YARD]:     http://yardoc.org/
-[YARD-GS]:  http://rubydoc.info/docs/yard/file/docs/GettingStarted.md
-[PDD]:      http://lists.w3.org/Archives/Public/public-rdf-ruby/2010May/0013.html
+[Ruby]:         http://ruby-lang.org/
+[RDF]:          http://www.w3.org/RDF/
+[RDF.rb]:       http://rubygems.org/gems/rdf
+[RDF/XML]:      http://www.w3.org/TR/REC-rdf-syntax/  "RDF/XML Syntax Specification"
+[YARD]:         http://yardoc.org/
+[YARD-GS]:      http://rubydoc.info/docs/yard/file/docs/GettingStarted.md
+[PDD]:          http://lists.w3.org/Archives/Public/public-rdf-ruby/2010May/0013.html
+[RDF/XML doc]:  http://rubydoc.info/github/ruby-rdf/rdf-rdfxml/master/frames

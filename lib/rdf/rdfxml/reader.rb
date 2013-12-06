@@ -76,13 +76,10 @@ module RDF::RDFXML
         mappings = {}
 
         # look for xmlns
-        element.namespaces.each do |attr_name,attr_value|
-          abbr, prefix = attr_name.to_s.split(":")
-          if abbr == "xmlns"
-            attr_value = self.base.to_s + attr_value if attr_value.match(/^\#/)
-            mappings[prefix] = attr_value
-            cb.call(prefix, attr_value) if block_given?
-          end
+        element.namespaces.each do |prefix, value|
+          value = base.join(value)
+          mappings[prefix] = value
+          cb.call(prefix, value) if block_given?
         end
         mappings
       end
@@ -196,7 +193,7 @@ module RDF::RDFXML
         ec = EvaluationContext.new(base_uri, root, @graph) do |prefix, value|
           prefix(prefix, value)
         end
-        
+
         nodeElement(root, ec)
       else
         rdf_nodes.each do |node|
@@ -204,10 +201,10 @@ module RDF::RDFXML
           # XXX Skip this element if it's contained within another rdf:RDF element
 
           # Extract base, lang and namespaces from parents to create proper evaluation context
-          ec = EvaluationContext.new(base_uri, nil, @graph) do |prefix, value|
+          ec = EvaluationContext.new(base_uri, nil, @graph)
+          ec.extract_from_ancestors(node) do |prefix, value|
             prefix(prefix, value)
           end
-          ec.extract_from_ancestors(node)
           node.children.each {|el|
             next unless el.elem?
             raise "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
