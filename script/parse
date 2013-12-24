@@ -45,7 +45,6 @@ end
 
 
 options = {
-  :base_uri      => "http://example.com",
   :host_language => nil,
   :input_format  => :rdfxml,
   :output        => STDOUT,
@@ -71,7 +70,7 @@ opts = GetoptLong.new(
 )
 opts.each do |opt, arg|
   case opt
-  when '--dbg'            then ::RDF::RDFa::debug = true
+  when '--dbg'            then ::RDF::RDFXML::debug = true
   when '--execute'        then input = arg
   when '--format'         then options[:output_format] = arg.to_sym
   when '--input-format'   then options[:input_format] = arg.to_sym

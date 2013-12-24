@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:dc="http://purl.org/dc/terms/" xmlns:xhv="http://www.w3.org/1999/xhtml/vocab#" xmlns:foaf="http://xmlns.com/foaf/0.1/">
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:doap="http://usefulinc.com/ns/doap#"
+    xmlns:dc="http://purl.org/dc/terms/"
+    xmlns:xhv="http://www.w3.org/1999/xhtml/vocab#"
+    xmlns:foaf="http://xmlns.com/foaf/0.1/"
+    xml:base="http://rubygems.org/gems/rdf-rdfxml">
   <doap:Project rdf:about="http://rubygems.org/gems/rdf-rdfxml">
     <dc:creator rdf:resource="http://greggkellogg.net/foaf#me"/>
     <doap:blog rdf:resource="http://greggkellogg.net/"/>
     <doap:bug-database rdf:resource="http://github.com/ruby-rdf/rdf-rdfxml/issues"/>
     <doap:category rdf:resource="http://dbpedia.org/resource/Resource_Description_Framework"/>
-    <doap:category>
-      <rdf:Description rdf:about="http://dbpedia.org/resource/Ruby_(programming_language)">
-        <doap:programming-language>Ruby</doap:programming-language>
-      </rdf:Description>
-    </doap:category>
+    <doap:category rdf:resource="http://dbpedia.org/resource/Ruby_(programming_language)"/>
     <doap:created rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2010-06-03</doap:created>
     <doap:description xml:lang="en">
       RDF::RDFXML is an RDF/XML reader/writer for Ruby using the RDF.rb library suite.

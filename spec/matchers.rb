@@ -44,30 +44,33 @@ def normalize(graph)
   end
 end
 
-Info = Struct.new(:about, :information, :trace, :compare, :inputDocument, :outputDocument, :format)
+Info = Struct.new(:about, :coment, :trace, :input, :result, :action, :expected)
 
 RSpec::Matchers.define :be_equivalent_graph do |expected, info|
   match do |actual|
-    @info = if info.respond_to?(:about)
+    @info = if info.respond_to?(:input)
       info
     elsif info.is_a?(Hash)
-      identifier = info[:identifier] || expected.is_a?(RDF::Graph) ? expected.context : info[:about]
+      identifier = info[:identifier] || expected.is_a?(RDF::Enumerable) ? expected.context : info[:about]
       trace = info[:trace]
-      trace = trace.join("\n") if trace.is_a?(Array)
-      i = Info.new(identifier, info[:information] || "", trace, info[:compare])
-      i.format = info[:format]
-      i
+      if trace.is_a?(Array)
+        trace = if defined?(RUBY_ENGINE) && RUBY_ENGINE == "jruby" && RUBY_VERSION >= "1.9"
+          trace.map {|s| s.dup.force_encoding(Encoding::UTF_8)}.join("\n")
+        else
+          trace.join("\n")
+        end
+      end
+      Info.new(identifier, info[:comment] || "", trace)
     else
-      Info.new(expected.is_a?(RDF::Graph) ? expected.context : info, info.to_s)
+      Info.new(expected.is_a?(RDF::Enumerable) ? expected.context : info, info.to_s)
     end
-    @info.format ||= :ttl
     @expected = normalize(expected)
     @actual = normalize(actual)
-    @actual.isomorphic_with?(@expected)
+    @actual.isomorphic_with?(@expected) rescue false
   end
-  
+
   failure_message_for_should do |actual|
-    info = @info.respond_to?(:information) ? @info.information : @info.inspect
+    info = @info.respond_to?(:comment) ? @info.comment : @info.inspect
     if @expected.is_a?(RDF::Graph) && @actual.size != @expected.size
       "Graph entry count differs:\nexpected: #{@expected.size}\nactual:   #{@actual.size}"
     elsif @expected.is_a?(Array) && @actual.size != @expected.length
@@ -76,10 +79,10 @@ RSpec::Matchers.define :be_equivalent_graph do |expected, info|
       "Graph differs"
     end +
     "\n#{info + "\n" unless info.empty?}" +
-    (@info.inputDocument ? "Input file: #{@info.inputDocument}\n" : "") +
-    (@info.outputDocument ? "Output file: #{@info.outputDocument}\n" : "") +
-    "Unsorted Expected:\n#{@expected.dump(@info.format, :standard_prefixes => true)}" +
-    "Unsorted Results:\n#{@actual.dump(@info.format, :standard_prefixes => true)}" +
+    (@info.action ? "Input file: #{@info.action}\n" : "") +
+    (@info.result ? "Result file: #{@info.result}\n" : "") +
+    "Unsorted Expected:\n#{@expected.dump(:ntriples, :standard_prefixes => true)}" +
+    "Unsorted Results:\n#{@actual.dump(:ntriples, :standard_prefixes => true)}" +
     (@info.trace ? "\nDebug:\n#{@info.trace}" : "")
   end  
 end

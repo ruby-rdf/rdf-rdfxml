@@ -5,7 +5,7 @@ autoload :CGI, 'cgi'
 
 class FOO < RDF::Vocabulary("http://foo/"); end
 
-describe "RDF::RDFXML::Writer", :pending => ("work with JRuby" if RUBY_ENGINE == "jruby") do
+describe "RDF::RDFXML::Writer" do
   before(:each) do
     @graph = RDF::Repository.new
     @writer = RDF::RDFXML::Writer.new(StringIO.new)
@@ -213,7 +213,7 @@ describe "RDF::RDFXML::Writer", :pending => ("work with JRuby" if RUBY_ENGINE ==
     describe "with lists" do
       context "List rdf:first/rdf:rest" do
         {
-          %q(<author> <is> (:Gregg :Barnum :Kellogg)) => {
+          %q(<author> <is> (:Gregg :Barnum :Kellogg) .) => {
             "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
             "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
             %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/Gregg"]) => /Gregg/,
@@ -221,7 +221,7 @@ describe "RDF::RDFXML::Writer", :pending => ("work with JRuby" if RUBY_ENGINE ==
             %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[@rdf:about="http://foo/Kellogg"]) => /Kellogg/,
             %(//rdf:first)  => false
           },
-          %q(<author> <is> (_:Gregg _:Barnum _:Kellogg)) => {
+          %q(<author> <is> (_:Gregg _:Barnum _:Kellogg) .) => {
             "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
             "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
             %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[1]) => /Desc/,
@@ -233,7 +233,7 @@ describe "RDF::RDFXML::Writer", :pending => ("work with JRuby" if RUBY_ENGINE ==
             %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[4]) => false,
             %(//rdf:first)  => false
           },
-          %q(<author> <is> (_:Gregg _:Barnum _:Kellogg); <and> _:Gregg, _:Barnum, _:Kellogg) => {
+          %q(<author> <is> (_:Gregg _:Barnum _:Kellogg); <and> _:Gregg, _:Barnum, _:Kellogg .) => {
             "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
             "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => "Collection",
             %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[1]) => /Desc/,
@@ -245,7 +245,7 @@ describe "RDF::RDFXML::Writer", :pending => ("work with JRuby" if RUBY_ENGINE ==
             %(/rdf:RDF/rdf:Description/foo:is/rdf:Description[4]) => false,
             %(//rdf:first)  => false
           },
-          %q(<author> <is> ("Gregg" "Barnum" "Kellogg")) => {
+          %q(<author> <is> ("Gregg" "Barnum" "Kellogg") .) => {
             "/rdf:RDF/rdf:Description/@rdf:about" => "http://foo/author",
             "/rdf:RDF/rdf:Description/foo:is/@rdf:parseType" => false,
             %(//rdf:first)  => /Gregg/
@@ -629,29 +629,32 @@ describe "RDF::RDFXML::Writer", :pending => ("work with JRuby" if RUBY_ENGINE ==
       end
     end
 
-    unless ENV['CI'] # Not for continuous integration
-      describe "w3c rdfcore tests" do
-        require 'suite_helper'
+    # W3C RDF/XML Test suite from https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/
+    describe "w3c RDF/XML tests" do
+      require 'suite_helper'
+      %w(manifest.ttl).each do |man|
+        Fixtures::SuiteTest::Manifest.open(Fixtures::SuiteTest::BASE + man) do |m|
+          describe m.comment do
+            m.entries.each do |t|
+              next unless t.positive_test? && t.evaluate?
+              # Literal serialization adds namespace definitions
+              next if t.subject =~ /rdfms-xml-literal-namespaces|xml-canon/
 
-        %w(manifest.rdf).each do |man|
-          Fixtures::SuiteTest::Manifest.open(Fixtures::SuiteTest::BASE + man) do |t|
-            next unless t.parser_test? && t.positive_test? && t.status == "APPROVED"
-            # Literal serialization adds namespace definitions
-            next if t.subject =~ /rdfms-xml-literal-namespaces|xml-canon/
-            specify t.id do
-              @graph = parse(t.result, :base_uri => t.id, :format => :ntriples)
+              specify "#{t.name}" do
+                @graph = parse(t.expected, :base_uri => t.base, :format => :ntriples)
 
-              serialized = serialize(:format => :rdfxml, :base_uri => t.id)
-              # New RBX failure :(
-              trace = @debug.unshift(serialized).map do |s|
-                s.force_encoding(Encoding::UTF_8)
-              end.join("\n")
-              parse(serialized, :base_uri => t.subject).should be_equivalent_graph(@graph, :trace => trace)
+                serialized = serialize(:format => :rdfxml, :base_uri => t.base)
+                # New RBX failure :(
+                trace = @debug.unshift(serialized).map do |s|
+                  s.force_encoding(Encoding::UTF_8)
+                end.join("\n")
+                expect(parse(serialized, :base_uri => t.base)).to be_equivalent_graph(@graph, :trace => trace)
+              end
             end
           end
         end
       end
-    end
+    end unless ENV['CI'] # Not for continuous integration
 
     def check_xpaths(doc, paths)
       puts doc.to_s if ::RDF::RDFXML::debug? || $verbose
@@ -686,7 +689,7 @@ describe "RDF::RDFXML::Writer", :pending => ("work with JRuby" if RUBY_ENGINE ==
     def parse(input, options = {})
       reader_class = options.fetch(:reader, RDF::Reader.for(detect_format(input)))
     
-      graph = RDF::Repository.new
+      graph = RDF::Graph.new
       reader_class.new(input, options).each do |statement|
         graph << statement
       end

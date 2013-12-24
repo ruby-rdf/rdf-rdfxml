@@ -1,79 +1,154 @@
-# -*- encoding: utf-8 -*-
-# Spira class for manipulating test-manifest style test suites.
-# Used for SWAP tests
+# For manipulating test-manifest style test suites.
+# Used for RDF/XML tests
+require 'rdf/turtle'
 require 'json/ld'
-require 'rdf/rdfxml'
+
+# For now, override RDF::Utils::File.open_file to look for the file locally before attempting to retrieve it
+module RDF::Util
+  module File
+    REMOTE_PATH = "https://dvcs.w3.org/hg/rdf/raw-file/default/"
+    LOCAL_PATH = ::File.expand_path("../w3c-rdf", __FILE__) + '/'
+
+    ##
+    # Override to use Patron for http and https, Kernel.open otherwise.
+    #
+    # @param [String] filename_or_url to open
+    # @param  [Hash{Symbol => Object}] options
+    # @option options [Array, String] :headers
+    #   HTTP Request headers.
+    # @return [IO] File stream
+    # @yield [IO] File stream
+    def self.open_file(filename_or_url, options = {}, &block)
+      case filename_or_url.to_s
+      when /^file:/
+        path = filename_or_url[5..-1]
+        Kernel.open(path.to_s, &block)
+      when /^#{REMOTE_PATH}/
+        begin
+          #puts "attempt to open #{filename_or_url} locally"
+          local_filename = filename_or_url.to_s.sub(REMOTE_PATH, LOCAL_PATH)
+          if ::File.exist?(local_filename)
+            response = ::File.open(local_filename)
+            #puts "use #{filename_or_url} locally"
+            case filename_or_url.to_s
+            when /\.rdf$/
+              def response.content_type; 'application/rdf+xml'; end
+            when /\.nt$/
+              def response.content_type; 'application/n-triples'; end
+            end
+
+            if block_given?
+              begin
+                yield response
+              ensure
+                response.close
+              end
+            else
+              response
+            end
+          else
+            Kernel.open(filename_or_url.to_s, &block)
+          end
+        rescue Errno::ENOENT #, OpenURI::HTTPError
+          # Not there, don't run tests
+          StringIO.new("")
+        end
+      else
+        Kernel.open(filename_or_url.to_s, &block)
+      end
+    end
+  end
+end
 
 module Fixtures
   module SuiteTest
-    BASE = "http://www.w3.org/2000/10/rdf-tests/rdfcore/"
-    CONTEXT = JSON.parse(%q({
-      "xsd":          "http://www.w3.org/2001/XMLSchema#",
-      "rdfs":         "http://www.w3.org/2000/01/rdf-schema#",
-      "test":         "http://www.w3.org/2000/10/rdf-tests/rdfcore/testSchema#",
-
-      "description":  "test:description",
-      "status":       "test:status",
-      "warning":      "test:warning",
-      "approval":     {"@id": "test:approval", "@type": "@id"},
-      "issue":        {"@id": "test:issue", "@type": "@id"},
-      "document":     {"@id": "test:document", "@type": "@id"},
-      "discussion":   {"@id": "test:discussion", "@type": "@id"},
-      "inputDocument": {"@id": "test:inputDocument", "@type": "@id"},
-      "outputDocument":{"@id": "test:outputDocument", "@type": "@id"}
+    BASE = "https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/"
+    FRAME = JSON.parse(%q({
+      "@context": {
+        "xsd": "http://www.w3.org/2001/XMLSchema#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "mf": "http://www.w3.org/2001/sw/DataAccess/tests/test-manifest#",
+        "mq": "http://www.w3.org/2001/sw/DataAccess/tests/test-query#",
+        "rdft": "http://www.w3.org/ns/rdftest#",
+    
+        "comment": "rdfs:comment",
+        "entries": {"@id": "mf:entries", "@container": "@list"},
+        "name": "mf:name",
+        "action": {"@id": "mf:action", "@type": "@id"},
+        "result": {"@id": "mf:result", "@type": "@id"}
+      },
+      "@type": "mf:Manifest",
+      "entries": {
+        "@type": [
+          "rdft:TestXMLEval",
+          "rdft:TestXMLNegativeSyntax"
+        ]
+      }
     }))
-
-    class Manifest
+ 
+    class Manifest < JSON::LD::Resource
       def self.open(file)
-        g = RDF::Graph.load(file, :format => :rdfxml)
+        #puts "open: #{file}"
+        prefixes = {}
+        g = RDF::Repository.load(file, :format => :turtle)
         JSON::LD::API.fromRDF(g) do |expanded|
-          JSON::LD::API.compact(expanded, CONTEXT) do |compacted|
-            compacted['@graph'].each do |node|
-              yield TestCase.new(node)
-            end
+          JSON::LD::API.frame(expanded, FRAME) do |framed|
+            yield Manifest.new(framed['@graph'].first)
           end
         end
       end
-    end
 
-    class TestCase < JSON::LD::Resource
+      # @param [Hash] json framed JSON-LD
+      # @return [Array<Manifest>]
+      def self.from_jsonld(json)
+        json['@graph'].map {|e| Manifest.new(e)}
+      end
+
+      def entries
+        # Map entries to resources
+        attributes['entries'].map {|e| Entry.new(e)}
+      end
+    end
+ 
+    class Entry < JSON::LD::Resource
       attr_accessor :debug
 
-      def name
-        id.to_s.split("#").last
+      def base
+        "http://www.w3.org/2013/RDFXMLTests/" + action.split('/')[-2,2].join("/")
       end
 
       # Alias data and query
       def input
-        RDF::Util::File.open_file(inputDocument)
+        RDF::Util::File.open_file(action)
       end
 
-      def result
-        RDF::Util::File.open_file(outputDocument)
+      def expected
+        RDF::Util::File.open_file(result)
+      end
+      
+      def evaluate?
+        attributes['@type'].to_s.match(/Eval/)
+      end
+      
+      def syntax?
+        attributes['@type'].to_s.match(/Syntax/)
       end
 
       def positive_test?
-        attributes['@type'].include?('Positive')
+        !attributes['@type'].to_s.match(/Negative/)
       end
-
+      
       def negative_test?
         !positive_test?
       end
-
-      def parser_test?
-        attributes['@type'].include?('ParserTest')
-      end
-
-      def entailment_test?
-        attributes['@type'].include?('EntailmentTest')
-      end
-
+      
       def inspect
         super.sub('>', "\n" +
-          "  parser?: #{parser_test?.inspect}\n" +
-          "  positive?: #{positive_test?.inspect}\n" +
-          ">"
-        )
+        "  syntax?: #{syntax?.inspect}\n" +
+        "  positive?: #{positive_test?.inspect}\n" +
+        "  evaluate?: #{evaluate?.inspect}\n" +
+        ">"
+      )
       end
     end
   end

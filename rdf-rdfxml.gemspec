@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby -rubygems
+#!/usr/bin/env ruby
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |gem|
@@ -23,18 +23,17 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 1.9.3'
   gem.requirements          = []
 
-  gem.add_runtime_dependency     'rdf',             '>= 1.1'
+  gem.add_runtime_dependency     'rdf',             '>= 1.1.1'
   gem.add_runtime_dependency     'rdf-rdfa',        '>= 1.1'
   gem.add_runtime_dependency     'rdf-xsd',         '>= 1.1'
 
   gem.add_development_dependency 'nokogiri' ,       '>= 1.6.0'
   gem.add_development_dependency 'equivalent-xml' , '>= 0.2.8'
-  gem.add_development_dependency 'open-uri-cached', '>= 0.0.5'
   gem.add_development_dependency 'spira',           '= 0.0.12'
   gem.add_development_dependency 'json-ld'
   gem.add_development_dependency 'rspec',           '>= 2.12.0'
   gem.add_development_dependency 'rdf-isomorphic'
-  gem.add_development_dependency 'rdf-turtle',      '>= 1.1'
+  gem.add_development_dependency 'rdf-turtle',      '>= 1.1.1'
   gem.add_development_dependency 'rdf-spec',        '>= 1.1'
   gem.add_development_dependency 'yard' ,           '>= 0.8.5'
 
