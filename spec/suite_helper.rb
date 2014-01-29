@@ -114,7 +114,7 @@ module Fixtures
       attr_accessor :debug
 
       def base
-        "http://www.w3.org/2013/RDFXMLTests/" + action.split('/')[-2,2].join("/")
+        "http://www.w3.org/2014/RDFXMLTests/" + action.split('/')[-2,2].join("/")
       end
 
       # Alias data and query
