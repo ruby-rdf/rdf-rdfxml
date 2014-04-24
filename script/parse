@@ -20,6 +20,8 @@ def run(input, options)
       num += 1
       if options[:quiet]
         #print "."
+      else
+        options[:output].puts statement.to_ntriples
       end
     end
   elsif options[:output_format] == :inspect

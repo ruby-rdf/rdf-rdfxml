@@ -6,8 +6,14 @@ require 'rdf/spec/reader'
 # w3c test suite: http://www.w3.org/TR/rdf-testcases/
 
 describe "RDF::RDFXML::Reader" do
-  before :each do
-    @reader = RDF::RDFXML::Reader.new(StringIO.new(""))
+  let!(:doap) {File.expand_path("../../etc/doap.rdf", __FILE__)}
+  let!(:doap_nt) {File.expand_path("../../etc/doap.nt", __FILE__)}
+  let!(:doap_count) {File.open(doap_nt).each_line.to_a.length}
+
+  before(:each) do
+    @reader_input = File.read(doap)
+    @reader = RDF::RDFXML::Reader.new(@reader_input)
+    @reader_count = doap_count
   end
 
   include RDF_Reader

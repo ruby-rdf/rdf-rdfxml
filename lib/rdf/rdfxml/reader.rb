@@ -179,42 +179,45 @@ module RDF::RDFXML
     # @yieldparam [RDF::Statement] statement
     # @return [void]
     def each_statement(&block)
-      # Block called from add_statement
-      @callback = block
+      if block_given?
+        # Block called from add_statement
+        @callback = block
 
-      raise "root must be a proxy not a #{root.class}" unless root.is_a?(@implementation::NodeProxy)
+        raise "root must be a proxy not a #{root.class}" unless root.is_a?(@implementation::NodeProxy)
 
-      add_debug(root, "base_uri: #{base_uri.inspect}")
+        add_debug(root, "base_uri: #{base_uri.inspect}")
       
-      rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF.to_uri.to_s)
-      if rdf_nodes.length == 0
-        # If none found, root element may be processed as an RDF Node
+        rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF.to_uri.to_s)
+        if rdf_nodes.length == 0
+          # If none found, root element may be processed as an RDF Node
 
-        ec = EvaluationContext.new(base_uri, root, @graph) do |prefix, value|
-          prefix(prefix, value)
-        end
-
-        nodeElement(root, ec)
-      else
-        rdf_nodes.each do |node|
-          raise "node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
-          # XXX Skip this element if it's contained within another rdf:RDF element
-
-          # Extract base, lang and namespaces from parents to create proper evaluation context
-          ec = EvaluationContext.new(base_uri, nil, @graph)
-          ec.extract_from_ancestors(node) do |prefix, value|
+          ec = EvaluationContext.new(base_uri, root, @graph) do |prefix, value|
             prefix(prefix, value)
           end
-          node.children.each {|el|
-            next unless el.elem?
-            raise "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
-            new_ec = ec.clone(el) do |prefix, value|
+
+          nodeElement(root, ec)
+        else
+          rdf_nodes.each do |node|
+            raise "node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
+            # XXX Skip this element if it's contained within another rdf:RDF element
+
+            # Extract base, lang and namespaces from parents to create proper evaluation context
+            ec = EvaluationContext.new(base_uri, nil, @graph)
+            ec.extract_from_ancestors(node) do |prefix, value|
               prefix(prefix, value)
             end
-            nodeElement(el, new_ec)
-          }
+            node.children.each {|el|
+              next unless el.elem?
+              raise "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
+              new_ec = ec.clone(el) do |prefix, value|
+                prefix(prefix, value)
+              end
+              nodeElement(el, new_ec)
+            }
+          end
         end
       end
+      enum_for(:each_statement)
     end
 
     ##
@@ -226,9 +229,12 @@ module RDF::RDFXML
     # @yieldparam [RDF::Value]    object
     # @return [void]
     def each_triple(&block)
-      each_statement do |statement|
-        block.call(*statement.to_triple)
+      if block_given?
+        each_statement do |statement|
+          block.call(*statement.to_triple)
+        end
       end
+      enum_for(:each_triple)
     end
     
     private
