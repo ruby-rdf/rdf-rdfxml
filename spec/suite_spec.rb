@@ -2,47 +2,45 @@
 $:.unshift "."
 require 'spec_helper'
 
-# w3c test suite: http://www.w3.org/TR/rdf-testcases/
-
-describe "RDF::RDFXML::Reader" do
-  # W3C Test suite from http://www.w3.org/2000/10/rdf-tests/rdfcore/
+describe RDF::RDFXML::Reader do
   describe "w3c rdfcore tests" do
     require 'suite_helper'
 
-    %w(manifest.rdf).each do |man|
-      Fixtures::SuiteTest::Manifest.open(Fixtures::SuiteTest::BASE + man) do |t|
-        next unless t.parser_test? && t.status == "APPROVED"
-        specify t.id do
-          t.debug = [t.inspect, "source:", t.input.read]
+    %w(manifest.ttl).each do |man|
+      Fixtures::SuiteTest::Manifest.open(Fixtures::SuiteTest::BASE + man) do |m|
+        describe m.comment do
+          m.entries.each do |t|
+            specify "#{t.name}" do
 
-          graph = RDF::Repository.new
+              t.debug = [t.inspect, "source:", t.input.read]
 
-          if t.positive_test?
-            begin
               reader = RDF::RDFXML::Reader.new(t.input,
-                :base_uri => t.inputDocument,
-                :canonicalize => false,
-                :validate => false,
-                :debug => t.debug)
+                  :base_uri => t.base,
+                  :canonicalize => false,
+                  :validate => t.syntax?,
+                  :debug => t.debug)
 
-              graph << reader
-            rescue Exception => e
-              e.message.should produce("Not exception #{e.inspect}", t.debug)
+              repo = RDF::Repository.new
+
+              if t.positive_test?
+                begin
+                  repo << reader
+                rescue Exception => e
+                  expect(e.message).to produce("Not exception #{e.inspect}", t.debug)
+                end
+              else
+                expect {
+                  repo << reader
+                }.to raise_error(RDF::ReaderError)
+              end
+
+              if t.evaluate? && t.positive_test?
+                output_repo = RDF::Repository.load(t.result, :format => :ntriples, :base_uri => t.base)
+                expect(repo).to be_equivalent_graph(output_repo, t)
+              elsif !t.evaluate?
+                expect(repo).to be_a(RDF::Enumerable)
+              end
             end
-
-            output_graph = RDF::Repository.load(t.outputDocument, :format => :ntriples)
-            graph.should be_equivalent_graph(output_graph, t)
-          else
-            lambda {
-              reader = RDF::RDFXML::Reader.new(t.input,
-                :base_uri => t.inputDocument,
-                :canonicalize => false,
-                :validate => true,
-                :debug => t.debug)
-
-              graph << reader
-              graph.dump(:ntriples).should produce("", t.debug)
-            }.should raise_error(RDF::ReaderError)
           end
         end
       end

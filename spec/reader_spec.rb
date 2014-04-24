@@ -6,8 +6,14 @@ require 'rdf/spec/reader'
 # w3c test suite: http://www.w3.org/TR/rdf-testcases/
 
 describe "RDF::RDFXML::Reader" do
-  before :each do
-    @reader = RDF::RDFXML::Reader.new(StringIO.new(""))
+  let!(:doap) {File.expand_path("../../etc/doap.rdf", __FILE__)}
+  let!(:doap_nt) {File.expand_path("../../etc/doap.nt", __FILE__)}
+  let!(:doap_count) {File.open(doap_nt).each_line.to_a.length}
+
+  before(:each) do
+    @reader_input = File.read(doap)
+    @reader = RDF::RDFXML::Reader.new(@reader_input)
+    @reader_count = doap_count
   end
 
   include RDF_Reader
@@ -357,12 +363,6 @@ describe "RDF::RDFXML::Reader" do
 
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
           graph.should be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
-        end
-
-        it "processes OWL definition", :pending => ENV['CI'] do
-          @debug = []
-          graph = RDF::Repository.load("http://www.w3.org/2002/07/owl", :format => :rdfxml, :debug => @debug)
-          graph.count.should > 10
         end
       end
     end

@@ -3,7 +3,7 @@ require 'rdf'
 
 module RDF
   ##
-  # **`RDF::RDFXML`** is an RDF/XML plugin for RDF.rb.
+  # **`RDF::RDFXML`** is an RDF/XML extension for RDF.rb.
   #
   # @example Requiring the `RDF::RDFXML` module
   #   require 'rdf/rdfxml'
