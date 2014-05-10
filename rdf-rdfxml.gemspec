@@ -29,6 +29,7 @@ Gem::Specification.new do |gem|
 
   #gem.add_development_dependency 'nokogiri' ,       '>= 1.6.1' # conditionally done in Gemfile
   gem.add_development_dependency 'equivalent-xml' , '~> 0.2'
+  gem.add_development_dependency 'open-uri-cached', '~> 0.0', '>= 0.0.5'
   gem.add_development_dependency 'spira',           '= 0.0.12'
   gem.add_development_dependency 'json-ld',         '~> 1.1'
   gem.add_development_dependency 'rspec',           '~> 2.14'
