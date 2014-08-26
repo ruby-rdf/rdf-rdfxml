@@ -230,6 +230,7 @@ module RDF::RDFXML
 
       # Separate out the objects which are lists and render separately
       lists = objects.
+        select(&:node?).
         map {|o| RDF::List.new(o, @graph)}.
         select {|l| l.valid? && l.none?(&:literal?)}
 

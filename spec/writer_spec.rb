@@ -111,7 +111,7 @@ describe "RDF::RDFXML::Writer" do
       end
     end
   
-    context "with children", focus: true do
+    context "with children" do
       subject do
         @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
         @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
