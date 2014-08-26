@@ -10,6 +10,12 @@ require 'rdf/turtle'
 require 'rdf/spec'
 require 'rdf/spec/matchers'
 require 'rdf/isomorphic'
+require 'open-uri/cached'
+
+# Create and maintain a cache of downloaded URIs
+URI_CACHE = File.expand_path(File.join(File.dirname(__FILE__), "uri-cache"))
+Dir.mkdir(URI_CACHE) unless File.directory?(URI_CACHE)
+OpenURI::Cache.class_eval { @cache_path = URI_CACHE }
 
 ::RSpec.configure do |c|
   c.filter_run :focus => true
@@ -19,6 +25,14 @@ require 'rdf/isomorphic'
     :no_jruby => lambda { |version| !(RUBY_PLATFORM.to_s != 'java') },
   }
   c.include(RDF::Spec::Matchers)
+end
+
+# For testing, modify RDF::Util::File.open_file to use Kernel.open, so we can just use open-uri-cached
+module RDF::Util::File
+  def self.open_file(filename_or_url, options = {}, &block)
+    options = options[:headers] || {} if filename_or_url.start_with?('http')
+    Kernel.open(filename_or_url, options, &block)
+  end
 end
 
 # Heuristically detect the input stream

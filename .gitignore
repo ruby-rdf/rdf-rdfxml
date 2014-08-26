@@ -4,4 +4,5 @@
 /.yardoc
 /user-test-cases
 /.rbx/
+/spec/w3c-rdf
 Gemfile.lock

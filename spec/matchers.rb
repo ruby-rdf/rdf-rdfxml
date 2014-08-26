@@ -3,27 +3,27 @@ require 'rspec/matchers'
 RSpec::Matchers.define :have_xpath do |xpath, value, namespaces, trace|
   match do |actual|
     @doc = Nokogiri::XML.parse(actual)
-    @doc.should be_a(Nokogiri::XML::Document)
-    @doc.root.should be_a(Nokogiri::XML::Element)
+    return false unless @doc.is_a?(Nokogiri::XML::Document)
+    return false unless @doc.root.is_a?(Nokogiri::XML::Element)
     @namespaces = @doc.namespaces.inject({}) {|memo, (k,v)| memo[k.to_s.sub(/xmlns:?/, '')] = v; memo}.
       merge(namespaces).
       merge("xhtml" => "http://www.w3.org/1999/xhtml", "xml" => "http://www.w3.org/XML/1998/namespace")
     @result = @doc.root.at_xpath(xpath, @namespaces) rescue false
     case value
     when false
-      @result.should be_nil
+      @result.nil?
     when true
-      @result.should_not be_nil
+      !@result.nil?
     when Array
-      @result.to_s.split(" ").should include(*value)
+      @result.to_s.split(" ").include?(*value)
     when Regexp
-      @result.to_s.should =~ value
+      @result.to_s =~ value
     else
-      @result.to_s.should == value
+      @result.to_s. == value
     end
   end
   
-  failure_message_for_should do |actual|
+  failure_message_when_negated do |actual|
     msg = "expected to that #{xpath.inspect} would be #{value.inspect} in:\n" + actual.to_s
     msg += "was: #{@result}"
     msg +=  "\nDebug:#{trace.join("\n")}" if trace
@@ -69,7 +69,7 @@ RSpec::Matchers.define :be_equivalent_graph do |expected, info|
     @actual.isomorphic_with?(@expected) rescue false
   end
 
-  failure_message_for_should do |actual|
+  failure_message do |actual|
     info = @info.respond_to?(:comment) ? @info.comment : @info.inspect
     if @expected.is_a?(RDF::Graph) && @actual.size != @expected.size
       "Graph entry count differs:\nexpected: #{@expected.size}\nactual:   #{@actual.size}"
@@ -89,10 +89,10 @@ end
 
 RSpec::Matchers.define :produce do |expected, info|
   match do |actual|
-    actual.should == expected
+    actual == expected
   end
   
-  failure_message_for_should do |actual|
+  failure_message do |actual|
     "Expected: #{[Array, Hash].include?(expected.class) ? expected.to_json(JSON_STATE) : expected.inspect}\n" +
     "Actual  : #{[Array, Hash].include?(actual.class) ? actual.to_json(JSON_STATE) : actual.inspect}\n" +
     #(expected.is_a?(Hash) && actual.is_a?(Hash) ? "Diff: #{expected.diff(actual).to_json(JSON_STATE)}\n" : "") +
