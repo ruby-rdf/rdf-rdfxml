@@ -27,7 +27,7 @@ describe "RDF::RDFXML::Reader" do
       "application/rdf+xml" => RDF::Reader.for(:content_type   => "application/rdf+xml"),
     }.each_pair do |label, format|
       it "should discover '#{label}'" do
-        format.should == RDF::RDFXML::Reader
+        expect(format).to eq RDF::RDFXML::Reader
       end
     end
   end
@@ -52,19 +52,19 @@ describe "RDF::RDFXML::Reader" do
     
     it "should yield reader" do
       inner = double("inner")
-      inner.should_receive(:called).with(RDF::RDFXML::Reader)
+      expect(inner).to receive(:called).with(RDF::RDFXML::Reader)
       RDF::RDFXML::Reader.new(@sampledoc) do |reader|
         inner.called(reader.class)
       end
     end
     
     it "should return reader" do
-      RDF::RDFXML::Reader.new(@sampledoc).should be_a(RDF::RDFXML::Reader)
+      expect(RDF::RDFXML::Reader.new(@sampledoc)).to be_a(RDF::RDFXML::Reader)
     end
     
     it "should yield statements" do
       inner = double("inner")
-      inner.should_receive(:called).with(RDF::Statement).twice
+      expect(inner).to receive(:called).with(RDF::Statement).twice
       RDF::RDFXML::Reader.new(@sampledoc).each_statement do |statement|
         inner.called(statement.class)
       end
@@ -72,7 +72,7 @@ describe "RDF::RDFXML::Reader" do
     
     it "should yield triples" do
       inner = double("inner")
-      inner.should_receive(:called).with(RDF::URI, RDF::URI, RDF::Literal).twice
+      expect(inner).to receive(:called).with(RDF::URI, RDF::URI, RDF::Literal).twice
       RDF::RDFXML::Reader.new(@sampledoc).each_triple do |subject, predicate, object|
         inner.called(subject.class, predicate.class, object.class)
       end
@@ -88,11 +88,11 @@ describe "RDF::RDFXML::Reader" do
           sampledoc = %(<?xml version="1.0" ?>
             <NotRDF />)
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          graph.size.should == 1
+          expect(graph.size).to eq 1
           statement = graph.statements.first
-          statement.subject.class.should == RDF::Node
-          statement.predicate.should == RDF.type
-          statement.object.should == RDF::XML.NotRDF
+          expect(statement.subject.class).to eq RDF::Node
+          expect(statement.predicate).to eq RDF.type
+          expect(statement.object).to eq RDF::XML.NotRDF
         end
   
         it "should parse on XML documents with multiple RDF nodes" do
@@ -112,7 +112,7 @@ describe "RDF::RDFXML::Reader" do
             </GenericXML>)
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
           objects = graph.statements.map {|s| s.object.value}.sort
-          objects.should == ["Bar", "Foo"]
+          expect(objects).to include("Bar", "Foo")
         end
   
         it "should be able to parse a simple single-triple document" do
@@ -156,7 +156,7 @@ describe "RDF::RDFXML::Reader" do
                  <http://www.example.org/name> "Tom"@en] .
           )
           graph = parse(sampledoc, :base_uri => "http://example.com/", :validate => true)
-          graph.should be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
+          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
         end
 
         it "should be able to handle Bags/Alts etc." do
@@ -168,7 +168,7 @@ describe "RDF::RDFXML::Reader" do
               </rdf:Bag>
             </rdf:RDF>)
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          graph.predicates.map(&:to_s).should include("http://www.w3.org/1999/02/22-rdf-syntax-ns#_1", "http://www.w3.org/1999/02/22-rdf-syntax-ns#_2")
+          expect(graph.predicates.map(&:to_s)).to include("http://www.w3.org/1999/02/22-rdf-syntax-ns#_1", "http://www.w3.org/1999/02/22-rdf-syntax-ns#_2")
         end
       end
 
@@ -199,7 +199,7 @@ describe "RDF::RDFXML::Reader" do
         	<http://example.net/> <http://purl.org/dc/terms/title> "Test 0304"@fr .
         )
         graph = parse(svg, :base_uri => "http://example.com/", :validate => true)
-        graph.should be_equivalent_graph(expected, :trace => @debug)
+        expect(graph).to be_equivalent_graph(expected, :trace => @debug)
       end
 
       context :exceptions do
@@ -316,7 +316,7 @@ describe "RDF::RDFXML::Reader" do
           )
 
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          graph.should be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
+          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
         end
       end
   
@@ -343,7 +343,7 @@ describe "RDF::RDFXML::Reader" do
           )
 
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          graph.should be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
+          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
         end
 
         it "decodes element content" do
@@ -362,7 +362,7 @@ describe "RDF::RDFXML::Reader" do
           )
 
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          graph.should be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
+          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
         end
       end
     end

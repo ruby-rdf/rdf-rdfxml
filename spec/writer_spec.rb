@@ -27,7 +27,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -45,7 +45,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/rdf:type" => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -64,7 +64,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/rdf:type/@rdf:resource" => FOO.XtraRelease.to_s
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -84,7 +84,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.Release}"]) => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -105,13 +105,13 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.XXtraRelease}"]) => %r(#{FOO.XXtraRelease})
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
     end
   
-    context "with children" do
+    context "with children", focus: true do
       subject do
         @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
         @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
@@ -127,7 +127,7 @@ describe "RDF::RDFXML::Writer" do
         "/rdf:RDF/foo:Release/foo:releaseContributor/foo:Contributor/@rdf:about" => "http://release/contributor"
       }.each do |path, value|
         it "returns #{value.inspect} for xpath #{path}" do
-          subject.should have_xpath(path, value, {}, @debug)
+          expect(subject).to have_xpath(path, value, {}, @debug)
         end
       end
     end
@@ -147,7 +147,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /second/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -166,7 +166,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -185,7 +185,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Bag/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -204,7 +204,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Alt/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -258,7 +258,7 @@ describe "RDF::RDFXML::Writer" do
             end
             match.each do |path, value|
               it "returns #{value.inspect} for xpath #{path}" do
-                subject.should have_xpath(path, value, {}, @debug)
+                expect(subject).to have_xpath(path, value, {}, @debug)
               end
             end
           end
@@ -279,7 +279,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /second/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -297,7 +297,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title/text()" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -314,7 +314,7 @@ describe "RDF::RDFXML::Writer" do
             "/rdf:RDF/rdf:Description/@dc:title" => "foo"
           }.each do |path, value|
             it "returns #{value.inspect} for xpath #{path}" do
-              subject.should have_xpath(path, value, {}, @debug)
+              expect(subject).to have_xpath(path, value, {}, @debug)
             end
           end
         end
@@ -331,7 +331,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -349,7 +349,7 @@ describe "RDF::RDFXML::Writer" do
             "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="en-us">foo</dc:title>)
           }.each do |path, value|
             it "returns #{value.inspect} for xpath #{path}" do
-              subject.should have_xpath(path, value, {}, @debug)
+              expect(subject).to have_xpath(path, value, {}, @debug)
             end
           end
         end
@@ -367,7 +367,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -384,7 +384,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -401,7 +401,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {})
+            expect(subject).to have_xpath(path, value, {})
           end
         end
       end
@@ -419,7 +419,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -435,7 +435,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => %(foo)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -451,7 +451,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -469,7 +469,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title[contains(., 'bar')]" => %(<dc:title>bar</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -492,12 +492,12 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => FOO.obj.to_s,
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {"foo" => FOO.to_s}, @debug)
+            expect(subject).to have_xpath(path, value, {"foo" => FOO.to_s}, @debug)
           end
         end
 
-        specify { subject.should =~ /<Release/ }
-        specify { subject.should =~ /<pred/ }
+        specify { expect(subject).to match /<Release/ }
+        specify { expect(subject).to match /<pred/ }
       end
 
       context "nil namespace" do
@@ -509,12 +509,12 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => FOO.obj.to_s,
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {"foo" => FOO.to_s}, @debug)
+            expect(subject).to have_xpath(path, value, {"foo" => FOO.to_s}, @debug)
           end
         end
 
-        specify { subject.should =~ /<Release/ }
-        specify { subject.should =~ /<pred/ }
+        specify { expect(subject).to match /<Release/ }
+        specify { expect(subject).to match /<pred/ }
       end
     end
   
@@ -530,7 +530,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/foo:ref/@rdf:resource" => "b"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -548,7 +548,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@rdf:nodeID" => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -567,7 +567,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/owl:sameAs/@rdf:nodeID" => /a$/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            subject.should have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, @debug)
           end
         end
       end
@@ -581,7 +581,7 @@ describe "RDF::RDFXML::Writer" do
           serialize
         end
 
-        specify { parse(subject).should be_equivalent_graph(@graph, :trace => @debug.unshift(subject).join("\n")) }
+        specify { expect(parse(subject)).to be_equivalent_graph(@graph, :trace => @debug.unshift(subject).join("\n")) }
       end
     
       it "should not generate extraneous BNode" do
@@ -602,7 +602,7 @@ describe "RDF::RDFXML::Writer" do
         ), :reader => RDF::Turtle::Reader)
         doc = serialize
         @debug.unshift(doc)
-        parse(doc).should be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+        expect(parse(doc)).to be_equivalent_graph(@graph, :trace => @debug.join("\n"))
       end
     end
 
@@ -614,7 +614,7 @@ describe "RDF::RDFXML::Writer" do
 
       it "should have a stylesheet as a processing instruction in the second line of the XML" do
         lines = subject.split(/[\r\n]+/)
-        lines[1].should == '<?xml-stylesheet type="text/xsl" href="/path/to/rdfxml.xsl"?>'
+        expect(lines[1]).to eq '<?xml-stylesheet type="text/xsl" href="/path/to/rdfxml.xsl"?>'
       end
     end
   
@@ -655,36 +655,6 @@ describe "RDF::RDFXML::Writer" do
         end
       end
     end unless ENV['CI'] # Not for continuous integration
-
-    def check_xpaths(doc, paths)
-      puts doc.to_s if ::RDF::RDFXML::debug? || $verbose
-      doc = Nokogiri::XML.parse(doc)
-      doc.should be_a(Nokogiri::XML::Document)
-      doc.root.should be_a(Nokogiri::XML::Element)
-      paths.each_pair do |path, value|
-        next if path.is_a?(Symbol)
-        @debug <<  doc.root.at_xpath(path, doc.namespaces).to_s if ::RDF::RDFXML::debug?
-        case value
-        when false
-          doc.root.at_xpath(path, doc.namespaces).should be_nil
-        when true
-          doc.root.at_xpath(path, doc.namespaces).should_not be_nil
-        when Array
-          doc.root.at_xpath(path, doc.namespaces).to_s.split(" ").should include(*value)
-        when Regexp
-          doc.root.at_xpath(path, doc.namespaces).to_s.should =~ value
-        else
-          doc.root.at_xpath(path, doc.namespaces).to_s.should == value
-        end
-      end
-    
-      # Parse generated graph and compare to source
-      if paths[:reparse]
-        graph = RDF::Repository.new
-        RDF::RDFXML::Reader.new(doc, :base_uri => "http://release/", :format => :rdfxml).each {|st| graph << st}
-        graph.should be_equivalent_graph(@graph, :about => "http://release/", :trace => @debug.join("\n"))
-      end
-    end
 
     def parse(input, options = {})
       reader_class = options.fetch(:reader, RDF::Reader.for(detect_format(input)))

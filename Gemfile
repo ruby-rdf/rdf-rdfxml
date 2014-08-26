@@ -18,7 +18,7 @@ group :debug do
   gem "wirble"
   gem "ruby-debug", :platforms => :jruby
   gem "debugger", :platforms => :mri_19
-  gem "byebug", :platforms => :mri_20
+  gem "byebug", :platforms => [:mri_20, :mri_21]
 end
 
 platforms :rbx do

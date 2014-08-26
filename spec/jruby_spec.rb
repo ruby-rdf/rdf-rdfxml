@@ -8,7 +8,7 @@ require 'rdf/spec/reader'
 describe Nokogiri::XML do
   describe "parse" do
     it "parses namespaced elements without a namespace" do
-      Nokogiri::XML.parse("<dc:sup>bar</dc:sup>").root.should_not be_nil
+      expect(Nokogiri::XML.parse("<dc:sup>bar</dc:sup>").root).not_to be_nil
     end
   end
 end
@@ -25,7 +25,7 @@ describe RDF::RDFXML::Writer do
       "/rdf:RDF/rdf:Description/@dc:title" => "foo"
     }.each do |path, value|
       it "returns #{value.inspect} for xpath #{path}" do
-        subject.should have_xpath(path, value, {})
+        expect(subject).to have_xpath(path, value, {})
       end
     end
   end

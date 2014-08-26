@@ -18,7 +18,7 @@ describe RDF::RDFXML::Format do
       {:content_type   => 'application/rdf+xml'},
     ].each do |arg|
       it "discovers with #{arg.inspect}" do
-        RDF::Format.for(arg).should == @format_class
+        expect(RDF::Format.for(arg)).to eq @format_class
       end
     end
 
@@ -26,13 +26,13 @@ describe RDF::RDFXML::Format do
       :rdfxml   => '<rdf:RDF about="foo"></rdf:RDF>',
     }.each do |sym, str|
       it "detects #{sym}" do
-        @format_class.for {str}.should == @format_class
+        expect(@format_class.for {str}).to eq @format_class
       end
     end
   end
 
   describe "#to_sym" do
-    specify {@format_class.to_sym.should == :rdfxml}
+    specify {expect(@format_class.to_sym).to eq :rdfxml}
   end
 
   describe ".detect" do
@@ -40,7 +40,7 @@ describe RDF::RDFXML::Format do
       :rdfxml => '<rdf:RDF about="foo"></rdf:RDF>',
     }.each do |sym, str|
       it "detects #{sym}" do
-        @format_class.detect(str).should be_true
+        expect(@format_class.detect(str)).to be_truthy
       end
     end
 
@@ -59,18 +59,18 @@ describe RDF::RDFXML::Format do
       :STRING_LITERAL_LONG2 => %(<a> <b> """\nliteral\n""" .),
     }.each do |sym, str|
       it "does not detect #{sym}" do
-        @format_class.detect(str).should be_false
+        expect(@format_class.detect(str)).to be_falsey
       end
     end
 
     describe RDF::RDFXML::RDFFormat do
       it "discovers with :rdf" do
-        RDF::Format.for(:rdf).should == RDF::RDFXML::RDFFormat
+        expect(RDF::Format.for(:rdf)).to eq RDF::RDFXML::RDFFormat
       end
 
       it "should discover :rdf" do
-        RDF::Format.for(:rdf).reader.should == RDF::RDFXML::Reader
-        RDF::Format.for(:rdf).writer.should == RDF::RDFXML::Writer
+        expect(RDF::Format.for(:rdf).reader).to eq RDF::RDFXML::Reader
+        expect(RDF::Format.for(:rdf).writer).to eq RDF::RDFXML::Writer
       end
     end
   end
