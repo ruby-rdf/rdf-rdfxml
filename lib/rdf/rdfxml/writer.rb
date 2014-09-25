@@ -307,13 +307,26 @@ module RDF::RDFXML
     # Perform any preprocessing of statements required
     # @return [ignored]
     def preprocess
+      # Load defined prefixes
+      (@options[:prefixes] || {}).each_pair do |k, v|
+        @uri_to_prefix[v.to_s] = k
+      end
+      @options[:prefixes] = {}  # Will define actual used when matched
+
+      prefix(:rdf, RDF.to_uri)
+      @uri_to_prefix[RDF.to_uri.to_s] = :rdf
+      if base_uri || @options[:lang]
+        prefix(:xml, RDF::XML)
+        @uri_to_prefix[RDF::XML.to_s] = :xml
+      end
+
       if @options[:default_namespace]
+        @uri_to_prefix[@options[:default_namespace]] = nil
         prefix(nil, @options[:default_namespace])
       end
-        
-      super
-      prefix(:rdf, RDF.to_uri)
-      prefix(:xml, RDF::XML) if base_uri || @options[:lang]
+
+      # Process each statement to establish CURIEs and Terms
+      @graph.each {|statement| preprocess_statement(statement)}
     end
 
     ##

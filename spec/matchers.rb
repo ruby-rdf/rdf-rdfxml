@@ -1,14 +1,14 @@
 require 'rspec/matchers'
 
-RSpec::Matchers.define :have_xpath do |xpath, value, namespaces, trace|
+RSpec::Matchers.define :have_xpath do |path, value, namespaces, trace|
   match do |actual|
     @doc = Nokogiri::XML.parse(actual)
     return false unless @doc.is_a?(Nokogiri::XML::Document)
     return false unless @doc.root.is_a?(Nokogiri::XML::Element)
-    @namespaces = @doc.namespaces.inject({}) {|memo, (k,v)| memo[k.to_s.sub(/xmlns:?/, '')] = v; memo}.
+    namespaces = @doc.namespaces.inject({}) {|memo, (k,v)| memo[k.to_s.sub(/xmlns:?/, '')] = v; memo}.
       merge(namespaces).
       merge("xhtml" => "http://www.w3.org/1999/xhtml", "xml" => "http://www.w3.org/XML/1998/namespace")
-    @result = @doc.root.at_xpath(xpath, @namespaces) rescue false
+    @result = @doc.root.at_xpath(path, namespaces) rescue false
     case value
     when false
       @result.nil?
@@ -19,14 +19,23 @@ RSpec::Matchers.define :have_xpath do |xpath, value, namespaces, trace|
     when Regexp
       @result.to_s =~ value
     else
-      @result.to_s. == value
+      @result.to_s == value
     end
   end
-  
+
+  failure_message do |actual|
+    msg = "expected that #{path.inspect}\nwould be: #{value.inspect}"
+    msg += "\n     was: #{@result}"
+    msg += "\nsource:" + actual
+    msg +=  "\nDebug:#{Array(trace).join("\n")}" if trace
+    msg
+  end
+
   failure_message_when_negated do |actual|
-    msg = "expected to that #{xpath.inspect} would be #{value.inspect} in:\n" + actual.to_s
-    msg += "was: #{@result}"
-    msg +=  "\nDebug:#{trace.join("\n")}" if trace
+    msg = "expected that #{path.inspect}\nwould not be #{value.inspect}"
+    msg += "\nsource:" + actual
+    msg +=  "\nDebug:#{Array(trace).join("\n")}" if trace
+    msg
   end
 end
 
