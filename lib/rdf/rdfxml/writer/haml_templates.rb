@@ -30,7 +30,7 @@ module RDF::RDFXML
         - (types.unshift(first_type); first_type = nil) if first_type && (first_type.include?('/') || first_type.start_with?('_:'))
         - first_type ||= get_qname(RDF.Description)
         - first_type = first_type[1..-1] if first_type.to_s.start_with?(":")
-        - attr_props = attr_props.merge(get_qname(RDF.nodeID) => subject.id) if subject.node? && ref_count(subject) > 1
+        - attr_props = attr_props.merge(get_qname(RDF.nodeID) => subject.id) if subject.node? && ref_count(subject) >= 1
         - attr_props = attr_props.merge(get_qname(RDF.about) => relativize(subject)) if subject.uri?
         - haml_tag(first_type, attr_props) do
           - types.each do |type|

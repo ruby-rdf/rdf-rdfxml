@@ -629,6 +629,35 @@ describe "RDF::RDFXML::Writer" do
       end
     end
 
+    describe "reported issues" do
+      {
+        "issue #31 no namespaces" => [
+          %(<http://example.com/> <http://www.w3.org/1999/xhtml/vocab#license> <http://creativecommons.org/licenses/by-sa/3.0/> .),
+          {},
+          {
+            "/rdf:RDF/rdf:Description/@rdf:about" => 'http://example.com/',
+            "/rdf:RDF/rdf:Description/ns0:license/@rdf:resource" => 'http://creativecommons.org/licenses/by-sa/3.0/'
+          }
+        ],
+        "issue #31 with namespaces" => [
+          %(<http://example.com/> <http://www.w3.org/1999/xhtml/vocab#license> <http://creativecommons.org/licenses/by-sa/3.0/> .),
+          {xhv: 'http://www.w3.org/1999/xhtml/vocab#'},
+          {
+            "/rdf:RDF/rdf:Description/@rdf:about" => 'http://example.com/',
+            "/rdf:RDF/rdf:Description/xhv:license/@rdf:resource" => 'http://creativecommons.org/licenses/by-sa/3.0/'
+          }
+        ]
+      }.each do |test, (input, prefixes, paths)|
+        it test do
+          @graph = RDF::Graph.new << RDF::Turtle::Reader.new(input)
+          result = serialize(prefixes: prefixes, standard_prefixes: false)
+          paths.each do |path, value|
+            expect(result).to have_xpath(path, value, {}, @debug)
+          end
+        end
+      end
+    end
+
     # W3C RDF/XML Test suite from https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/
     describe "w3c RDF/XML tests" do
       require 'suite_helper'
@@ -669,7 +698,7 @@ describe "RDF::RDFXML::Writer" do
     # Serialize  @graph to a string and compare against regexps
     def serialize(options = {})
       @debug = []
-      result = @writer_class.buffer({:debug => @debug, :standard_prefixes => true}.merge(options)) do |writer|
+      result = @writer_class.buffer({debug: @debug, standard_prefixes: true}.merge(options)) do |writer|
         writer << @graph
       end
       require 'cgi'
