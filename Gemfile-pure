@@ -1,13 +1,12 @@
+# "Pure" version of Gemfile, without C bindings
 source "https://rubygems.org"
 
 gemspec
 
 gem "rdf",            :git => "git://github.com/ruby-rdf/rdf.git", :branch => "develop"
 gem "rdf-rdfa",       :git => "git://github.com/ruby-rdf/rdf-rdfa.git", :branch => "develop"
-gem "nokogiri"
 
 group :development do
-  gem "equivalent-xml"
   gem "rdf-xsd",        :git => "git://github.com/ruby-rdf/rdf-xsd.git", :branch => "develop"
   gem 'json-ld',        :git => "git://github.com/ruby-rdf/json-ld.git", :branch => "develop"
   gem 'rdf-isomorphic', :git => "git://github.com/ruby-rdf/rdf-isomorphic.git", :branch => "develop"

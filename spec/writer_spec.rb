@@ -346,7 +346,9 @@ describe "RDF::RDFXML::Writer" do
           {
             "/rdf:RDF/@xml:lang" => "de",
             "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-            "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="en-us">foo</dc:title>)
+            "/rdf:RDF/rdf:Description/dc:title" => true,
+            "/rdf:RDF/rdf:Description/dc:title/@xml:lang" => "en-us",
+            "/rdf:RDF/rdf:Description/dc:title/text()" => "foo",
           }.each do |path, value|
             it "returns #{value.inspect} for xpath #{path}" do
               expect(subject).to have_xpath(path, value, {}, @debug)
@@ -381,7 +383,9 @@ describe "RDF::RDFXML::Writer" do
         {
           "/rdf:RDF/@xml:lang" => false,
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
+          "/rdf:RDF/rdf:Description/dc:title" => true,
+          "/rdf:RDF/rdf:Description/dc:title/@xml:lang" => "de",
+          "/rdf:RDF/rdf:Description/dc:title/text()" => "foo",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
             expect(subject).to have_xpath(path, value, {}, @debug)
@@ -398,7 +402,9 @@ describe "RDF::RDFXML::Writer" do
         {
           "/rdf:RDF/@xml:lang" => "en-us",
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
+          "/rdf:RDF/rdf:Description/dc:title" => true,
+          "/rdf:RDF/rdf:Description/dc:title/@xml:lang" => "de",
+          "/rdf:RDF/rdf:Description/dc:title/text()" => "foo",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
             expect(subject).to have_xpath(path, value, {})
@@ -416,7 +422,9 @@ describe "RDF::RDFXML::Writer" do
         {
           "/rdf:RDF/@xml:lang" => "en-us",
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/dc:title" => %(<dc:title xml:lang="de">foo</dc:title>)
+          "/rdf:RDF/rdf:Description/dc:title" => true,
+          "/rdf:RDF/rdf:Description/dc:title/@xml:lang" => "de",
+          "/rdf:RDF/rdf:Description/dc:title/text()" => "foo",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
             expect(subject).to have_xpath(path, value, {}, @debug)
@@ -581,7 +589,7 @@ describe "RDF::RDFXML::Writer" do
           serialize
         end
 
-        specify { expect(parse(subject)).to be_equivalent_graph(@graph, :trace => @debug.unshift(subject).join("\n")) }
+        specify { expect(parse(subject)).to be_equivalent_graph(@graph, debug: @debug.unshift(subject)) }
       end
     
       it "should not generate extraneous BNode" do
@@ -602,7 +610,7 @@ describe "RDF::RDFXML::Writer" do
         ), :reader => RDF::Turtle::Reader)
         doc = serialize
         @debug.unshift(doc)
-        expect(parse(doc)).to be_equivalent_graph(@graph, :trace => @debug.join("\n"))
+        expect(parse(doc)).to be_equivalent_graph(@graph, debug: @debug)
       end
     end
 
@@ -670,14 +678,17 @@ describe "RDF::RDFXML::Writer" do
               next if t.subject =~ /rdfms-xml-literal-namespaces|xml-canon/
 
               specify "#{t.name}" do
+                unless defined?(::Nokogiri)
+                  pending("XML-C14XL") if t.name == "xml-canon-test001"
+                end
                 @graph = parse(t.expected, :base_uri => t.base, :format => :ntriples)
 
                 serialized = serialize(:format => :rdfxml, :base_uri => t.base)
                 # New RBX failure :(
-                trace = @debug.unshift(serialized).map do |s|
+                debug = @debug.unshift(serialized).map do |s|
                   s.force_encoding(Encoding::UTF_8)
-                end.join("\n")
-                expect(parse(serialized, :base_uri => t.base)).to be_equivalent_graph(@graph, :trace => trace)
+                end
+                expect(parse(serialized, :base_uri => t.base)).to be_equivalent_graph(@graph, debug: debug)
               end
             end
           end

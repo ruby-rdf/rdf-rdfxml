@@ -9,10 +9,10 @@ rvm:
   - 2.1
   - jruby-19mode
   - rbx-2
+gemfile:
+  - Gemfile
+  - Gemfile-pure
 env:
   global:
     - CI=true
-  matrix:
-    - WITH_NOKOGIRI=true
-    - WITH_NOKOGIRI=false
 cache: bundler

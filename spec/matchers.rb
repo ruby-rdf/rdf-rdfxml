@@ -1,14 +1,13 @@
 require 'rspec/matchers'
 
-RSpec::Matchers.define :have_xpath do |path, value, namespaces, trace|
+RSpec::Matchers.define :have_xpath do |path, value, namespaces, debug|
   match do |actual|
-    @doc = Nokogiri::XML.parse(actual)
-    return false unless @doc.is_a?(Nokogiri::XML::Document)
-    return false unless @doc.root.is_a?(Nokogiri::XML::Element)
-    namespaces = @doc.namespaces.inject({}) {|memo, (k,v)| memo[k.to_s.sub(/xmlns:?/, '')] = v; memo}.
+    root = RDF::RDFXML::Reader.new(actual).root
+    return false unless root
+    namespaces = root.namespaces.inject({}) {|memo, (k,v)| memo[k.to_s.sub(/xmlns:?/, '')] = v; memo}.
       merge(namespaces).
       merge("xhtml" => "http://www.w3.org/1999/xhtml", "xml" => "http://www.w3.org/XML/1998/namespace")
-    @result = @doc.root.at_xpath(path, namespaces) rescue false
+    @result = root.at_xpath(path, namespaces) rescue false
     case value
     when false
       @result.nil?
@@ -27,14 +26,14 @@ RSpec::Matchers.define :have_xpath do |path, value, namespaces, trace|
     msg = "expected that #{path.inspect}\nwould be: #{value.inspect}"
     msg += "\n     was: #{@result}"
     msg += "\nsource:" + actual
-    msg +=  "\nDebug:#{Array(trace).join("\n")}" if trace
+    msg +=  "\nDebug:#{Array(debug).join("\n")}" if debug
     msg
   end
 
   failure_message_when_negated do |actual|
     msg = "expected that #{path.inspect}\nwould not be #{value.inspect}"
     msg += "\nsource:" + actual
-    msg +=  "\nDebug:#{Array(trace).join("\n")}" if trace
+    msg +=  "\nDebug:#{Array(debug).join("\n")}" if debug
     msg
   end
 end
@@ -53,7 +52,7 @@ def normalize(graph)
   end
 end
 
-Info = Struct.new(:about, :coment, :trace, :input, :result, :action, :expected)
+Info = Struct.new(:about, :coment, :debug, :input, :result, :action, :expected)
 
 RSpec::Matchers.define :be_equivalent_graph do |expected, info|
   match do |actual|
@@ -61,15 +60,15 @@ RSpec::Matchers.define :be_equivalent_graph do |expected, info|
       info
     elsif info.is_a?(Hash)
       identifier = info[:identifier] || expected.is_a?(RDF::Enumerable) ? expected.context : info[:about]
-      trace = info[:trace]
-      if trace.is_a?(Array)
-        trace = if defined?(RUBY_ENGINE) && RUBY_ENGINE == "jruby" && RUBY_VERSION >= "1.9"
-          trace.map {|s| s.dup.force_encoding(Encoding::UTF_8)}.join("\n")
+      debug = info[:debug]
+      if debug.is_a?(Array)
+        debug = if defined?(RUBY_ENGINE) && RUBY_ENGINE == "jruby" && RUBY_VERSION >= "1.9"
+          debug.map {|s| s.dup.force_encoding(Encoding::UTF_8)}.join("\n")
         else
-          trace.join("\n")
+          debug.join("\n")
         end
       end
-      Info.new(identifier, info[:comment] || "", trace)
+      Info.new(identifier, info[:comment] || "", debug)
     else
       Info.new(expected.is_a?(RDF::Enumerable) ? expected.context : info, info.to_s)
     end
@@ -90,9 +89,9 @@ RSpec::Matchers.define :be_equivalent_graph do |expected, info|
     "\n#{info + "\n" unless info.empty?}" +
     (@info.action ? "Input file: #{@info.action}\n" : "") +
     (@info.result ? "Result file: #{@info.result}\n" : "") +
-    "Unsorted Expected:\n#{@expected.dump(:ntriples, :standard_prefixes => true)}" +
-    "Unsorted Results:\n#{@actual.dump(:ntriples, :standard_prefixes => true)}" +
-    (@info.trace ? "\nDebug:\n#{@info.trace}" : "")
+    "Unsorted Expected:\n#{@expected.dump(:ttl, :standard_prefixes => true)}" +
+    "Unsorted Results:\n#{@actual.dump(:ttl, :standard_prefixes => true)}" +
+    (@info.debug ? "\nDebug:\n#{Array(@info.debug).join("\n")}" : "")
   end  
 end
 

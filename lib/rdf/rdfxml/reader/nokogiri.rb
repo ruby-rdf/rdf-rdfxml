@@ -23,6 +23,15 @@ module RDF::RDFXML
           @parent = parent
         end
 
+        # Create a new element child of an existing node
+        def create_node(name, children)
+          native = ::Nokogiri::XML::Element.new(name, @node)
+          children.each do |c|
+            native.add_child(c.node)
+          end
+          NodeProxy.new(native, self)
+        end
+
         ##
         # Element language
         #
@@ -124,6 +133,10 @@ module RDF::RDFXML
           end
         end
 
+        def at_xpath(*args)
+          xpath(*args).first
+        end
+
         # For jRuby, there is a bug that prevents the namespace from being set on an element
         if RUBY_PLATFORM == "java"
           def add_namespace(prefix, href)
@@ -150,6 +163,8 @@ module RDF::RDFXML
           ns = ns.href if ns.respond_to?(:href)
           RDF::URI.intern(ns + self.node_name)
         end
+
+        def to_s; @node.to_s; end
 
         ##
         # Proxy for everything else to @node
