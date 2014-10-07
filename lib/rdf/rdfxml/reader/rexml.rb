@@ -152,14 +152,6 @@ module RDF::RDFXML
           }.join
         end
 
-        ##
-        # Node type accessors
-        #
-        # @return [Boolean]
-        def element?
-          @node.is_a?(::REXML::Element)
-        end
-
         def attribute_nodes
           attrs = @node.attributes.dup.keep_if do |name, attr|
             !name.start_with?('xmlns')
