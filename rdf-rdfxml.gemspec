@@ -26,9 +26,10 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency     'rdf',             '~> 1.1', '>= 1.1.6'
   gem.add_runtime_dependency     'rdf-rdfa',        '~> 1.1', '>= 1.1.4.1'
   gem.add_runtime_dependency     'rdf-xsd',         '~> 1.1'
+  gem.add_runtime_dependency     'htmlentities',    '~> 4.3'
 
   #gem.add_development_dependency 'nokogiri' ,       '>= 1.6.1' # conditionally done in Gemfile
-  gem.add_development_dependency 'equivalent-xml' , '~> 0.2'
+  #gem.add_development_dependency 'equivalent-xml' , '~> 0.2' # conditionally done in Gemfile
   gem.add_development_dependency 'open-uri-cached', '~> 0.0', '>= 0.0.5'
   gem.add_development_dependency 'spira',           '= 0.0.12'
   gem.add_development_dependency 'json-ld',         '~> 1.1'

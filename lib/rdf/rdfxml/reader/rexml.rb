@@ -1,3 +1,5 @@
+require 'htmlentities'
+
 module RDF::RDFXML
   class Reader < RDF::Reader
     ##
@@ -13,6 +15,11 @@ module RDF::RDFXML
         :rexml
       end
 
+      # For Attribute namespaces
+      Namespace = Struct.new(:href, :prefix) do
+        def to_s; href; end
+      end
+
       # Proxy class to implement uniform element accessors
       class NodeProxy
         attr_reader :node
@@ -21,6 +28,28 @@ module RDF::RDFXML
         def initialize(node, parent = nil)
           @node = node
           @parent = parent
+          @parent = NodeProxy.new(node.parent) if @parent.nil? &&
+                                                  node.respond_to?(:parent) &&
+                                                  node.parent &&
+                                                  !node.parent.is_a?(::REXML::Document)
+        end
+
+        # Create a new element child of an existing node
+        def create_node(name, children)
+          native = ::REXML::Element.new(name, @node)
+          children.each do |c|
+            case c.node
+            when ::REXML::Text
+              native.add_text(c.node)
+            when ::REXML::Element
+              native.add_element(c.node)
+            when ::REXML::Comment
+              # Skip comments
+            else
+              raise "Unexpected child node type: #{c.node.class}"
+            end
+          end
+          NodeProxy.new(native, self)
         end
 
         ##
@@ -89,7 +118,15 @@ module RDF::RDFXML
           end
           ns_decls
         end
-        
+
+        def namespace
+          Namespace.new(@node.namespace, @node.prefix) unless @node.namespace.to_s.empty?
+        end
+
+        def add_namespace(prefix, uri)
+          prefix ? !@node.add_namespace(prefix, uri) : @node.add_namespace(uri)
+        end
+
         ##
         # Children of this node
         #
@@ -115,32 +152,45 @@ module RDF::RDFXML
           }.join
         end
 
-        ##
-        # Node type accessors
-        #
-        # @return [Boolean]
-        def element?
-          @node.is_a?(::REXML::Element)
+        def attribute_nodes
+          attrs = @node.attributes.dup.keep_if do |name, attr|
+            !name.start_with?('xmlns')
+          end
+          @attribute_nodes ||= (attrs.empty? ? attrs : NodeSetProxy.new(attrs, self))
         end
 
-        def attribute_nodes
-          @attribute_nodes ||= NodeSetProxy.new(@node.children.select {|n| n.is_a?(::REXML::Attribute)}, self)
+        def remove_attribute(key)
+          @node.delete_attribute(key)
         end
 
         def xpath(*args)
           #NodeSetProxy.new(::REXML::XPath.match(@node, path, namespaces), self)
           ::REXML::XPath.match(@node, *args).map do |n|
-            # Get node ancestors
-            parent = n.ancestors.reverse.inject(nil) do |p,node|
-              NodeProxy.new(node, p)
-            end
             NodeProxy.new(n, parent)
           end
         end
 
-        def elem?
+        def at_xpath(*args)
+          xpath(*args).first
+        end
+
+        ##
+        # Node type accessors
+        #
+        # @return [Boolean]
+        def text?
+          @node.is_a?(::REXML::Text)
+        end
+
+        def element?
           @node.is_a?(::REXML::Element)
         end
+
+        def blank?
+          @node.is_a?(::REXML::Text) && @node.empty?
+        end
+
+        def to_s; @node.to_s; end
 
         ##
         # Proxy for everything else to @node
@@ -166,8 +216,20 @@ module RDF::RDFXML
         # @yield child
         # @yieldparam [NodeProxy]
         def each
-          @node_set.each do |c|
+          @node_set.to_a.each do |c|
             yield NodeProxy.new(c, parent)
+          end
+        end
+        
+        ##
+        # Return selected NodeProxies based on selection
+        #
+        # @yield child
+        # @yieldparam [NodeProxy]
+        # @return [Array[NodeProxy]]
+        def select
+          @node_set.to_a.map {|n| NodeProxy.new(n, parent)}.select do |c|
+            yield c
           end
         end
 

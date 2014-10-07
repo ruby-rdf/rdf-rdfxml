@@ -79,20 +79,20 @@ describe "RDF::RDFXML::Reader" do
     end
   end
   
-  [:nokogiri].each do |library|
-    context library.to_s, :library => library do
+  [:rexml, :nokogiri].each do |library|
+    context library.to_s, :library => library, skip: ("Nokogiri not loaded" if library == :nokogiri && !defined?(::Nokogiri)) do
       before(:all) {@library = library}
       
       context "simple parsing" do
         it "should recognise and create single triple for empty non-RDF root" do
           sampledoc = %(<?xml version="1.0" ?>
             <NotRDF />)
+            expected = %q(
+              @prefix xml: <http://www.w3.org/XML/1998/namespace> .
+              [ a xml:NotRDF] .
+            )
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          expect(graph.size).to eq 1
-          statement = graph.statements.first
-          expect(statement.subject.class).to eq RDF::Node
-          expect(statement.predicate).to eq RDF.type
-          expect(statement.object).to eq RDF::XML.NotRDF
+          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
         end
   
         it "should parse on XML documents with multiple RDF nodes" do
@@ -156,7 +156,7 @@ describe "RDF::RDFXML::Reader" do
                  <http://www.example.org/name> "Tom"@en] .
           )
           graph = parse(sampledoc, :base_uri => "http://example.com/", :validate => true)
-          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
+          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", debug: @debug)
         end
 
         it "should be able to handle Bags/Alts etc." do
@@ -199,7 +199,7 @@ describe "RDF::RDFXML::Reader" do
         	<http://example.net/> <http://purl.org/dc/terms/title> "Test 0304"@fr .
         )
         graph = parse(svg, :base_uri => "http://example.com/", :validate => true)
-        expect(graph).to be_equivalent_graph(expected, :trace => @debug)
+        expect(graph).to be_equivalent_graph(expected, debug: @debug)
       end
 
       context :exceptions do
@@ -316,7 +316,7 @@ describe "RDF::RDFXML::Reader" do
           )
 
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
+          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", debug: @debug)
         end
       end
   
@@ -343,7 +343,7 @@ describe "RDF::RDFXML::Reader" do
           )
 
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
+          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", debug: @debug)
         end
 
         it "decodes element content" do
@@ -362,7 +362,7 @@ describe "RDF::RDFXML::Reader" do
           )
 
           graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
+          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", debug: @debug)
         end
       end
     end
@@ -371,7 +371,7 @@ describe "RDF::RDFXML::Reader" do
   def parse(input, options)
     @debug = []
     graph = RDF::Repository.new
-    RDF::RDFXML::Reader.new(input, options.merge(:debug => @debug, :library => @library)).each do |statement|
+    RDF::RDFXML::Reader.new(input, options.merge(debug: @debug, :library => @library)).each do |statement|
       graph << statement
     end
     graph

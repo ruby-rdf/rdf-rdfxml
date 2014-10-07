@@ -1,11 +1,17 @@
 # coding: utf-8
 $:.unshift "."
 require File.join(File.dirname(__FILE__), 'spec_helper')
-require 'nokogiri'
 require 'rdf/spec/reader'
 
 # Some specific issues that fail with jRuby to be resolved
-describe Nokogiri::XML do
+have_nokogiri = true
+begin
+  require 'nokogiri'
+rescue LoadError
+  have_nokogiri = false
+end
+
+describe "Nokogiri::XML", skip: ("Nokogiri not loaded" unless have_nokogiri) do
   describe "parse" do
     it "parses namespaced elements without a namespace" do
       expect(Nokogiri::XML.parse("<dc:sup>bar</dc:sup>").root).not_to be_nil
@@ -13,7 +19,7 @@ describe Nokogiri::XML do
   end
 end
 
-describe RDF::RDFXML::Writer do
+describe RDF::RDFXML::Writer, skip: ("Nokogiri not loaded" unless have_nokogiri) do
   context "resource without type" do
     subject do
       @graph = RDF::Repository.new << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]

@@ -22,11 +22,16 @@ describe RDF::RDFXML::Reader do
 
               repo = RDF::Repository.new
 
+              if reader.instance_variable_get(:@library) == :rexml
+                pending("no namespace attributes") if t.name == "unrecognised-xml-attributes-test002"
+                pending("XML-C14XL") if t.name == "xml-canon-test001"
+              end
+
               if t.positive_test?
                 begin
                   repo << reader
                 rescue Exception => e
-                  expect(e.message).to produce("Not exception #{e.inspect}", t.debug)
+                  expect(e.message).to produce("Not exception #{e.inspect}", t.debug + e.backtrace.unshift("Backtrace:"))
                 end
               else
                 expect {

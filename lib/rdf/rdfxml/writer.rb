@@ -1,4 +1,3 @@
-require 'nokogiri'  # FIXME: Implement using different modules as in RDF::TriX
 require 'rdf/rdfa'
 
 module RDF::RDFXML

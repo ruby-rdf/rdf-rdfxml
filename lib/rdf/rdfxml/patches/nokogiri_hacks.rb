@@ -5,14 +5,6 @@ class Nokogiri::XML::Node
     ns = self.namespace ? self.namespace.href : RDF::XML.to_s
     RDF::URI.intern(ns + self.node_name)
   end
-
-  def display_path
-    @display_path ||= case self
-    when Nokogiri::XML::Document then ""
-    when Nokogiri::XML::Element then parent ? "#{parent.display_path}/#{name}" : name
-    when Nokogiri::XML::Attr then "#{parent && parent.display_path}@#{name}"
-    end
-  end
   
   alias_method :attribute_with_ns_without_ffi_null, :attribute_with_ns
   ##

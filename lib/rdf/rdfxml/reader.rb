@@ -188,7 +188,7 @@ module RDF::RDFXML
         add_debug(root, "base_uri: #{base_uri.inspect}")
       
         rdf_nodes = root.xpath("//rdf:RDF", "rdf" => RDF.to_uri.to_s)
-        if rdf_nodes.length == 0
+        if rdf_nodes.size == 0
           # If none found, root element may be processed as an RDF Node
 
           ec = EvaluationContext.new(base_uri, root, @graph) do |prefix, value|
@@ -207,7 +207,7 @@ module RDF::RDFXML
               prefix(prefix, value)
             end
             node.children.each {|el|
-              next unless el.elem?
+              next unless el.element?
               raise "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
               new_ec = ec.clone(el) do |prefix, value|
                 prefix(prefix, value)
@@ -316,7 +316,7 @@ module RDF::RDFXML
       li_counter = 0 # this will increase for each li we iterate through
       el.children.each do |child|
         raise "child must be a proxy not a #{child.class}" unless child.is_a?(@implementation::NodeProxy)
-        next unless child.elem?
+        next unless child.element?
         child_ec = ec.clone(child) do |prefix, value|
           prefix(prefix, value)
         end
@@ -338,7 +338,7 @@ module RDF::RDFXML
           raise "element node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
         end
 
-        if element_nodes.length > 1
+        if element_nodes.size > 1
           element_nodes.each do |node|
             add_debug(child) {"  node: #{node.to_s}"}
           end
@@ -399,7 +399,7 @@ module RDF::RDFXML
         add_debug(child) {"nodeID: #{nodeID}"} if nodeID
         add_debug(child) {"id: #{id}"} if id
         
-        if attrs.empty? && datatype.nil? && parseType.nil? && element_nodes.length == 1
+        if attrs.empty? && datatype.nil? && parseType.nil? && element_nodes.size == 1
           # Production resourcePropertyElt
 
           new_ec = child_ec.clone(nil) do |prefix, value|
@@ -410,7 +410,7 @@ module RDF::RDFXML
           add_debug(child) {"resourcePropertyElt: #{node_path(new_node_element)}"}
           new_subject = nodeElement(new_node_element, new_ec)
           add_triple(child, subject, predicate, new_subject)
-        elsif attrs.empty? && parseType.nil? && element_nodes.length == 0 && text_nodes.length > 0
+        elsif attrs.empty? && parseType.nil? && element_nodes.size == 0 && text_nodes.size > 0
           # Production literalPropertyElt
           add_debug(child, "literalPropertyElt")
           
@@ -448,9 +448,9 @@ module RDF::RDFXML
           # c
           # end-element()
           add_debug(child, "compose new sequence with rdf:Description")
-          node = child.clone
-          node.attributes.keys.each {|a| node.remove_attribute(a)}
-          node.node_name = "Description"
+          #child.clone
+          #node.attributes.keys.each {|a| node.remove_attribute(a)}
+          node = el.create_node("Description", child.children)
           node.add_namespace(nil, RDF.to_uri.to_s)
           add_debug(node) { "uri: #{node.uri}, namespace: #{node.namespace.inspect}"}
           new_ec = child_ec.clone(nil, :subject => n) do |prefix, value|
@@ -518,7 +518,7 @@ module RDF::RDFXML
           rescue ArgumentError => e
             add_error(child, e.message)
           end
-        elsif text_nodes.length == 0 && element_nodes.length == 0
+        elsif text_nodes.size == 0 && element_nodes.size == 0
           # Production emptyPropertyElt
           add_debug(child, "emptyPropertyElt")
 
