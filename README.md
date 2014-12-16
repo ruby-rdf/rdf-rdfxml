@@ -101,7 +101,7 @@ see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 [Ruby]:         http://ruby-lang.org/
 [RDF]:          http://www.w3.org/RDF/
 [RDF.rb]:       http://rubygems.org/gems/rdf
-[RDF/XML]:      http://www.w3.org/TR/REC-rdf-syntax/  "RDF/XML Syntax Specification"
+[RDF/XML]:      hhttp://www.w3.org/TR/rdf-syntax-grammar/ "RDF/XML Syntax Specification"
 [YARD]:         http://yardoc.org/
 [YARD-GS]:      http://rubydoc.info/docs/yard/file/docs/GettingStarted.md
 [PDD]:          http://lists.w3.org/Archives/Public/public-rdf-ruby/2010May/0013.html
