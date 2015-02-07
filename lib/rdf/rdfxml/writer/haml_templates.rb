@@ -11,7 +11,7 @@ module RDF::RDFXML
         = %(<?xml version='1.0' encoding='utf-8' ?>)
         - if stylesheet
           = %(<?xml-stylesheet type="text/xsl" href="#{stylesheet}"?>)
-        %rdf:RDF{prefix_attrs.merge("xml:lang" => lang, "xml:base" => base)}
+        %rdf:RDF{prefix_attrs.merge("xml:lang" => lang, "xml:base" => base)}<
           - subjects.each do |subject|
             != yield(subject)
       ),
