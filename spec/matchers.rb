@@ -59,7 +59,7 @@ RSpec::Matchers.define :be_equivalent_graph do |expected, info|
     @info = if info.respond_to?(:input)
       info
     elsif info.is_a?(Hash)
-      identifier = info[:identifier] || expected.is_a?(RDF::Enumerable) ? expected.context : info[:about]
+      identifier = info[:identifier] || info[:about]
       debug = info[:debug]
       if debug.is_a?(Array)
         debug = if defined?(RUBY_ENGINE) && RUBY_ENGINE == "jruby" && RUBY_VERSION >= "1.9"

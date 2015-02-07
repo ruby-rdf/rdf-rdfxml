@@ -19,7 +19,7 @@ describe "RDF::RDFXML::Writer" do
       context "resource without type" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:attributes => :untyped)
+          serialize(attributes: :untyped)
         end
 
         {
@@ -36,7 +36,7 @@ describe "RDF::RDFXML::Writer" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:attributes => :untyped)
+          serialize(attributes: :untyped)
         end
 
         {
@@ -55,7 +55,7 @@ describe "RDF::RDFXML::Writer" do
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:attributes => :untyped)
+          serialize(attributes: :untyped)
         end
 
         {
@@ -74,7 +74,7 @@ describe "RDF::RDFXML::Writer" do
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:attributes => :none)
+          serialize(attributes: :none)
         end
 
         {
@@ -95,7 +95,7 @@ describe "RDF::RDFXML::Writer" do
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
           @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XXtraRelease]
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:attributes => :typed)
+          serialize(attributes: :typed)
         end
 
         {
@@ -112,13 +112,17 @@ describe "RDF::RDFXML::Writer" do
     end
   
     context "with children" do
-      subject do
+      before(:each) {
         @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
         @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
         @graph << [RDF::URI.new("http://release/contributor"), RDF.type, FOO.Contributor]
         @graph << [RDF::URI.new("http://release/contributor"), RDF::DC.title, "bar"]
         @graph << [RDF::URI.new("http://release/"), FOO.releaseContributor, RDF::URI.new("http://release/contributor")]
-        serialize(:attributes => :untyped)
+      }
+      subject {serialize(attributes: :untyped)}
+
+      it "reproduces graph" do
+        expect(parse(subject)).to be_equivalent_graph(@graph, debug: @debug.unshift(subject))
       end
 
       {
@@ -128,6 +132,26 @@ describe "RDF::RDFXML::Writer" do
       }.each do |path, value|
         it "returns #{value.inspect} for xpath #{path}" do
           expect(subject).to have_xpath(path, value, {}, @debug)
+        end
+      end
+
+      context "max_depth: 0" do
+        subject {serialize(attributes: :untyped, max_depth: 0)}
+
+        it "reproduces graph" do
+          expect(parse(subject)).to be_equivalent_graph(@graph, debug: @debug.unshift(subject))
+        end
+
+        {
+          "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
+          "/rdf:RDF/foo:Release/@dc:title" => "foo",
+          "/rdf:RDF/foo:Release/foo:releaseContributor/@rdf:resource" => "http://release/contributor",
+          "/rdf:RDF/foo:Contributor/@dc:title" => "bar",
+          "/rdf:RDF/foo:Contributor/@rdf:about" => "http://release/contributor",
+        }.each do |path, value|
+          it "returns #{value.inspect} for xpath #{path}" do
+            expect(subject).to have_xpath(path, value, {}, @debug)
+          end
         end
       end
     end
@@ -253,7 +277,7 @@ describe "RDF::RDFXML::Writer" do
         }.each do |ttl, match|
           context ttl do
             subject do
-              @graph = parse(ttl, :base_uri => "http://foo/", :reader => RDF::Turtle::Reader)
+              @graph = parse(ttl, base_uri: "http://foo/", :reader => RDF::Turtle::Reader)
               serialize({})
             end
             match.each do |path, value|
@@ -289,7 +313,7 @@ describe "RDF::RDFXML::Writer" do
       context ":attributes == :none" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-          serialize(:attributes => :none)
+          serialize(attributes: :none)
         end
 
         {
@@ -306,7 +330,7 @@ describe "RDF::RDFXML::Writer" do
         context ":attributes == #{opt}" do
           subject do
             @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
-            serialize(:attributes => opt)
+            serialize(attributes: opt)
           end
 
           {
@@ -323,7 +347,7 @@ describe "RDF::RDFXML::Writer" do
       context "untyped without lang if attribute lang set" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
-          serialize(:attributes => :untyped, :lang => "de")
+          serialize(attributes: :untyped, :lang => "de")
         end
 
         {
@@ -340,7 +364,7 @@ describe "RDF::RDFXML::Writer" do
         context "property for title" do
           subject do
             @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "en-us")]
-            serialize(:attributes => :untyped, :lang => "de")
+            serialize(attributes: :untyped, :lang => "de")
           end
 
           {
@@ -360,7 +384,7 @@ describe "RDF::RDFXML::Writer" do
       context "attribute if lang is default" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
-          serialize(:attributes => :untyped, :lang => "de")
+          serialize(attributes: :untyped, :lang => "de")
         end
 
         {
@@ -377,7 +401,7 @@ describe "RDF::RDFXML::Writer" do
       context "untyped as property if lang set and no default" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
-          serialize(:attributes => :untyped)
+          serialize(attributes: :untyped)
         end
 
         {
@@ -396,7 +420,7 @@ describe "RDF::RDFXML::Writer" do
       context "untyped as property if lang set and not default" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
-          serialize(:attributes => :untyped, :lang => "en-us")
+          serialize(attributes: :untyped, :lang => "en-us")
         end
 
         {
@@ -416,7 +440,7 @@ describe "RDF::RDFXML::Writer" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "de")]
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :language => "en-us")]
-          serialize(:attributes => :untyped, :lang => "en-us")
+          serialize(attributes: :untyped, :lang => "en-us")
         end
 
         {
@@ -435,7 +459,7 @@ describe "RDF::RDFXML::Writer" do
       context "typed node as element if :untyped" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :datatype => RDF::XSD.string)]
-          serialize(:attributes => :untyped)
+          serialize(attributes: :untyped)
         end
 
         {
@@ -451,7 +475,7 @@ describe "RDF::RDFXML::Writer" do
       context "typed node as attribute if :typed" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :datatype => RDF::XSD.string)]
-          serialize(:attributes => :typed)
+          serialize(attributes: :typed)
         end
 
         {
@@ -468,7 +492,7 @@ describe "RDF::RDFXML::Writer" do
         subject do
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("foo", :datatype => RDF::XSD.string)]
           @graph << [RDF::URI.new("http://release/"), RDF::DC.title, RDF::Literal.new("bar", :datatype => RDF::XSD.string)]
-          serialize(:attributes => :untyped)
+          serialize(attributes: :untyped)
         end
 
         {
@@ -530,7 +554,7 @@ describe "RDF::RDFXML::Writer" do
       context "relative about URI" do
         subject do
           @graph << [RDF::URI.new("http://release/a"), FOO.ref, RDF::URI.new("http://release/b")]
-          serialize(:attributes => :untyped, :base_uri => "http://release/")
+          serialize(attributes: :untyped, base_uri: "http://release/")
         end
 
         {
@@ -548,7 +572,7 @@ describe "RDF::RDFXML::Writer" do
       context "no nodeID attribute unless node is referenced as an object" do
         subject do
           @graph << [RDF::Node.new("a"), RDF::DC.title, "foo"]
-          serialize(:attributes => :untyped, :base_uri => "http://release/")
+          serialize(attributes: :untyped, base_uri: "http://release/")
         end
 
         {
@@ -566,7 +590,7 @@ describe "RDF::RDFXML::Writer" do
           bn = RDF::Node.new("a")
           @graph << [bn, RDF::DC.title, "foo"]
           @graph << [bn, RDF::OWL.sameAs, bn]
-          serialize(:attributes => :untyped, :base_uri => "http://release/")
+          serialize(attributes: :untyped, base_uri: "http://release/")
         end
 
         {
@@ -589,7 +613,9 @@ describe "RDF::RDFXML::Writer" do
           serialize
         end
 
-        specify { expect(parse(subject)).to be_equivalent_graph(@graph, debug: @debug.unshift(subject)) }
+        it "produces expected graph" do
+          expect(parse(subject)).to be_equivalent_graph(@graph, debug: @debug.unshift(subject))
+        end
       end
     
       it "should not generate extraneous BNode" do
@@ -681,14 +707,14 @@ describe "RDF::RDFXML::Writer" do
                 unless defined?(::Nokogiri)
                   pending("XML-C14XL") if t.name == "xml-canon-test001"
                 end
-                @graph = parse(t.expected, :base_uri => t.base, :format => :ntriples)
+                @graph = parse(t.expected, base_uri: t.base, format: :ntriples)
 
-                serialized = serialize(:format => :rdfxml, :base_uri => t.base)
+                serialized = serialize(format: :rdfxml, base_uri: t.base)
                 # New RBX failure :(
                 debug = @debug.unshift(serialized).map do |s|
                   s.force_encoding(Encoding::UTF_8)
                 end
-                expect(parse(serialized, :base_uri => t.base)).to be_equivalent_graph(@graph, debug: debug)
+                expect(parse(serialized, base_uri: t.base)).to be_equivalent_graph(@graph, debug: debug)
               end
             end
           end

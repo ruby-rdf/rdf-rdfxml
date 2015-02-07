@@ -65,6 +65,8 @@ module RDF::RDFXML
     #   the prefix mappings to use (not supported by all writers)
     # @option options [#to_s]    :base_uri     (nil)
     #   the base URI to use when constructing relative URIs
+    # @option options [Integer]  :max_depth (10)
+    #   Maximum depth for recursively defining resources
     # @option options [#to_s]   :lang   (nil)
     #   Output as root xml:lang attribute, and avoid generation _xml:lang_ where possible
     # @option options [Symbol]    :attributes   (nil)
@@ -92,7 +94,8 @@ module RDF::RDFXML
 
     def write_epilogue
       @force_RDF_about = {}
-      @attributes = @options[:attributes] || :none
+      @max_depth = @options.fetch(:max_depth, 10)
+      @attributes = @options.fetch(:attributes, :none)
 
       super
     end
@@ -259,9 +262,10 @@ module RDF::RDFXML
         raise RDF::WriterError, "Missing property template" if template.nil?
 
         options = {
-          :object     => objects.first,
-          :predicate  => predicate,
-          :property   => get_qname(predicate),
+          object:     objects.first,
+          predicate:  predicate,
+          property:   get_qname(predicate),
+          recurse:    @depth <= @max_depth
         }.merge(options)
         hamlify(template, options, &block)
       end
@@ -285,9 +289,10 @@ module RDF::RDFXML
       template = options[:haml] || haml_template[:collection]
 
       options = {
-        :list       => list,
-        :predicate  => predicate,
-        :property   => get_qname(predicate),
+        list:       list,
+        predicate:  predicate,
+        property:   get_qname(predicate),
+        recurse:    @depth <= @max_depth,
       }.merge(options)
       hamlify(template, options) do |object|
         yield object

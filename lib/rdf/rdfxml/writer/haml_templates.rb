@@ -11,7 +11,7 @@ module RDF::RDFXML
         = %(<?xml version='1.0' encoding='utf-8' ?>)
         - if stylesheet
           = %(<?xml-stylesheet type="text/xsl" href="#{stylesheet}"?>)
-        %rdf:RDF{prefix_attrs.merge("xml:lang" => lang, "xml:base" => base)}<
+        %rdf:RDF{prefix_attrs.merge("xml:lang" => lang, "xml:base" => base)}
           - subjects.each do |subject|
             != yield(subject)
       ),
@@ -49,7 +49,7 @@ module RDF::RDFXML
       # If nil is returned, render as a leaf
       # Otherwise, render result
       :property_value => %q(
-      - if res = yield(object)
+      - if recurse && res = yield(object)
         - haml_tag(property) do
           = res
       - elsif object.literal? && object.datatype == RDF.XMLLiteral
@@ -72,7 +72,7 @@ module RDF::RDFXML
       :collection => %q(
         - haml_tag(property, get_qname(RDF.parseType) => "Collection") do
           - list.each do |object|
-            - if res = yield(object)
+            - if recurse && res = yield(object)
               = res
             - elsif object.node?
               - haml_tag(get_qname(RDF.Description), :"/", "rdf:nodeID" => (object.id if ref_count(object) > 1))
