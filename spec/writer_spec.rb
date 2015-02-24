@@ -18,16 +18,25 @@ describe "RDF::RDFXML::Writer" do
     context "typed resources" do
       context "resource without type" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
+          @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo & bar"]
           serialize(attributes: :untyped)
         end
 
         {
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/@dc:title" => "foo"
+          "/rdf:RDF/rdf:Description[@dc:title='foo & bar']/@rdf:about" => "http://release/",
+          "/rdf:RDF/rdf:Description/@dc:title" => "foo & bar"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
             expect(subject).to have_xpath(path, value, {}, @debug)
+          end
+        end
+        [
+          '<dc:title>foo &amp; bar</dc:title>',
+          'dc:title=\'foo &amp; bar\''
+          ].each do |value|
+          it "serializes literal value with illegal XML characters to fragment #{value}" do
+            expect(subject).to include(value)
           end
         end
       end

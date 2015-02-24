@@ -57,7 +57,7 @@ module RDF::RDFXML
           = object.value
       - elsif object.literal?
         - haml_tag(property, :"<", "xml:lang" => object.language, "rdf:datatype" => (object.datatype unless object.plain?)) do
-          = object.value
+          = object.value.to_s.encode(xml: :text)
       - elsif object.node?
         - haml_tag(property, :"/", "rdf:nodeID" => object.id)
       - else
