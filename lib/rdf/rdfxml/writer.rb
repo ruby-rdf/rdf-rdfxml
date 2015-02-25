@@ -154,7 +154,7 @@ module RDF::RDFXML
         {}
       end
 
-      predicates -= attr_props.keys
+      predicates -= attr_props.keys.map {|k| expand_curie(k).to_s}
       super(subject, predicates, options.merge(:attr_props => attr_props), &block)
     end
     # See if we can serialize as attribute.
