@@ -18,25 +18,16 @@ describe "RDF::RDFXML::Writer" do
     context "typed resources" do
       context "resource without type" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo & bar"]
+          @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
           serialize(attributes: :untyped)
         end
 
         {
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description[@dc:title='foo & bar']/@rdf:about" => "http://release/",
-          "/rdf:RDF/rdf:Description/@dc:title" => "foo & bar"
+          "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
             expect(subject).to have_xpath(path, value, {}, @debug)
-          end
-        end
-        [
-          '<dc:title>foo &amp; bar</dc:title>',
-          'dc:title=\'foo &amp; bar\''
-          ].each do |value|
-          it "serializes literal value with illegal XML characters to fragment #{value}" do
-            expect(subject).to include(value)
           end
         end
       end
@@ -119,7 +110,42 @@ describe "RDF::RDFXML::Writer" do
         end
       end
     end
-  
+
+    context "with illegal content" do
+      context "in attribute", skip: !defined?(::Nokogiri) do
+        subject do
+          @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo & bar"]
+          serialize(attributes: :untyped)
+        end
+
+        {
+          "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
+          "/rdf:RDF/rdf:Description/@dc:title" => "foo & bar",
+          "/rdf:RDF/rdf:Description/dc:title" => false
+        }.each do |path, value|
+          it "returns #{value.inspect} for xpath #{path}" do
+            expect(subject).to have_xpath(path, value, {}, @debug)
+          end
+        end
+      end
+      context "in element" do
+        subject do
+          @graph << [RDF::URI.new("http://release/"), RDF::DC.title, "foo & bar"]
+          serialize(attributes: :none)
+        end
+
+        {
+          "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
+          "/rdf:RDF/rdf:Description/@dc:title" => false,
+          "/rdf:RDF/rdf:Description/dc:title/text()" => "foo &amp; bar"
+        }.each do |path, value|
+          it "returns #{value.inspect} for xpath #{path}" do
+            expect(subject).to have_xpath(path, value, {}, @debug)
+          end
+        end
+      end
+    end
+
     context "with children" do
       before(:each) {
         @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
