@@ -19,6 +19,7 @@
     <doap:developer rdf:resource="http://greggkellogg.net/foaf#me"/>
     <doap:helper rdf:resource="http://njh.me/"/>
     <doap:documenter rdf:resource="http://greggkellogg.net/foaf#me"/>
+    <doap:implements rdf:resource="http://www.w3.org/TR/rdf-syntax-grammar/"/>
     <doap:download-page rdf:resource="http://rubygems.org/gems/rdf-rdfxml"/>
     <doap:homepage rdf:resource="http://github.com/gkellogg/rdf-rdfxml"/>
     <doap:mailing-list rdf:resource="http://lists.w3.org/Archives/Public/public-rdf-ruby/"/>

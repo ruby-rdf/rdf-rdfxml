@@ -11,6 +11,11 @@ require 'rdf/spec'
 require 'rdf/spec/matchers'
 require 'rdf/isomorphic'
 require 'open-uri/cached'
+begin
+  require 'nokogiri'
+rescue LoadError => e
+  :rexml
+end
 
 # Create and maintain a cache of downloaded URIs
 URI_CACHE = File.expand_path(File.join(File.dirname(__FILE__), "uri-cache"))
@@ -20,10 +25,6 @@ OpenURI::Cache.class_eval { @cache_path = URI_CACHE }
 ::RSpec.configure do |c|
   c.filter_run :focus => true
   c.run_all_when_everything_filtered = true
-  c.exclusion_filter = {
-    :ruby => lambda { |version| !(RUBY_VERSION.to_s =~ /^#{version.to_s}/) },
-    :no_jruby => lambda { |version| !(RUBY_PLATFORM.to_s != 'java') },
-  }
   c.include(RDF::Spec::Matchers)
 end
 

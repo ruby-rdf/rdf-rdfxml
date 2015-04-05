@@ -49,7 +49,7 @@ module RDF::RDFXML
       # If nil is returned, render as a leaf
       # Otherwise, render result
       :property_value => %q(
-      - if res = yield(object)
+      - if recurse && res = yield(object)
         - haml_tag(property) do
           = res
       - elsif object.literal? && object.datatype == RDF.XMLLiteral
@@ -57,7 +57,7 @@ module RDF::RDFXML
           = object.value
       - elsif object.literal?
         - haml_tag(property, :"<", "xml:lang" => object.language, "rdf:datatype" => (object.datatype unless object.plain?)) do
-          = object.value
+          = object.value.to_s.encode(xml: :text)
       - elsif object.node?
         - haml_tag(property, :"/", "rdf:nodeID" => object.id)
       - else
@@ -72,7 +72,7 @@ module RDF::RDFXML
       :collection => %q(
         - haml_tag(property, get_qname(RDF.parseType) => "Collection") do
           - list.each do |object|
-            - if res = yield(object)
+            - if recurse && res = yield(object)
               = res
             - elsif object.node?
               - haml_tag(get_qname(RDF.Description), :"/", "rdf:nodeID" => (object.id if ref_count(object) > 1))

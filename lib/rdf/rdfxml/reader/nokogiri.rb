@@ -232,7 +232,7 @@ module RDF::RDFXML
           options[:encoding] ||= 'utf-8'
           options[:encoding] = options[:encoding].to_s if options[:encoding]
 
-          ::Nokogiri::XML.parse(input, base_uri.to_s, options[:encoding]) do |config|
+          ::Nokogiri::XML.parse(input.respond_to?(:read) ? input.read : input.to_s, base_uri.to_s, options[:encoding]) do |config|
             config.noent
           end
         end
