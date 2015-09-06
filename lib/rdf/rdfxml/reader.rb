@@ -64,10 +64,11 @@ module RDF::RDFXML
 
       # Extract Evaluation Context from an element
       def extract_from_element(el, &cb)
-        b = el.base
-        lang = el.language
-        self.base = self.base.join(b) if b
-        self.language = lang if lang
+        self.language = el.language if el.language
+        if b = el.base
+          b = RDF::URI(b)
+          self.base = b.absolute? ? b : self.base.join(b)
+        end
         self.uri_mappings.merge!(extract_mappings(el, &cb))
       end
       
@@ -302,7 +303,7 @@ module RDF::RDFXML
           # If there is an attribute a in propertyAttr with a.URI == rdf:type
           # then u:=uri(identifier:=resolve(a.string-value))
           # and the following triple is added to the graph:
-          u = ec.base.join(attr.value)
+          u = uri(ec.base, attr.value)
           add_triple(attr, subject, RDF.type, u)
         elsif is_propertyAttr?(attr)
           # Attributes not RDF.type
@@ -530,12 +531,12 @@ module RDF::RDFXML
             # Reification
             reify(id, child, subject, predicate, literal, child_ec) if id
           else
-            if resourceAttr
-              resource = ec.base.join(resourceAttr)
+            resource = if resourceAttr
+              uri(ec.base, resourceAttr)
             elsif nodeID
-              resource = bnode(nodeID)
+              bnode(nodeID)
             else
-              resource = RDF::Node.new
+              RDF::Node.new
             end
 
             # produce triples for attributes
@@ -605,7 +606,7 @@ module RDF::RDFXML
       when about
         about = RDF::NTriples.unescape(about.value)
         add_debug(el) {"parse_subject, about: #{about.inspect}"}
-        ec.base.join(about)
+        uri(ec.base, about)
       else
         add_debug(el, "parse_subject, BNode")
         RDF::Node.new
@@ -687,8 +688,15 @@ module RDF::RDFXML
     end
     
     def uri(value, append = nil)
-      value = RDF::URI.new(value)
-      value = value.join(append) if append
+      append = RDF::URI(append)
+      value = RDF::URI(value)
+      value = if append.absolute?
+        value = append
+      elsif append
+        value = value.join(append)
+      else
+        value
+      end
       value.validate! if validate?
       value.canonicalize! if canonicalize?
       value = RDF::URI.intern(value) if intern?

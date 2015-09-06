@@ -6,13 +6,13 @@ autoload :CGI, 'cgi'
 class FOO < RDF::Vocabulary("http://foo/"); end
 
 describe "RDF::RDFXML::Writer" do
+  it_behaves_like 'an RDF::Writer' do
+    let(:writer) {RDF::RDFXML::Writer.new}
+  end
+
   before(:each) do
     @graph = RDF::Repository.new
-    @writer = RDF::RDFXML::Writer.new(StringIO.new)
-    @writer_class = RDF::RDFXML::Writer
   end
-  
-  include RDF_Writer
   
   describe "#buffer" do
     context "typed resources" do
@@ -770,7 +770,7 @@ describe "RDF::RDFXML::Writer" do
     # Serialize  @graph to a string and compare against regexps
     def serialize(options = {})
       @debug = []
-      result = @writer_class.buffer({debug: @debug, standard_prefixes: true}.merge(options)) do |writer|
+      result = RDF::RDFXML::Writer.buffer({debug: @debug, standard_prefixes: true}.merge(options)) do |writer|
         writer << @graph
       end
       require 'cgi'
