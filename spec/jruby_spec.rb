@@ -22,7 +22,7 @@ end
 describe RDF::RDFXML::Writer, skip: ("Nokogiri not loaded" unless have_nokogiri) do
   context "resource without type" do
     subject do
-      @graph = RDF::Repository.new << [RDF::URI.new("http://release/"), RDF::DC.title, "foo"]
+      @graph = RDF::Repository.new << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
       serialize(:max_depth => 1, :attributes => :untyped)
     end
 
