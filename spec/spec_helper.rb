@@ -4,18 +4,18 @@ $:.unshift File.dirname(__FILE__)
 require "bundler/setup"
 require 'rspec'
 require 'matchers'
-require 'rdf/rdfxml'
+require 'rdf/isomorphic'
 require 'rdf/ntriples'
 require 'rdf/turtle'
 require 'rdf/spec'
 require 'rdf/spec/matchers'
-require 'rdf/isomorphic'
 require 'open-uri/cached'
 begin
   require 'nokogiri'
 rescue LoadError => e
   :rexml
 end
+require 'rdf/rdfxml'
 
 # Create and maintain a cache of downloaded URIs
 URI_CACHE = File.expand_path(File.join(File.dirname(__FILE__), "uri-cache"))
