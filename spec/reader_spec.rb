@@ -1094,7 +1094,7 @@ describe "RDF::RDFXML::Reader" do
       <urn:ex:s305> <urn:ex:p> <http://abc/d:f/xyz>.
       <urn:ex:s306> <urn:ex:p> <http://abc/xyz>.
     }}
-    it "produces equivalent triples", pending: ("REXML nmespace issues" unless defined?(::Nokogiri)) do
+    it "produces equivalent triples" do
       nt_str = RDF::NTriples::Reader.new(nt).dump(:ntriples)
       xml_str = RDF::RDFXML::Reader.new(xml).dump(:ntriples)
       expect(xml_str).to eql(nt_str)
