@@ -6,8 +6,8 @@ require 'json/ld'
 # For now, override RDF::Utils::File.open_file to look for the file locally before attempting to retrieve it
 module RDF::Util
   module File
-    REMOTE_PATH = "https://dvcs.w3.org/hg/rdf/raw-file/default/"
-    LOCAL_PATH = ::File.expand_path("../w3c-rdf", __FILE__) + '/'
+    REMOTE_PATH = "http://www.w3.org/2013/RDFXMLTests/"
+    LOCAL_PATH = ::File.expand_path("../w3c-rdf/rdf-xml", __FILE__) + '/'
 
     ##
     # Override to use Patron for http and https, Kernel.open otherwise.
@@ -62,7 +62,7 @@ end
 
 module Fixtures
   module SuiteTest
-    BASE = "https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/"
+    BASE = "http://www.w3.org/2013/RDFXMLTests/"
     FRAME = JSON.parse(%q({
       "@context": {
         "xsd": "http://www.w3.org/2001/XMLSchema#",

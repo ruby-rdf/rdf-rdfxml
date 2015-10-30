@@ -99,6 +99,9 @@ def run_tc(tc, options)
 }
   end
 
+  options[:result_count][result] ||= 0
+  options[:result_count][result] += 1
+
   puts "#{"test result:" unless options[:quiet]} #{result}"
 end
 
@@ -142,9 +145,15 @@ manifest = Fixtures::SuiteTest::BASE + "manifest.ttl"
 
 earl_preamble(options) if options[:earl]
 
+result_count = {}
+
 Fixtures::SuiteTest::Manifest.open(manifest) do |m|
   m.entries.each do |tc|
     next unless ARGV.empty? || ARGV.any? {|n| tc.name.match(/#{n}/)}
-    run_tc(tc, options)
+    run_tc(tc, options.merge(result_count: result_count))
   end
+end
+
+result_count.each do |result, count|
+  puts "#{result}: #{count}"
 end

@@ -17,8 +17,8 @@ list2 = RDF::Node.new
 leaf1 = RDF::Node.new
 leaf2 = RDF::Node.new
 
-g.insert([leaf1, RDF::DC.title, 'Hi'   ])
-g.insert([leaf2, RDF::DC.title, 'There'])
+g.insert([leaf1, RDF::URI("http://purl.org/dc/terms/title"), 'Hi'   ])
+g.insert([leaf2, RDF::URI("http://purl.org/dc/terms/title"), 'There'])
 g.insert([list1,  RDF.first,     leaf1  ])
 g.insert([list1,  RDF.rest,      list2  ])
 g.insert([list2,  RDF.first,     leaf2  ])

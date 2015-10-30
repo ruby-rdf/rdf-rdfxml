@@ -3,11 +3,9 @@ require File.join(File.dirname(__FILE__), 'spec_helper')
 require 'rdf/spec/format'
 
 describe RDF::RDFXML::Format do
-  before :each do
-    @format_class = RDF::RDFXML::Format
+  it_behaves_like 'an RDF::Format' do
+    let(:format_class) {RDF::RDFXML::Format}
   end
-
-  include RDF_Format
 
   describe ".for" do
     formats = [
@@ -18,7 +16,7 @@ describe RDF::RDFXML::Format do
       {:content_type   => 'application/rdf+xml'},
     ].each do |arg|
       it "discovers with #{arg.inspect}" do
-        expect(RDF::Format.for(arg)).to eq @format_class
+        expect(RDF::Format.for(arg)).to eq described_class
       end
     end
 
@@ -26,13 +24,13 @@ describe RDF::RDFXML::Format do
       :rdfxml   => '<rdf:RDF about="foo"></rdf:RDF>',
     }.each do |sym, str|
       it "detects #{sym}" do
-        expect(@format_class.for {str}).to eq @format_class
+        expect(RDF::Format.for {str}).to eq described_class
       end
     end
   end
 
   describe "#to_sym" do
-    specify {expect(@format_class.to_sym).to eq :rdfxml}
+    specify {expect(described_class.to_sym).to eq :rdfxml}
   end
 
   describe ".detect" do
@@ -40,7 +38,7 @@ describe RDF::RDFXML::Format do
       :rdfxml => '<rdf:RDF about="foo"></rdf:RDF>',
     }.each do |sym, str|
       it "detects #{sym}" do
-        expect(@format_class.detect(str)).to be_truthy
+        expect(described_class.detect(str)).to be_truthy
       end
     end
 
@@ -59,7 +57,7 @@ describe RDF::RDFXML::Format do
       :STRING_LITERAL_LONG2 => %(<a> <b> """\nliteral\n""" .),
     }.each do |sym, str|
       it "does not detect #{sym}" do
-        expect(@format_class.detect(str)).to be_falsey
+        expect(described_class.detect(str)).to be_falsey
       end
     end
 
