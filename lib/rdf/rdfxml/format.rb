@@ -43,22 +43,9 @@ module RDF::RDFXML
     def self.name
       "RDF/XML"
     end
-  end
 
-  # Aliases for RDF::Format
-  #
-  # This allows the following:
-  #
-  # @example Obtaining an HTML format class
-  #   RDF::Format.for(:rdf)         # RDF::RDFXML::Lite
-  #   RDF::Format.for(:rdf).reader  # RDF::RDFXML::Reader
-  #   RDF::Format.for(:rdf).writer  # RDF::RDFXML::Writer
-  class RDFFormat < RDF::Format
-    content_type     'application/rdf+xml'
-    content_encoding 'utf-8'
-    reader { RDF::RDFXML::Reader }
-    writer { RDF::RDFXML::Writer }
-    
-    def self.to_sym; :rdf; end
+    def self.symbols
+      [:rdfxml, :rdf]
+    end
   end
 end

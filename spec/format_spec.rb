@@ -10,6 +10,7 @@ describe RDF::RDFXML::Format do
   describe ".for" do
     formats = [
       :rdfxml,
+      :rdf,
       'etc/doap.rdf',
       {:file_name      => 'etc/doap.rdf'},
       {:file_extension => 'rdf'},
@@ -58,17 +59,6 @@ describe RDF::RDFXML::Format do
     }.each do |sym, str|
       it "does not detect #{sym}" do
         expect(described_class.detect(str)).to be_falsey
-      end
-    end
-
-    describe RDF::RDFXML::RDFFormat do
-      it "discovers with :rdf" do
-        expect(RDF::Format.for(:rdf)).to eq RDF::RDFXML::RDFFormat
-      end
-
-      it "should discover :rdf" do
-        expect(RDF::Format.for(:rdf).reader).to eq RDF::RDFXML::Reader
-        expect(RDF::Format.for(:rdf).writer).to eq RDF::RDFXML::Writer
       end
     end
   end
