@@ -38,6 +38,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rdf-isomorphic',  '~> 1.1'
   gem.add_development_dependency 'rdf-turtle',      '~> 1.1'
   gem.add_development_dependency 'rdf-spec',        '~> 1.1'
+  gem.add_development_dependency 'rdf-vocab',       '~> 0.8'
   gem.add_development_dependency 'yard' ,           '~> 0.8'
 
   # Rubinius has it's own dependencies
