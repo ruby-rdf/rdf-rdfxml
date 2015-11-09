@@ -1,6 +1,7 @@
 $:.unshift "."
 require File.join(File.dirname(__FILE__), 'spec_helper')
 require 'rdf/spec/writer'
+require 'rdf/vocab'
 autoload :CGI, 'cgi'
 
 class FOO < RDF::Vocabulary("http://foo/"); end
