@@ -23,21 +23,21 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 1.9.3'
   gem.requirements          = []
 
-  gem.add_runtime_dependency     'rdf',             '~> 1.1', '>= 1.1.6'
-  gem.add_runtime_dependency     'rdf-rdfa',        '~> 1.1', '>= 1.1.4.1'
-  gem.add_runtime_dependency     'rdf-xsd',         '~> 1.1'
+  gem.add_runtime_dependency     'rdf',             '~> 1.99'
+  gem.add_runtime_dependency     'rdf-rdfa',        '~> 1.99'
+  gem.add_runtime_dependency     'rdf-xsd',         '~> 1.99'
   gem.add_runtime_dependency     'htmlentities',    '~> 4.3'
 
   #gem.add_development_dependency 'nokogiri' ,       '>= 1.6.1' # conditionally done in Gemfile
   #gem.add_development_dependency 'equivalent-xml' , '~> 0.2' # conditionally done in Gemfile
   gem.add_development_dependency 'open-uri-cached', '~> 0.0', '>= 0.0.5'
   gem.add_development_dependency 'spira',           '= 0.0.12'
-  gem.add_development_dependency 'json-ld',         '~> 1.1'
+  gem.add_development_dependency 'json-ld',         '~> 1.99'
   gem.add_development_dependency 'rspec',           '~> 3.2'
   gem.add_development_dependency 'rspec-its',       '~> 1.0'
-  gem.add_development_dependency 'rdf-isomorphic',  '~> 1.1'
-  gem.add_development_dependency 'rdf-turtle',      '~> 1.1'
-  gem.add_development_dependency 'rdf-spec',        '~> 1.1'
+  gem.add_development_dependency 'rdf-isomorphic',  '~> 1.99'
+  gem.add_development_dependency 'rdf-turtle',      '~> 1.99'
+  gem.add_development_dependency 'rdf-spec',        '~> 1.99'
   gem.add_development_dependency 'rdf-vocab',       '~> 0.8'
   gem.add_development_dependency 'yard' ,           '~> 0.8'
 
