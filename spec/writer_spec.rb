@@ -7,6 +7,7 @@ autoload :CGI, 'cgi'
 class FOO < RDF::Vocabulary("http://foo/"); end
 
 describe "RDF::RDFXML::Writer" do
+  let(:logger) {RDF::Spec.logger}
   it_behaves_like 'an RDF::Writer' do
     let(:writer) {RDF::RDFXML::Writer.new}
   end
@@ -28,7 +29,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -46,7 +47,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/rdf:type" => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -65,7 +66,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Release/rdf:type/@rdf:resource" => FOO.XtraRelease.to_s
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -85,7 +86,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.Release}"]) => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -106,7 +107,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.XXtraRelease}"]) => %r(#{FOO.XXtraRelease})
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -125,7 +126,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title" => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -141,7 +142,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title/text()" => "foo &amp; bar"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -158,7 +159,7 @@ describe "RDF::RDFXML::Writer" do
       subject {serialize(attributes: :untyped)}
 
       it "reproduces graph" do
-        expect(parse(subject)).to be_equivalent_graph(@graph, debug: @debug.unshift(subject))
+        expect(parse(subject)).to be_equivalent_graph(@graph, logger: logger)
       end
 
       {
@@ -167,7 +168,7 @@ describe "RDF::RDFXML::Writer" do
         "/rdf:RDF/foo:Release/foo:releaseContributor/foo:Contributor/@rdf:about" => "http://release/contributor"
       }.each do |path, value|
         it "returns #{value.inspect} for xpath #{path}" do
-          expect(subject).to have_xpath(path, value, {}, @debug)
+          expect(subject).to have_xpath(path, value, {}, logger)
         end
       end
 
@@ -175,7 +176,7 @@ describe "RDF::RDFXML::Writer" do
         subject {serialize(attributes: :untyped, max_depth: 0)}
 
         it "reproduces graph" do
-          expect(parse(subject)).to be_equivalent_graph(@graph, debug: @debug.unshift(subject))
+          expect(parse(subject)).to be_equivalent_graph(@graph, logger: logger)
         end
 
         {
@@ -186,7 +187,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/foo:Contributor/@rdf:about" => "http://release/contributor",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -207,7 +208,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /second/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -226,7 +227,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -245,7 +246,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Bag/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -264,7 +265,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Alt/rdf:_2[@rdf:resource="http://example/second"]) => /secon/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -313,12 +314,12 @@ describe "RDF::RDFXML::Writer" do
         }.each do |ttl, match|
           context ttl do
             subject do
-              @graph = parse(ttl, base_uri: "http://foo/", :reader => RDF::Turtle::Reader)
+              @graph = parse(ttl, base_uri: "http://foo/", format: :ttl)
               serialize({})
             end
             match.each do |path, value|
               it "returns #{value.inspect} for xpath #{path}" do
-                expect(subject).to have_xpath(path, value, {}, @debug)
+                expect(subject).to have_xpath(path, value, {}, logger)
               end
             end
           end
@@ -339,7 +340,7 @@ describe "RDF::RDFXML::Writer" do
           %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /second/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -357,7 +358,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title/text()" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -374,7 +375,7 @@ describe "RDF::RDFXML::Writer" do
             "/rdf:RDF/rdf:Description/@dc:title" => "foo"
           }.each do |path, value|
             it "returns #{value.inspect} for xpath #{path}" do
-              expect(subject).to have_xpath(path, value, {}, @debug)
+              expect(subject).to have_xpath(path, value, {}, logger)
             end
           end
         end
@@ -382,8 +383,8 @@ describe "RDF::RDFXML::Writer" do
   
       context "untyped without lang if attribute lang set" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", :language => "de")]
-          serialize(attributes: :untyped, :lang => "de")
+          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "de")]
+          serialize(attributes: :untyped, lang: "de")
         end
 
         {
@@ -391,7 +392,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -399,8 +400,8 @@ describe "RDF::RDFXML::Writer" do
       context "with language" do
         context "property for title" do
           subject do
-            @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", :language => "en-us")]
-            serialize(attributes: :untyped, :lang => "de")
+            @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "en-us")]
+            serialize(attributes: :untyped, lang: "de")
           end
 
           {
@@ -411,7 +412,7 @@ describe "RDF::RDFXML::Writer" do
             "/rdf:RDF/rdf:Description/dc:title/text()" => "foo",
           }.each do |path, value|
             it "returns #{value.inspect} for xpath #{path}" do
-              expect(subject).to have_xpath(path, value, {}, @debug)
+              expect(subject).to have_xpath(path, value, {}, logger)
             end
           end
         end
@@ -419,8 +420,8 @@ describe "RDF::RDFXML::Writer" do
   
       context "attribute if lang is default" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", :language => "de")]
-          serialize(attributes: :untyped, :lang => "de")
+          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "de")]
+          serialize(attributes: :untyped, lang: "de")
         end
 
         {
@@ -429,14 +430,14 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
   
       context "untyped as property if lang set and no default" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", :language => "de")]
+          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "de")]
           serialize(attributes: :untyped)
         end
 
@@ -448,15 +449,15 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title/text()" => "foo",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
   
       context "untyped as property if lang set and not default" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", :language => "de")]
-          serialize(attributes: :untyped, :lang => "en-us")
+          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "de")]
+          serialize(attributes: :untyped, lang: "en-us")
         end
 
         {
@@ -474,9 +475,9 @@ describe "RDF::RDFXML::Writer" do
   
       context "multiple untyped attributes values through properties" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", :language => "de")]
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", :language => "en-us")]
-          serialize(attributes: :untyped, :lang => "en-us")
+          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "de")]
+          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "en-us")]
+          serialize(attributes: :untyped, lang: "en-us")
         end
 
         {
@@ -487,14 +488,14 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title/text()" => "foo",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
   
       context "typed node as element if :untyped" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", :datatype => RDF::XSD.string)]
+          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", datatype: RDF::XSD.string)]
           serialize(attributes: :untyped)
         end
 
@@ -503,14 +504,14 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => %(foo)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
   
       context "typed node as attribute if :typed" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", :datatype => RDF::XSD.string)]
+          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", datatype: RDF::XSD.string)]
           serialize(attributes: :typed)
         end
 
@@ -519,15 +520,15 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@dc:title" => "foo",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
   
       context "multiple typed values through properties" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", :datatype => RDF::XSD.string)]
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("bar", :datatype => RDF::XSD.string)]
+          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", datatype: RDF::XSD.string)]
+          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("bar", datatype: RDF::XSD.string)]
           serialize(attributes: :untyped)
         end
 
@@ -537,7 +538,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/dc:title[contains(., 'bar')]" => %(<dc:title>bar</dc:title>)
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -552,15 +553,15 @@ describe "RDF::RDFXML::Writer" do
 
       context "default namespace" do
         subject do
-          serialize(:default_namespace => FOO.to_s,
-                    :prefixes => {:foo => FOO.to_s})
+          serialize(default_namespace: FOO.to_s,
+                    prefixes: {foo: FOO.to_s})
         end
 
         {
           "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => FOO.obj.to_s,
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {"foo" => FOO.to_s}, @debug)
+            expect(subject).to have_xpath(path, value, {"foo" => FOO.to_s}, logger)
           end
         end
 
@@ -570,14 +571,14 @@ describe "RDF::RDFXML::Writer" do
 
       context "nil namespace" do
         subject do
-          serialize(:prefixes => {nil => FOO.to_s})
+          serialize(prefixes: {nil => FOO.to_s})
         end
 
         {
           "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => FOO.obj.to_s,
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {"foo" => FOO.to_s}, @debug)
+            expect(subject).to have_xpath(path, value, {"foo" => FOO.to_s}, logger)
           end
         end
 
@@ -598,7 +599,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/foo:ref/@rdf:resource" => "b"
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -616,7 +617,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/@rdf:nodeID" => false
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -635,7 +636,7 @@ describe "RDF::RDFXML::Writer" do
           "/rdf:RDF/rdf:Description/owl:sameAs/@rdf:nodeID" => /a$/
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, @debug)
+            expect(subject).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -645,12 +646,12 @@ describe "RDF::RDFXML::Writer" do
           @graph = parse(%(
             @prefix : <http://example/> .
             :foo :list (:bar (:baz)).
-          ))
+          ), format: :ttl)
           serialize
         end
 
         it "produces expected graph" do
-          expect(parse(subject)).to be_equivalent_graph(@graph, debug: @debug.unshift(subject))
+          expect(parse(subject)).to be_equivalent_graph(@graph, logger: logger)
         end
       end
     
@@ -669,17 +670,17 @@ describe "RDF::RDFXML::Writer" do
             )
           ] .
           [ a owl:Class; owl:intersectionOf (<a> <b>)] .
-        ), :reader => RDF::Turtle::Reader)
+        ), format: :ttl)
         doc = serialize
-        @debug.unshift(doc)
-        expect(parse(doc)).to be_equivalent_graph(@graph, debug: @debug)
+        logger.info(serialize)
+        expect(parse(doc)).to be_equivalent_graph(@graph, logger: logger)
       end
     end
 
     describe "with a stylesheet" do
       subject do
         @graph << [RDF::URI.new("http://release/a"), FOO.ref, RDF::URI.new("http://release/b")]
-        serialize(:stylesheet => "/path/to/rdfxml.xsl")
+        serialize(stylesheet: "/path/to/rdfxml.xsl")
       end
 
       it "should have a stylesheet as a processing instruction in the second line of the XML" do
@@ -691,11 +692,11 @@ describe "RDF::RDFXML::Writer" do
     describe "illegal RDF values" do
       it "raises error with literal as subject" do
         @graph << [RDF::Literal.new("literal"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo")]
-        expect { serialize(:validate => true) }.to raise_error(RDF::WriterError)
+        expect { serialize(validate: true) }.to raise_error(RDF::WriterError)
       end
       it "raises error with node as predicate" do
         @graph << [RDF::URI("http://example.com"), RDF::Node.new, RDF::Literal.new("foo")]
-        expect { serialize(:validate => true) }.to raise_error(RDF::WriterError)
+        expect { serialize(validate: true) }.to raise_error(RDF::WriterError)
       end
     end
 
@@ -722,7 +723,7 @@ describe "RDF::RDFXML::Writer" do
           @graph = RDF::Graph.new << RDF::Turtle::Reader.new(input)
           result = serialize(prefixes: prefixes, standard_prefixes: false)
           paths.each do |path, value|
-            expect(result).to have_xpath(path, value, {}, @debug)
+            expect(result).to have_xpath(path, value, {}, logger)
           end
         end
       end
@@ -746,11 +747,7 @@ describe "RDF::RDFXML::Writer" do
                 @graph = parse(t.expected, base_uri: t.base, format: :ntriples)
 
                 serialized = serialize(format: :rdfxml, base_uri: t.base)
-                # New RBX failure :(
-                debug = @debug.unshift(serialized).map do |s|
-                  s.force_encoding(Encoding::UTF_8)
-                end
-                expect(parse(serialized, base_uri: t.base)).to be_equivalent_graph(@graph, debug: debug)
+                expect(parse(serialized, base_uri: t.base)).to be_equivalent_graph(@graph, logger: logger)
               end
             end
           end
@@ -759,7 +756,7 @@ describe "RDF::RDFXML::Writer" do
     end unless ENV['CI'] # Not for continuous integration
 
     def parse(input, options = {})
-      reader_class = options.fetch(:reader, RDF::Reader.for(detect_format(input)))
+      reader_class = RDF::Reader.for(options.fetch(:format, :rdfxml))
     
       graph = RDF::Graph.new
       reader_class.new(input, options).each do |statement|
@@ -770,8 +767,7 @@ describe "RDF::RDFXML::Writer" do
 
     # Serialize  @graph to a string and compare against regexps
     def serialize(options = {})
-      @debug = []
-      result = RDF::RDFXML::Writer.buffer({debug: @debug, standard_prefixes: true}.merge(options)) do |writer|
+      result = RDF::RDFXML::Writer.buffer({logger: logger, standard_prefixes: true}.merge(options)) do |writer|
         writer << @graph
       end
       require 'cgi'

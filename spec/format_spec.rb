@@ -12,9 +12,9 @@ describe RDF::RDFXML::Format do
       :rdfxml,
       :rdf,
       'etc/doap.rdf',
-      {:file_name      => 'etc/doap.rdf'},
-      {:file_extension => 'rdf'},
-      {:content_type   => 'application/rdf+xml'},
+      {file_name: 'etc/doap.rdf'},
+      {file_extension: 'rdf'},
+      {content_type: 'application/rdf+xml'},
     ].each do |arg|
       it "discovers with #{arg.inspect}" do
         expect(RDF::Format.for(arg)).to eq described_class
@@ -22,7 +22,7 @@ describe RDF::RDFXML::Format do
     end
 
     {
-      :rdfxml   => '<rdf:RDF about="foo"></rdf:RDF>',
+      rdfxml: '<rdf:RDF about="foo"></rdf:RDF>',
     }.each do |sym, str|
       it "detects #{sym}" do
         expect(RDF::Format.for {str}).to eq described_class
@@ -36,7 +36,7 @@ describe RDF::RDFXML::Format do
 
   describe ".detect" do
     {
-      :rdfxml => '<rdf:RDF about="foo"></rdf:RDF>',
+      rdfxml: '<rdf:RDF about="foo"></rdf:RDF>',
     }.each do |sym, str|
       it "detects #{sym}" do
         expect(described_class.detect(str)).to be_truthy
@@ -44,18 +44,18 @@ describe RDF::RDFXML::Format do
     end
 
     {
-      :n3                   => "@prefix foo: <bar> .\nfoo:bar = {<a> <b> <c>} .",
-      :nquads               => "<a> <b> <c> <d> . ",
-      :jsonld               => '{"@context" => "foo"}',
-      :ntriples             => "<a> <b> <c> .",
-      :microdata            => '<div itemref="bar"></div>',
-      :multi_line           => '<a>\n  <b>\n  "literal"\n .',
-      :rdfa                 => '<div about="foo"></div>',
-      :turtle               => "@prefix foo: <bar> .\n foo:a foo:b <c> .",
-      :STRING_LITERAL1      => %(<a> <b> 'literal' .),
-      :STRING_LITERAL2      => %(<a> <b> "literal" .),
-      :STRING_LITERAL_LONG1 => %(<a> <b> '''\nliteral\n''' .),
-      :STRING_LITERAL_LONG2 => %(<a> <b> """\nliteral\n""" .),
+      n3: "@prefix foo: <bar> .\nfoo:bar = {<a> <b> <c>} .",
+      nquads: "<a> <b> <c> <d> . ",
+      jsonld: '{"@context" => "foo"}',
+      ntriples: "<a> <b> <c> .",
+      microdata: '<div itemref="bar"></div>',
+      multi_line: '<a>\n  <b>\n  "literal"\n .',
+      rdfa: '<div about="foo"></div>',
+      turtle: "@prefix foo: <bar> .\n foo:a foo:b <c> .",
+      STRING_LITERAL1: %(<a> <b> 'literal' .),
+      STRING_LITERAL2: %(<a> <b> "literal" .),
+      STRING_LITERAL_LONG1: %(<a> <b> '''\nliteral\n''' .),
+      STRING_LITERAL_LONG2: %(<a> <b> """\nliteral\n""" .),
     }.each do |sym, str|
       it "does not detect #{sym}" do
         expect(described_class.detect(str)).to be_falsey

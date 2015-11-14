@@ -6,6 +6,7 @@ require 'rdf/spec/reader'
 # w3c test suite: http://www.w3.org/TR/rdf-testcases/
 
 describe "RDF::RDFXML::Reader" do
+  let(:logger) {RDF::Spec.logger}
   let!(:doap) {File.expand_path("../../etc/doap.rdf", __FILE__)}
   let!(:doap_nt) {File.expand_path("../../etc/doap.nt", __FILE__)}
 
@@ -20,9 +21,9 @@ describe "RDF::RDFXML::Reader" do
     {
       "rdfxml" => RDF::Reader.for(:rdfxml),
       "etc/foaf.rdf" => RDF::Reader.for("etc/foaf.rdf"),
-      "foaf.rdf" => RDF::Reader.for(:file_name      => "foaf.rdf"),
-      ".rdf" => RDF::Reader.for(:file_extension => "rdf"),
-      "application/rdf+xml" => RDF::Reader.for(:content_type   => "application/rdf+xml"),
+      "foaf.rdf" => RDF::Reader.for(file_name: "foaf.rdf"),
+      ".rdf" => RDF::Reader.for(file_extension: "rdf"),
+      "application/rdf+xml" => RDF::Reader.for(content_type: "application/rdf+xml"),
     }.each_pair do |label, format|
       it "should discover '#{label}'" do
         expect(format).to eq RDF::RDFXML::Reader
@@ -79,7 +80,7 @@ describe "RDF::RDFXML::Reader" do
   
   [:rexml, :nokogiri].each do |library|
     next if library == :nokogiri && !defined?(::Nokogiri)
-    context library.to_s, :library => library do
+    context library.to_s, library: library do
       before(:all) {@library = library}
       
       context "simple parsing" do
@@ -90,8 +91,8 @@ describe "RDF::RDFXML::Reader" do
               @prefix xml: <http://www.w3.org/XML/1998/namespace> .
               [ a xml:NotRDF] .
             )
-          graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", :trace => @debug)
+          graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+          expect(graph).to be_equivalent_graph(expected, about: "http://example.com/", logger: logger)
         end
   
         it "should parse on XML documents with multiple RDF nodes" do
@@ -109,7 +110,7 @@ describe "RDF::RDFXML::Reader" do
                 </rdf:Description>
               </rdf:RDF>
             </GenericXML>)
-          graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
+          graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
           objects = graph.statements.map {|s| s.object.value}.sort
           expect(objects).to include("Bar", "Foo")
         end
@@ -154,8 +155,8 @@ describe "RDF::RDFXML::Reader" do
                    <http://www.example.org/name> "Rob"@en];
                  <http://www.example.org/name> "Tom"@en] .
           )
-          graph = parse(sampledoc, :base_uri => "http://example.com/", :validate => true)
-          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", debug: @debug)
+          graph = parse(sampledoc, base_uri: "http://example.com/", validate: true)
+          expect(graph).to be_equivalent_graph(expected, about: "http://example.com/", logger: logger)
         end
 
         it "should be able to handle Bags/Alts etc." do
@@ -166,7 +167,7 @@ describe "RDF::RDFXML::Reader" do
                 <rdf:li rdf:resource="http://twitter.com/tommorris" />
               </rdf:Bag>
             </rdf:RDF>)
-          graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
+          graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
           expect(graph.predicates.map(&:to_s)).to include("http://www.w3.org/1999/02/22-rdf-syntax-ns#_1", "http://www.w3.org/1999/02/22-rdf-syntax-ns#_2")
         end
       end
@@ -197,8 +198,8 @@ describe "RDF::RDFXML::Reader" do
         expected = %(
         	<http://example.net/> <http://purl.org/dc/terms/title> "Test 0304"@fr .
         )
-        graph = parse(svg, :base_uri => "http://example.com/", :validate => true)
-        expect(graph).to be_equivalent_graph(expected, debug: @debug)
+        graph = parse(svg, base_uri: "http://example.com/", validate: true)
+        expect(graph).to be_equivalent_graph(expected, logger: logger)
       end
 
       context :exceptions do
@@ -219,8 +220,9 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
   
           expect do
-            graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.to raise_error(RDF::ReaderError, /Obsolete attribute .*aboutEach/)
+            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+          end.to raise_error(RDF::ReaderError)
+          expect(logger.to_s).to match(/Obsolete attribute .*aboutEach/)
         end
 
         it "should raise an error if rdf:aboutEachPrefix is used, as per the negative parser test rdfms-abouteach-error002 (rdf:aboutEachPrefix attribute)" do
@@ -240,8 +242,9 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
   
           expect do
-            graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.to raise_error(RDF::ReaderError, /Obsolete attribute .*aboutEachPrefix/)
+            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+          end.to raise_error(RDF::ReaderError)
+          expect(logger.to_s).to match(/Obsolete attribute .*aboutEachPrefix/)
         end
 
         it "should fail if given a non-ID as an ID (as per rdfcore-rdfms-rdf-id-error001)" do
@@ -251,8 +254,9 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
   
           expect do
-            graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.to raise_error(RDF::ReaderError, /ID addtribute '.*' must be a NCName/)
+            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+          end.to raise_error(RDF::ReaderError)
+          expect(logger.to_s).to match(/ID addtribute '.*' must be a NCName/)
         end
 
         it "should make sure that the value of rdf:ID attributes match the XML Name production (child-element version)" do
@@ -265,8 +269,9 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
   
           expect do
-            graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.to raise_error(RDF::ReaderError, /ID addtribute '.*' must be a NCName/)
+            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+          end.to raise_error(RDF::ReaderError)
+          expect(logger.to_s).to match(/ID addtribute '.*' must be a NCName/)
         end
 
         it "should make sure that the value of rdf:ID attributes match the XML Name production (data attribute version)" do
@@ -277,8 +282,9 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
   
           expect do
-            graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.to raise_error(RDF::ReaderError, "ID addtribute 'a/b' must be a NCName")
+            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+          end.to raise_error(RDF::ReaderError)
+          expect(logger.to_s).to include("ID addtribute 'a/b' must be a NCName")
         end
   
         it "should detect bad bagIDs" do
@@ -288,8 +294,9 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
     
           expect do
-            graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          end.to raise_error(RDF::ReaderError, /Obsolete attribute .*bagID/)
+            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+          end.to raise_error(RDF::ReaderError)
+          expect(logger.to_s).to match(/Obsolete attribute .*bagID/)
         end
       end
   
@@ -314,8 +321,8 @@ describe "RDF::RDFXML::Reader" do
               rdf:object "blah" .
           )
 
-          graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", debug: @debug)
+          graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+          expect(graph).to be_equivalent_graph(expected, about: "http://example.com/", logger: logger)
         end
       end
   
@@ -341,8 +348,8 @@ describe "RDF::RDFXML::Reader" do
               rdf:object "blah" .
           )
 
-          graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", debug: @debug)
+          graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+          expect(graph).to be_equivalent_graph(expected, about: "http://example.com/", logger: logger)
         end
 
         it "decodes element content" do
@@ -360,8 +367,8 @@ describe "RDF::RDFXML::Reader" do
             <http://example.org/> ex:prop ">" .
           )
 
-          graph = parse(sampledoc, :base_uri => "http://example.com", :validate => true)
-          expect(graph).to be_equivalent_graph(expected, :about => "http://example.com/", debug: @debug)
+          graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+          expect(graph).to be_equivalent_graph(expected, about: "http://example.com/", logger: logger)
         end
       end
     end
@@ -1102,12 +1109,7 @@ describe "RDF::RDFXML::Reader" do
   end
 
   def parse(input, options)
-    @debug = []
-    graph = RDF::Repository.new
-    RDF::RDFXML::Reader.new(input, options.merge(debug: @debug, :library => @library)).each do |statement|
-      graph << statement
-    end
-    graph
+    RDF::Repository.new << RDF::RDFXML::Reader.new(input, options.merge(logger: logger, library: @library))
   end
 end
 

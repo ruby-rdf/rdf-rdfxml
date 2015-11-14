@@ -34,7 +34,7 @@ def run(input, options)
     g = RDF::Repository.new << r
     num = g.count
     STDERR.puts "graph: #{g.dump(:ttl)}" if options[:verbose]
-    options[:output].puts g.dump(options[:output_format], options.merge(:prefixes => r.prefixes))
+    options[:output].puts g.dump(options[:output_format], options.merge(prefixes: r.prefixes))
   end
   STDERR.puts
   secs = Time.new - start
@@ -47,14 +47,14 @@ end
 
 
 options = {
-  :host_language => nil,
-  :input_format  => :rdfxml,
-  :output        => STDOUT,
-  :output_format => :ntriples,
-  :strict        => true,
-  :validate      => false,
-  :verbose       => false,
-  :version       => nil,
+  host_language: nil,
+  input_format: :rdfxml,
+  output: STDOUT,
+  output_format: :ntriples,
+  strict: true,
+  validate: false,
+  verbose: false,
+  version: nil,
 }
 input = nil
 

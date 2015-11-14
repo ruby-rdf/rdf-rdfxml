@@ -3,11 +3,11 @@ module RDF::RDFXML
   class Writer
     # The default set of HAML templates used for RDFa code generation
    BASE_HAML = {
-     :identifier => "base", 
+     identifier: "base", 
       # Document
       # Locals: lang, title, prefix, base, subjects
       # Yield: subjects.each
-      :doc => %q(
+      doc: %q(
         = %(<?xml version='1.0' encoding='utf-8' ?>)
         - if stylesheet
           = %(<?xml-stylesheet type="text/xsl" href="#{stylesheet}"?>)
@@ -25,7 +25,7 @@ module RDF::RDFXML
       #
       # Locals: subject, typeof, predicates, rel, element, inlist, attr_props
       # Yield: predicates.each
-      :subject => %q(
+      subject: %q(
         - first_type, *types = typeof.to_s.split(' ')
         - (types.unshift(first_type); first_type = nil) if first_type && (first_type.include?('/') || first_type.start_with?('_:'))
         - first_type ||= get_qname(RDF.Description)
@@ -48,7 +48,7 @@ module RDF::RDFXML
       # Yields: object
       # If nil is returned, render as a leaf
       # Otherwise, render result
-      :property_value => %q(
+      property_value: %q(
       - if recurse && res = yield(object)
         - haml_tag(property) do
           = res
@@ -69,7 +69,7 @@ module RDF::RDFXML
       # Yields: object
       # If nil is returned, render as a leaf
       # Otherwise, render result
-      :collection => %q(
+      collection: %q(
         - haml_tag(property, get_qname(RDF.parseType) => "Collection") do
           - list.each do |object|
             - if recurse && res = yield(object)
@@ -80,7 +80,7 @@ module RDF::RDFXML
               - haml_tag(get_qname(RDF.Description), :"/", "rdf:about" => relativize(object))
       ),
     }
-    HAML_TEMPLATES = {:base => BASE_HAML}
+    HAML_TEMPLATES = {base: BASE_HAML}
     DEFAULT_HAML = BASE_HAML
   end
 end

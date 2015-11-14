@@ -14,6 +14,7 @@ module RDF::RDFXML
   # @author [Gregg Kellogg](http://kellogg-assoc.com/)
   class Reader < RDF::Reader
     format Format
+    include RDF::Util::Logger
 
     CORE_SYNTAX_TERMS = %w(RDF ID about parseType resource nodeID datatype).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
     OLD_TERMS = %w(aboutEach aboutEachPrefix bagID).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
@@ -139,16 +140,14 @@ module RDF::RDFXML
     # @raise [Error] Raises RDF::ReaderError if _validate_
     def initialize(input = $stdin, options = {}, &block)
       super do
-        @debug = options[:debug]
-            
         @library = case options[:library]
-          when nil
-            # Use Nokogiri when available, and REXML otherwise:
-            defined?(::Nokogiri) ? :nokogiri : :rexml
-          when :nokogiri, :rexml
-            options[:library]
-          else
-            raise ArgumentError.new("expected :rexml or :nokogiri, but got #{options[:library].inspect}")
+        when nil
+          # Use Nokogiri when available, and REXML otherwise:
+          defined?(::Nokogiri) ? :nokogiri : :rexml
+        when :nokogiri, :rexml
+          options[:library]
+        else
+          log_fatal("expected :rexml or :nokogiri, but got #{options[:library].inspect}", exception: ArgumentError)
         end
 
         require "rdf/rdfxml/reader/#{@library}"
@@ -158,10 +157,10 @@ module RDF::RDFXML
         end
         self.extend(@implementation)
 
-        initialize_xml(input, options) rescue raise RDF::ReaderError.new($!.message)
+        initialize_xml(input, options) rescue log_fatal($!.message)
 
-        raise RDF::ReaderError, "Empty document" if root.nil? && validate?
-        raise RDF::ReaderError, "Synax errors:\n#{doc_errors}" if !doc_errors.empty? && validate?
+        log_fatal("Empty document", exception: RDF::ReaderError) if root.nil? && validate?
+        log_error("Synax errors") {doc_errors} if !doc_errors.empty?
 
         block.call(self) if block_given?
       end
@@ -184,7 +183,8 @@ module RDF::RDFXML
         # Block called from add_statement
         @callback = block
 
-        raise "root must be a proxy not a #{root.class}" unless root.is_a?(@implementation::NodeProxy)
+        
+        log_fatal "root must be a proxy not a #{root.class}" unless root.is_a?(@implementation::NodeProxy)
 
         add_debug(root, "base_uri: #{base_uri.inspect}")
       
@@ -199,7 +199,7 @@ module RDF::RDFXML
           nodeElement(root, ec)
         else
           rdf_nodes.each do |node|
-            raise "node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
+            log_fatal "node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
             # XXX Skip this element if it's contained within another rdf:RDF element
 
             # Extract base, lang and namespaces from parents to create proper evaluation context
@@ -209,13 +209,17 @@ module RDF::RDFXML
             end
             node.children.each {|el|
               next unless el.element?
-              raise "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
+              log_fatal "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
               new_ec = ec.clone(el) do |prefix, value|
                 prefix(prefix, value)
               end
               nodeElement(el, new_ec)
             }
           end
+        end
+
+        if validate? && log_statistics[:error]
+          raise RDF::ReaderError, "Errors found during processing"
         end
       end
       enum_for(:each_statement)
@@ -251,16 +255,22 @@ module RDF::RDFXML
       "<#{base_uri}>#{node.respond_to?(:display_path) ? node.display_path : node}"
     end
     
-    # Add debug event to debug array, if specified
+    # Log a debug message
     #
     # @param [Nokogiri::XML::Node, #to_s] node XML Node or string for showing context
     # @param [String] message
     # @yieldreturn [String] appended to message, to allow for lazy-evaulation of message
-    def add_debug(node, message = "")
-      return unless ::RDF::RDFXML.debug? || @debug
-      message = message + yield if block_given?
-      puts "#{node_path(node)}: #{message}" if ::RDF::RDFXML::debug?
-      @debug << "#{node_path(node)}: #{message}".force_encoding("utf-8") if @debug.is_a?(Array)
+    def add_debug(node, message = "", &block)
+      log_debug(node_path(node), message, &block)
+    end
+
+    # Log an error message
+    #
+    # @param [Nokogiri::XML::Node, #to_s] node XML Node or string for showing context
+    # @param [String] message
+    # @yieldreturn [String] appended to message, to allow for lazy-evaulation of message
+    def add_error(node, message = "", &block)
+      log_error(node_path(node), message, &block)
     end
 
     # add a statement, object can be literal or URI or bnode
@@ -284,7 +294,7 @@ module RDF::RDFXML
     # @return [RDF::URI] subject The subject found for the node
     # @raise [RDF::ReaderError] Raises Exception if validating
     def nodeElement(el, ec)
-      raise "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
+      log_fatal "el must be a proxy not a #{el.class}" unless el.is_a?(@implementation::NodeProxy)
       # subject
       subject = ec.subject || parse_subject(el, ec)
       
@@ -308,7 +318,7 @@ module RDF::RDFXML
         elsif is_propertyAttr?(attr)
           # Attributes not RDF.type
           predicate = attr.uri
-          lit = RDF::Literal.new(attr.value, :language => ec.language, :validate => validate?, :canonicalize => canonicalize?)
+          lit = RDF::Literal.new(attr.value, language: ec.language, validate: validate?, canonicalize: canonicalize?)
           add_triple(attr, subject, predicate, lit)
         end
       end
@@ -316,7 +326,7 @@ module RDF::RDFXML
       # Handle the propertyEltList children events in document order
       li_counter = 0 # this will increase for each li we iterate through
       el.children.each do |child|
-        raise "child must be a proxy not a #{child.class}" unless child.is_a?(@implementation::NodeProxy)
+        log_fatal "child must be a proxy not a #{child.class}" unless child.is_a?(@implementation::NodeProxy)
         next unless child.element?
         child_ec = ec.clone(child) do |prefix, value|
           prefix(prefix, value)
@@ -326,17 +336,17 @@ module RDF::RDFXML
         propertyElementURI_check(child)
         
         # Determine the content type of this property element
-        raise "child must be a proxy not a #{child.class}" unless child.is_a?(@implementation::NodeProxy)
+        log_fatal "child must be a proxy not a #{child.class}" unless child.is_a?(@implementation::NodeProxy)
 
         text_nodes = child.children.select {|e| e.text? && !e.blank?}
         element_nodes = child.children.select {|c| c.element? }
         add_debug(child) {"#{text_nodes.to_a.length} text nodes, #{element_nodes.to_a.length} element nodes"}
 
         text_nodes.each do |node|
-          raise "text node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
+          log_fatal "text node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
         end
         element_nodes.each do |node|
-          raise "element node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
+          log_fatal "element node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
         end
 
         if element_nodes.size > 1
@@ -383,10 +393,7 @@ module RDF::RDFXML
           end
         end
         
-        if nodeID && resourceAttr
-          add_debug(el, "Cannot have rdf:nodeID and rdf:resource.")
-          raise RDF::ReaderError.new("Cannot have rdf:nodeID and rdf:resource.") if validate?
-        end
+        add_error(el, "Cannot have rdf:nodeID and rdf:resource.") if nodeID && resourceAttr
 
         # Apply character transformations
         id = id_check(el, RDF::NTriples.unescape(id), nil) if id
@@ -407,7 +414,7 @@ module RDF::RDFXML
             prefix(prefix, value)
           end
           new_node_element = element_nodes.first
-          raise "new_node_element must be a proxy not a #{new_node_element.class}" unless new_node_element.is_a?(@implementation::NodeProxy)
+          log_fatal "new_node_element must be a proxy not a #{new_node_element.class}" unless new_node_element.is_a?(@implementation::NodeProxy)
           add_debug(child) {"resourcePropertyElt: #{node_path(new_node_element)}"}
           new_subject = nodeElement(new_node_element, new_ec)
           add_triple(child, subject, predicate, new_subject)
@@ -415,7 +422,7 @@ module RDF::RDFXML
           # Production literalPropertyElt
           add_debug(child, "literalPropertyElt")
           
-          literal_opts = {:validate => validate?, :canonicalize => canonicalize?}
+          literal_opts = {validate: validate?, canonicalize: canonicalize?}
           if datatype
             literal_opts[:datatype] = uri(datatype)
           else
@@ -429,9 +436,7 @@ module RDF::RDFXML
           add_debug(child, "parseTypeResourcePropertyElt")
 
           unless attrs.empty?
-            warn = "Resource Property with extra attributes: '#{attrs.inspect}'"
-            add_debug(child, warn)
-            raise RDF::ReaderError.new(warn) if validate?
+            add_error(child, "Resource Property with extra attributes") {attrs.inspect}
           end
 
           # For element e with possibly empty element content c.
@@ -454,7 +459,7 @@ module RDF::RDFXML
           node = el.create_node("Description", child.children)
           node.add_namespace(nil, RDF.to_uri.to_s)
           add_debug(node) { "uri: #{node.uri}, namespace: #{node.namespace.inspect}"}
-          new_ec = child_ec.clone(nil, :subject => n) do |prefix, value|
+          new_ec = child_ec.clone(nil, subject: n) do |prefix, value|
             prefix(prefix, value)
           end
           nodeElement(node, new_ec)
@@ -463,9 +468,7 @@ module RDF::RDFXML
           add_debug(child, "parseTypeCollectionPropertyElt")
 
           unless attrs.empty?
-            warn = "Resource Property with extra attributes: '#{attrs.inspect}'"
-            add_debug(child, warn)
-            raise RDF::ReaderError.new(warn) if validate?
+            add_error(child, "Resource Property with extra attributes") {attrs.inspect}
           end
 
           # For element event e with possibly empty nodeElementList l. Set s:=list().
@@ -493,27 +496,23 @@ module RDF::RDFXML
           add_debug(child, parseType == "Literal" ? "parseTypeResourcePropertyElt" : "parseTypeOtherPropertyElt (#{parseType})")
 
           unless attrs.empty?
-            warn = "Resource Property with extra attributes: '#{attrs.inspect}'"
-            add_debug(child, warn)
-            raise RDF::ReaderError.new(warn) if validate?
+            add_error(child, "Resource Property with extra attributes") {attrs.inspect}
           end
 
           if resourceAttr
-            warn = "illegal rdf:resource"
-            add_debug(child, warn)
-            raise RDF::ReaderError.new(warn) if validate?
+            add_error(child, "illegal rdf:resource") {resourceAttr.inspect}
           end
 
           begin
             c14nxl = child.children.c14nxl(
-              :library => @library,
-              :language => ec.language,
-              :namespaces => child_ec.uri_mappings)
+              library: @library,
+              language: ec.language,
+              namespaces: child_ec.uri_mappings)
             object = RDF::Literal.new(c14nxl,
-              :library => @library,
-              :datatype => RDF.XMLLiteral,
-              :validate => validate?,
-              :canonicalize => canonicalize?)
+              library: @library,
+              datatype: RDF.XMLLiteral,
+              validate: validate?,
+              canonicalize: canonicalize?)
 
             add_triple(child, subject, predicate, object)
           rescue ArgumentError => e
@@ -525,7 +524,7 @@ module RDF::RDFXML
 
           if attrs.empty? && resourceAttr.nil? && nodeID.nil?
             
-            literal = RDF::Literal.new("", :language => ec.language)
+            literal = RDF::Literal.new("", language: ec.language)
             add_triple(child, subject, predicate, literal)
             
             # Reification
@@ -550,7 +549,7 @@ module RDF::RDFXML
                 next unless is_propertyAttr?(attr)
 
                 # Attributes not in RDF.type
-                lit = RDF::Literal.new(val, :language => child_ec.language)
+                lit = RDF::Literal.new(val, language: child_ec.language)
                 add_triple(child, resource, attr.uri, lit)
               end
             end
@@ -587,11 +586,9 @@ module RDF::RDFXML
       nodeID = el.attribute_with_ns("nodeID", RDF.to_uri.to_s)
       
       if nodeID && about
-        add_debug(el, "Cannot have rdf:nodeID and rdf:about.")
-        raise RDF::ReaderError.new("Cannot have rdf:nodeID and rdf:about.") if validate?
+        add_error(el, "Cannot have rdf:nodeID and rdf:about.")
       elsif nodeID && id
-        add_debug(el, "Cannot have rdf:nodeID and rdf:ID.")
-        raise RDF::ReaderError.new("Cannot have rdf:nodeID and rdf:ID.") if validate?
+        add_error(el, "Cannot have rdf:nodeID and rdf:ID.")
       end
 
       case
@@ -615,19 +612,12 @@ module RDF::RDFXML
     
     # ID attribute must be an NCName
     def id_check(el, id, base)
-      unless NC_REGEXP.match(id)
-        warn = "ID addtribute '#{id}' must be a NCName"
-        add_debug(el, warn)
-        raise RDF::ReaderError.new(warn) if validate?
-      end
+      add_error(el, "ID addtribute '#{id}' must be a NCName") unless NC_REGEXP.match(id)
+
       # ID may only be specified once for the same URI
       if base
         uri = uri(base, "##{id}")
-        if prefix(id) && RDF::URI(prefix(id)) == uri
-          warn = "ID addtribute '#{id}' may only be defined once for the same URI"
-          add_debug(el, warn)
-          raise RDF::ReaderError.new(warn) if validate?
-        end
+        add_error(el, "ID addtribute '#{id}' may only be defined once for the same URI") if prefix(id) && RDF::URI(prefix(id)) == uri
         
         RDF::URI(prefix(id, uri))
         # Returns URI, in this case
@@ -642,8 +632,7 @@ module RDF::RDFXML
       if NC_REGEXP.match(nodeID)
         nodeID
       else
-        add_debug(el, "nodeID addtribute '#{nodeID}' must be an XML Name")
-        raise RDF::ReaderError.new("nodeID addtribute '#{nodeID}' must be a NCName") if validate?
+        add_error(el, "nodeID addtribute '#{nodeID}' must be an XML Name")
         nil
       end
     end
@@ -651,9 +640,7 @@ module RDF::RDFXML
     # Is this attribute a Property Attribute?
     def is_propertyAttr?(attr)
       if ([RDF.Description.to_s, RDF.li.to_s] + OLD_TERMS).include?(attr.uri.to_s)
-        warn = "Invalid use of rdf:#{attr.name}"
-        add_debug(attr, warn)
-        raise RDF::ReaderError.new(warn) if validate?
+        add_error(attr, "Invalid use of rdf:#{attr.name}")
         return false
       end
       !CORE_SYNTAX_TERMS.include?(attr.uri.to_s) && attr.namespace && attr.namespace.href != RDF::XML.to_s
@@ -662,18 +649,14 @@ module RDF::RDFXML
     # Check Node Element name
     def nodeElementURI_check(el)
       if (CORE_SYNTAX_TERMS + [RDF.li.to_s] + OLD_TERMS).include?(el.uri.to_s)
-        warn = "Invalid use of rdf:#{el.name}"
-        add_debug(el, warn)
-        raise RDF::ReaderError.new(warn) if validate?
+        add_error(el, "Invalid use of rdf:#{el.name}")
       end
     end
 
     # Check Property Element name
     def propertyElementURI_check(el)
       if (CORE_SYNTAX_TERMS + [RDF.Description.to_s] + OLD_TERMS).include?(el.uri.to_s)
-        warn = "Invalid use of rdf:#{el.name}"
-        add_debug(el, warn)
-        raise RDF::ReaderError.new(warn) if validate?
+        add_error(el, "Invalid use of rdf:#{el.name}")
       end
     end
 
@@ -681,8 +664,7 @@ module RDF::RDFXML
     def old_property_check(el)
       el.attribute_nodes.each do |attr|
         if OLD_TERMS.include?(attr.uri.to_s)
-          add_debug(el) {"Obsolete attribute '#{attr.uri}'"}
-          raise RDF::ReaderError.new("Obsolete attribute '#{attr.uri}'") if validate?
+          add_error(el) {"Obsolete attribute '#{attr.uri}'"}
         end
       end
     end

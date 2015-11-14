@@ -11,14 +11,15 @@ describe RDF::RDFXML::Reader do
         describe m.comment do
           m.entries.each do |t|
             specify "#{t.name}" do
-
-              t.debug = [t.inspect, "source:", t.input.read]
+              t.logger = RDF::Spec.logger
+              t.logger.info t.inspect
+              t.logger.info "source:\n#{t.input.read}"
 
               reader = RDF::RDFXML::Reader.new(t.input,
-                  :base_uri => t.base,
-                  :canonicalize => false,
-                  :validate => t.syntax?,
-                  :debug => t.debug)
+                  base_uri: t.base,
+                  canonicalize: false,
+                  validate: t.syntax?,
+                  logger: t.logger)
 
               repo = RDF::Repository.new
 
@@ -40,7 +41,7 @@ describe RDF::RDFXML::Reader do
               end
 
               if t.evaluate? && t.positive_test?
-                output_repo = RDF::Repository.load(t.result, :format => :ntriples, :base_uri => t.base)
+                output_repo = RDF::Repository.load(t.result, format: :ntriples, base_uri: t.base)
                 expect(repo).to be_equivalent_graph(output_repo, t)
               elsif !t.evaluate?
                 expect(repo).to be_a(RDF::Enumerable)

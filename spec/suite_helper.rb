@@ -90,7 +90,7 @@ module Fixtures
       def self.open(file)
         #puts "open: #{file}"
         prefixes = {}
-        g = RDF::Repository.load(file, :format => :turtle)
+        g = RDF::Repository.load(file, format: :turtle)
         JSON::LD::API.fromRDF(g) do |expanded|
           JSON::LD::API.frame(expanded, FRAME) do |framed|
             yield Manifest.new(framed['@graph'].first)
@@ -111,7 +111,7 @@ module Fixtures
     end
  
     class Entry < JSON::LD::Resource
-      attr_accessor :debug
+      attr_accessor :logger
 
       def base
         "http://www.w3.org/2013/RDFXMLTests/" + action.split('/')[-2,2].join("/")
