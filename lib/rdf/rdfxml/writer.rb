@@ -266,7 +266,7 @@ module RDF::RDFXML
           object:     objects.first,
           predicate:  predicate,
           property:   get_qname(predicate),
-          recurse:    @options[:log_depth] <= @max_depth
+          recurse:    log_depth <= @max_depth
         }.merge(options)
         hamlify(template, options, &block)
       end
@@ -293,7 +293,7 @@ module RDF::RDFXML
         list:       list,
         predicate:  predicate,
         property:   get_qname(predicate),
-        recurse:    @options[:log_depth] <= @max_depth,
+        recurse:    log_depth <= @max_depth,
       }.merge(options)
       hamlify(template, options) do |object|
         yield object

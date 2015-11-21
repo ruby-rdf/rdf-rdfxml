@@ -157,9 +157,10 @@ module RDF::RDFXML
         end
         self.extend(@implementation)
 
+        input.rewind if input.respond_to?(:rewind)
         initialize_xml(input, options) rescue log_fatal($!.message)
 
-        log_fatal("Empty document", exception: RDF::ReaderError) if root.nil? && validate?
+        log_error("Empty document") if root.nil?
         log_error("Synax errors") {doc_errors} if !doc_errors.empty?
 
         block.call(self) if block_given?
@@ -182,8 +183,8 @@ module RDF::RDFXML
       if block_given?
         # Block called from add_statement
         @callback = block
+        return unless root
 
-        
         log_fatal "root must be a proxy not a #{root.class}" unless root.is_a?(@implementation::NodeProxy)
 
         add_debug(root, "base_uri: #{base_uri.inspect}")
