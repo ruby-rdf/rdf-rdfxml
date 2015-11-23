@@ -45,7 +45,7 @@ def run_tc(tc, options)
     puts "open #{tc.action}" if options[:verbose]
     options = {base_uri: tc.base}.merge(options)
 
-    reader = RDF::Reader.for(tc.action).new(tc.input, base_uri: tc.base, validate: tc.syntax?)
+    reader = RDF::Reader.for(tc.action).new(tc.input, base_uri: tc.base, validate: tc.syntax?, logger: options[:logger])
 
     graph = RDF::Repository.new
     result = nil
@@ -74,6 +74,9 @@ def run_tc(tc, options)
       result ||= "passed"
     end
 
+  rescue Interrupt
+    STDERR.puts "\nHalting"
+    exit(1)
   rescue Exception => e
     STDERR.puts "#{"exception:" unless options[:quiet]}: #{e}"
     if options[:quiet]
@@ -105,8 +108,13 @@ def run_tc(tc, options)
   puts "#{"test result:" unless options[:quiet]} #{result}"
 end
 
+logger = Logger.new(STDERR)
+logger.level = Logger::WARN
+logger.formatter = lambda {|severity, datetime, progname, msg| "#{severity}: #{msg}\n"}
+
 options = {
   output: STDOUT,
+  logger: logger
 }
 
 opts = GetoptLong.new(
@@ -133,10 +141,10 @@ end
 opts.each do |opt, arg|
   case opt
   when '--help'             then help(options)
-  when '--dbg'              then ::RDF::RDFXML::debug = true
+  when '--dbg'              then logger.level = Logger::DEBUG
   when '--earl'             then options[:quiet] = options[:earl] = true
   when '--output'           then options[:output] = File.open(arg, "w")
-  when '--quiet'            then options[:quiet] = true
+  when '--quiet'            then options[:quiet] = true; logger.level = Logger::FATAL
   when '--verbose'          then options[:verbose] = true
   end
 end

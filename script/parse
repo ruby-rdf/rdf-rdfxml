@@ -6,6 +6,7 @@ require 'rdf/rdfxml'
 require 'rdf/turtle'
 require 'rdf/ntriples'
 require 'getoptlong'
+require 'logger'
 require 'open-uri'
 
 def run(input, options)
@@ -45,16 +46,18 @@ rescue
   raise
 end
 
+logger = Logger.new(STDERR)
+logger.level = Logger::WARN
+logger.formatter = lambda {|severity, datetime, progname, msg| "#{severity}: #{msg}\n"}
 
 options = {
-  host_language: nil,
   input_format: :rdfxml,
   output: STDOUT,
   output_format: :ntriples,
   strict: true,
   validate: false,
   verbose: false,
-  version: nil,
+  logger: logger
 }
 input = nil
 
@@ -72,12 +75,14 @@ opts = GetoptLong.new(
 )
 opts.each do |opt, arg|
   case opt
-  when '--dbg'            then ::RDF::RDFXML::debug = true
+  when '--dbg'            then logger.level = Logger::DEBUG
   when '--execute'        then input = arg
   when '--format'         then options[:output_format] = arg.to_sym
   when '--input-format'   then options[:input_format] = arg.to_sym
   when '--output'         then options[:output] = File.open(arg, "w")
-  when '--quiet'          then options[:quiet] = true
+  when '--quiet'
+    options[:quiet] = true
+    logger.level = Logger::FATAL
   when '--template'       then options[:haml] = arg.to_sym
   when '--uri'            then options[:base_uri] = arg
   when '--validate'       then options[:validate] = true
