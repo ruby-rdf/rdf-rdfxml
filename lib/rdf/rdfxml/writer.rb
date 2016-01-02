@@ -234,7 +234,7 @@ module RDF::RDFXML
       # Separate out the objects which are lists and render separately
       lists = objects.
         select(&:node?).
-        map {|o| RDF::List.new(o, @graph)}.
+        map {|o| RDF::List.new(subject: o, graph: @graph)}.
         select {|l| l.valid? && l.none?(&:literal?)}
 
       unless lists.empty?

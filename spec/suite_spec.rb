@@ -13,7 +13,7 @@ describe RDF::RDFXML::Reader do
             specify "#{t.name}" do
               t.logger = RDF::Spec.logger
               t.logger.info t.inspect
-              t.logger.info "source:\n#{t.input.read}"
+              t.logger.info "source:\n#{t.input}"
 
               reader = RDF::RDFXML::Reader.new(t.input,
                   base_uri: t.base,

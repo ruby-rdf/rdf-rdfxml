@@ -4,6 +4,7 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xhv: <http://www.w3.org/1999/xhtml/vocab#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 <http://rubygems.org/gems/rdf-rdfxml> a doap:Project;
    dc:creator <http://greggkellogg.net/foaf#me>;
@@ -28,7 +29,7 @@
    foaf:maker <http://greggkellogg.net/foaf#me> .
 
 <> foaf:primaryTopic <http://rubygems.org/gems/rdf-rdfxml> ;
-  dct:issued "2014-01-29T11:10:43-08:00"^^xsd:dateTime ;
+  dc:issued "2014-01-29T11:10:43-08:00"^^xsd:dateTime ;
   foaf:maker <http://greggkellogg.net/foaf#me> .
 
 <http://greggkellogg.net/foaf#me> a foaf:Person, earl:Assertor;

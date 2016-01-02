@@ -283,7 +283,7 @@ module RDF::RDFXML
     # @return [Statement] Added statement
     # @raise [RDF::ReaderError] Checks parameter types and raises if they are incorrect if validating.
     def add_triple(node, subject, predicate, object)
-      statement = RDF::Statement.new(subject, predicate, object)
+      statement = RDF::Statement(subject, predicate, object)
       add_debug(node) {"statement: #{statement}"}
       @callback.call(statement)
     end
