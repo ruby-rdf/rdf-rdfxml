@@ -11,9 +11,13 @@ describe RDF::RDFXML::Format do
     formats = [
       :rdfxml,
       :rdf,
+      :owl,
       'etc/doap.rdf',
+      'etc/doap.owl',
       {file_name: 'etc/doap.rdf'},
+      {file_name: 'etc/doap.owl'},
       {file_extension: 'rdf'},
+      {file_extension: 'owl'},
       {content_type: 'application/rdf+xml'},
     ].each do |arg|
       it "discovers with #{arg.inspect}" do
