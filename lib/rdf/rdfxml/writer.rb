@@ -54,6 +54,39 @@ module RDF::RDFXML
     VALID_ATTRIBUTES = [:none, :untyped, :typed]
 
     ##
+    # RDF/XML Writer options
+    # @see http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Writer#options-class_method
+    def self.options
+      super + [
+        RDF::CLI::Option.new(
+          symbol: :attributes,
+          datatype: %w(none untyped typed),
+          on: ["--attributes ATTRIBUTES",  %w(none untyped typed)],
+          description: "How to use XML attributes when serializing, one of :none, :untyped, :typed. The default is :none.") {|arg| arg.to_sym},
+        RDF::CLI::Option.new(
+          symbol: :default_namespace,
+          datatype: RDF::URI,
+          on: ["--default-namespace URI", :REQUIRED],
+          description: "URI to use as default namespace, same as prefixes.") {|arg| RDF::URI(arg)},
+        RDF::CLI::Option.new(
+          symbol: :lang,
+          datatype: String,
+          on: ["--lang"],
+          description: "Output as root @lang attribute, and avoid generation _@lang_ where possible."),
+        RDF::CLI::Option.new(
+          symbol: :max_depth,
+          datatype: Integer,
+          on: ["--max-depth"],
+          description: "Maximum depth for recursively defining resources, defaults to 3.") {|arg| arg.to_i},
+        RDF::CLI::Option.new(
+          symbol: :stylesheet,
+          datatype: RDF::URI,
+          on: ["--stylesheet URI", :REQUIRED],
+          description: "URI to use as @href for output stylesheet processing instruction.") {|arg| RDF::URI(arg)},
+      ]
+    end
+
+    ##
     # Initializes the RDF/XML writer instance.
     #
     # @param  [IO, File] output

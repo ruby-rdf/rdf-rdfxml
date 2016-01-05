@@ -131,8 +131,6 @@ module RDF::RDFXML
     #   the prefix mappings to use (not supported by all readers)
     # @option options [#to_s]    :base_uri     (nil)
     #   the base URI to use when resolving relative URIs
-    # @option options [Array] :debug
-    #   Array to place debug messages
     # @return [reader]
     # @yield  [reader] `self`
     # @yieldparam  [RDF::Reader] reader
