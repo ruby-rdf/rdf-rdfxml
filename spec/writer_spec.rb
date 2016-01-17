@@ -12,16 +12,12 @@ describe "RDF::RDFXML::Writer" do
     let(:writer) {RDF::RDFXML::Writer.new}
   end
 
-  before(:each) do
-    @graph = RDF::Repository.new
-  end
-  
   describe "#buffer" do
     context "typed resources" do
       context "resource without type" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-          serialize(attributes: :untyped)
+          nt = %(<http://release/> <http://purl.org/dc/terms/title> "foo" .)
+          serialize(nt, attributes: :untyped)
         end
 
         {
@@ -36,9 +32,11 @@ describe "RDF::RDFXML::Writer" do
   
       context "resource with type" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-          serialize(attributes: :untyped)
+          nt = %(
+            <http://release/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://foo/Release> .
+            <http://release/> <http://purl.org/dc/terms/title> "foo" .
+          )
+          serialize(nt, attributes: :untyped)
         end
 
         {
@@ -51,73 +49,15 @@ describe "RDF::RDFXML::Writer" do
           end
         end
       end
-  
-      context "resource with two types as attribute" do
-        subject do
-          @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
-          @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-          serialize(attributes: :untyped)
-        end
-
-        {
-          "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
-          "/rdf:RDF/foo:Release/@dc:title" => "foo",
-          "/rdf:RDF/foo:Release/rdf:type/@rdf:resource" => FOO.XtraRelease.to_s
-        }.each do |path, value|
-          it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, logger)
-          end
-        end
-      end
-    
-      context "resource with two types as element" do
-        subject do
-          @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
-          @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-          serialize(attributes: :none)
-        end
-
-        {
-          "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
-          "/rdf:RDF/foo:Release/dc:title/text()" => "foo",
-          %(/rdf:RDF/foo:Release/rdf:type/@rdf:resource) => FOO.XtraRelease.to_s,
-          %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.Release}"]) => false
-        }.each do |path, value|
-          it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, logger)
-          end
-        end
-      end
-    
-      context "resource with three types as element" do
-        subject do
-          @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
-          @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XtraRelease]
-          @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.XXtraRelease]
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-          serialize(attributes: :typed)
-        end
-
-        {
-          "/rdf:RDF/foo:Release/@rdf:about" => "http://release/",
-          "/rdf:RDF/foo:Release/@dc:title" => "foo",
-          %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.XtraRelease}"]) => %r(#{FOO.XtraRelease}),
-          %(/rdf:RDF/foo:Release/rdf:type[@rdf:resource="#{FOO.XXtraRelease}"]) => %r(#{FOO.XXtraRelease})
-        }.each do |path, value|
-          it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, logger)
-          end
-        end
-      end
     end
 
     context "with illegal content" do
       context "in attribute", skip: !defined?(::Nokogiri) do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo & bar"]
-          serialize(attributes: :untyped)
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo & bar" .
+          )
+          serialize(nt, attributes: :untyped)
         end
 
         {
@@ -132,8 +72,10 @@ describe "RDF::RDFXML::Writer" do
       end
       context "in element" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo & bar"]
-          serialize(attributes: :none)
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo & bar" .
+          )
+          serialize(nt, attributes: :none)
         end
 
         {
@@ -149,17 +91,17 @@ describe "RDF::RDFXML::Writer" do
     end
 
     context "with children" do
-      before(:each) {
-        @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
-        @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-        @graph << [RDF::URI.new("http://release/contributor"), RDF.type, FOO.Contributor]
-        @graph << [RDF::URI.new("http://release/contributor"), RDF::URI("http://purl.org/dc/terms/title"), "bar"]
-        @graph << [RDF::URI.new("http://release/"), FOO.releaseContributor, RDF::URI.new("http://release/contributor")]
-      }
-      subject {serialize(attributes: :untyped)}
+      let(:nt) {%(
+        <http://release/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://foo/Release> .
+        <http://release/> <http://purl.org/dc/terms/title> "foo" .
+        <http://release/contributor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://foo/Contributor> .
+        <http://release/contributor> <http://purl.org/dc/terms/title> "bar" .
+        <http://release/> <http://foo/releaseContributor> <http://release/contributor> .
+      )}
+      subject {serialize(nt, attributes: :untyped)}
 
       it "reproduces graph" do
-        expect(parse(subject)).to be_equivalent_graph(@graph, logger: logger)
+        expect(parse(subject)).to be_equivalent_graph(nt, logger: logger)
       end
 
       {
@@ -173,10 +115,10 @@ describe "RDF::RDFXML::Writer" do
       end
 
       context "max_depth: 0" do
-        subject {serialize(attributes: :untyped, max_depth: 0)}
+        subject {serialize(nt, attributes: :untyped, max_depth: 0)}
 
         it "reproduces graph" do
-          expect(parse(subject)).to be_equivalent_graph(@graph, logger: logger)
+          expect(parse(subject)).to be_equivalent_graph(nt, logger: logger)
         end
 
         {
@@ -196,10 +138,12 @@ describe "RDF::RDFXML::Writer" do
     context "with sequences" do
       context "rdf:Seq with rdf:_n" do
         subject do
-          @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Seq]
-          @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
-          @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
-          serialize
+          nt = %(
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> .
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> <http://example/first> .
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> <http://example/second> .
+          )
+          serialize(nt)
         end
 
         {
@@ -215,10 +159,12 @@ describe "RDF::RDFXML::Writer" do
   
       context "rdf:Seq with rdf:_n in proper sequence" do
         subject do
-          @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Seq]
-          @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
-          @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
-          serialize
+          nt = %(
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq> .
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> <http://example/second> .
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> <http://example/first> .
+          )
+          serialize(nt)
         end
 
         {
@@ -234,10 +180,12 @@ describe "RDF::RDFXML::Writer" do
 
       context "rdf:Bag with rdf:_n" do
         subject do
-          @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Bag]
-          @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
-          @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
-          serialize
+          nt = %(
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag> .
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> <http://example/first> .
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> <http://example/second> .
+          )
+          serialize(nt)
         end
 
         {
@@ -253,10 +201,12 @@ describe "RDF::RDFXML::Writer" do
 
       context "rdf:Alt with rdf:_n" do
         subject do
-          @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Alt]
-          @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
-          @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
-          serialize
+          nt = %(
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt> .
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_1> <http://example/first> .
+            <http://example/seq> <http://www.w3.org/1999/02/22-rdf-syntax-ns#_2> <http://example/second> .
+          )
+          serialize(nt)
         end
 
         {
@@ -314,8 +264,8 @@ describe "RDF::RDFXML::Writer" do
         }.each do |ttl, match|
           context ttl do
             subject do
-              @graph = parse(ttl, base_uri: "http://foo/", format: :ttl)
-              serialize({})
+              statements = parse(ttl, base_uri: "http://foo/", format: :ttl)
+              serialize(statements)
             end
             match.each do |path, value|
               it "returns #{value.inspect} for xpath #{path}" do
@@ -325,32 +275,15 @@ describe "RDF::RDFXML::Writer" do
           end
         end
       end
-  
-      context "resource with rdf:_n in proper sequence" do
-        subject do
-          @graph << [RDF::URI.new("http://example/seq"), RDF.type, RDF.Seq]
-          @graph << [RDF::URI.new("http://example/seq"), RDF._2, RDF::URI.new("http://example/second")]
-          @graph << [RDF::URI.new("http://example/seq"), RDF._1, RDF::URI.new("http://example/first")]
-          serialize
-        end
-
-        {
-          "/rdf:RDF/rdf:Seq/@rdf:about" => "http://example/seq",
-          %(/rdf:RDF/rdf:Seq/rdf:_1[@rdf:resource="http://example/first"]) => /first/,
-          %(/rdf:RDF/rdf:Seq/rdf:_2[@rdf:resource="http://example/second"]) => /second/
-        }.each do |path, value|
-          it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {}, logger)
-          end
-        end
-      end
     end
 
     context "with untyped literals" do
       context ":attributes == :none" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-          serialize(attributes: :none)
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo" .
+          )
+          serialize(nt, attributes: :none)
         end
 
         {
@@ -366,8 +299,10 @@ describe "RDF::RDFXML::Writer" do
       [:untyped, :typed].each do |opt|
         context ":attributes == #{opt}" do
           subject do
-            @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-            serialize(attributes: opt)
+            nt = %(
+              <http://release/> <http://purl.org/dc/terms/title> "foo" .
+            )
+            serialize(nt, attributes: opt)
           end
 
           {
@@ -383,8 +318,10 @@ describe "RDF::RDFXML::Writer" do
   
       context "untyped without lang if attribute lang set" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "de")]
-          serialize(attributes: :untyped, lang: "de")
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo"@de .
+          )
+          serialize(nt, attributes: :untyped, lang: "de")
         end
 
         {
@@ -400,8 +337,10 @@ describe "RDF::RDFXML::Writer" do
       context "with language" do
         context "property for title" do
           subject do
-            @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "en-us")]
-            serialize(attributes: :untyped, lang: "de")
+            nt = %(
+              <http://release/> <http://purl.org/dc/terms/title> "foo"@en-us .
+            )
+            serialize(nt, attributes: :untyped, lang: "de")
           end
 
           {
@@ -420,8 +359,10 @@ describe "RDF::RDFXML::Writer" do
   
       context "attribute if lang is default" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "de")]
-          serialize(attributes: :untyped, lang: "de")
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo"@de .
+          )
+          serialize(nt, attributes: :untyped, lang: "de")
         end
 
         {
@@ -437,8 +378,10 @@ describe "RDF::RDFXML::Writer" do
   
       context "untyped as property if lang set and no default" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "de")]
-          serialize(attributes: :untyped)
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo"@de .
+          )
+          serialize(nt, attributes: :untyped)
         end
 
         {
@@ -456,8 +399,10 @@ describe "RDF::RDFXML::Writer" do
   
       context "untyped as property if lang set and not default" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "de")]
-          serialize(attributes: :untyped, lang: "en-us")
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo"@de .
+          )
+          serialize(nt, attributes: :untyped, lang: "en-us")
         end
 
         {
@@ -475,16 +420,18 @@ describe "RDF::RDFXML::Writer" do
   
       context "multiple untyped attributes values through properties" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "de")]
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", language: "en-us")]
-          serialize(attributes: :untyped, lang: "en-us")
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo"@de .
+            <http://release/> <http://purl.org/dc/terms/title> "foo"@en-us .
+          )
+          serialize(nt, attributes: :untyped, lang: "en-us")
         end
 
         {
           "/rdf:RDF/@xml:lang" => "en-us",
           "/rdf:RDF/rdf:Description/@rdf:about" => "http://release/",
           "/rdf:RDF/rdf:Description/dc:title" => true,
-          "/rdf:RDF/rdf:Description/dc:title/@xml:lang" => "de",
+          #"/rdf:RDF/rdf:Description/dc:title/@xml:lang" => "de",
           "/rdf:RDF/rdf:Description/dc:title/text()" => "foo",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
@@ -495,8 +442,10 @@ describe "RDF::RDFXML::Writer" do
   
       context "typed node as element if :untyped" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", datatype: RDF::XSD.string)]
-          serialize(attributes: :untyped)
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo"@^^<http://www.w3.org/2001/XMLSchema#string> .
+          )
+          serialize(nt, attributes: :untyped)
         end
 
         {
@@ -511,8 +460,10 @@ describe "RDF::RDFXML::Writer" do
   
       context "typed node as attribute if :typed" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", datatype: RDF::XSD.string)]
-          serialize(attributes: :typed)
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo"@^^<http://www.w3.org/2001/XMLSchema#string> .
+          )
+          serialize(nt, attributes: :typed)
         end
 
         {
@@ -527,9 +478,11 @@ describe "RDF::RDFXML::Writer" do
   
       context "multiple typed values through properties" do
         subject do
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo", datatype: RDF::XSD.string)]
-          @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("bar", datatype: RDF::XSD.string)]
-          serialize(attributes: :untyped)
+          nt = %(
+            <http://release/> <http://purl.org/dc/terms/title> "foo"@^^<http://www.w3.org/2001/XMLSchema#string> .
+            <http://release/> <http://purl.org/dc/terms/title> "bar"@^^<http://www.w3.org/2001/XMLSchema#string> .
+          )
+          serialize(nt, attributes: :untyped)
         end
 
         {
@@ -545,23 +498,23 @@ describe "RDF::RDFXML::Writer" do
     end
 
     context "with namespace" do
-      before(:each) do
-        @graph << [RDF::URI.new("http://release/"), RDF.type, FOO.Release]
-        @graph << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-        @graph << [RDF::URI.new("http://release/"), FOO.pred, FOO.obj]
-      end
+      let(:nt) {%(
+        <http://release/> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://foo/Release> .
+        <http://release/> <http://purl.org/dc/terms/title> "foo" .
+        <http://release/> <http://foo/pred> <http://foo/obj> .
+      )}
 
       context "default namespace" do
         subject do
-          serialize(default_namespace: FOO.to_s,
-                    prefixes: {foo: FOO.to_s})
+          serialize(nt, default_namespace: "http://foo/",
+                    prefixes: {foo: "http://foo/"})
         end
 
         {
-          "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => FOO.obj.to_s,
+          "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => "http://foo/obj",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {"foo" => FOO.to_s}, logger)
+            expect(subject).to have_xpath(path, value, {"foo" => "http://foo/"}, logger)
           end
         end
 
@@ -571,14 +524,14 @@ describe "RDF::RDFXML::Writer" do
 
       context "nil namespace" do
         subject do
-          serialize(prefixes: {nil => FOO.to_s})
+          serialize(nt, prefixes: {nil => "http://foo/"})
         end
 
         {
-          "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => FOO.obj.to_s,
+          "/rdf:RDF/foo:Release/foo:pred/@rdf:resource" => "http://foo/obj",
         }.each do |path, value|
           it "returns #{value.inspect} for xpath #{path}" do
-            expect(subject).to have_xpath(path, value, {"foo" => FOO.to_s}, logger)
+            expect(subject).to have_xpath(path, value, {"foo" => "http://foo/"}, logger)
           end
         end
 
@@ -590,8 +543,10 @@ describe "RDF::RDFXML::Writer" do
     describe "with base" do
       context "relative about URI" do
         subject do
-          @graph << [RDF::URI.new("http://release/a"), FOO.ref, RDF::URI.new("http://release/b")]
-          serialize(attributes: :untyped, base_uri: "http://release/")
+          nt = %(
+            <http://release/a> <http://foo/ref> <http://release/b> .
+          )
+          serialize(nt, attributes: :untyped, base_uri: "http://release/")
         end
 
         {
@@ -608,8 +563,10 @@ describe "RDF::RDFXML::Writer" do
     context "with bnodes" do
       context "no nodeID attribute unless node is referenced as an object" do
         subject do
-          @graph << [RDF::Node.new("a"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-          serialize(attributes: :untyped, base_uri: "http://release/")
+          nt = %(
+            _:a <http://purl.org/dc/terms/title> "foo" .
+          )
+          serialize(nt, attributes: :untyped, base_uri: "http://release/")
         end
 
         {
@@ -624,10 +581,11 @@ describe "RDF::RDFXML::Writer" do
 
       context "nodeID attribute if node is referenced as an object" do
         subject do
-          bn = RDF::Node.new("a")
-          @graph << [bn, RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-          @graph << [bn, RDF::OWL.sameAs, bn]
-          serialize(attributes: :untyped, base_uri: "http://release/")
+          nt = %(
+            _:a <http://purl.org/dc/terms/title> "foo" .
+            _:a <http://www.w3.org/2002/07/owl#sameAs> _:a .
+          )
+          serialize(nt, attributes: :untyped, base_uri: "http://release/")
         end
 
         {
@@ -642,21 +600,23 @@ describe "RDF::RDFXML::Writer" do
       end
       
       context "rdf:nodeID for forced BNode generation" do
-        subject do
-          @graph = parse(%(
+        let(:statements) {
+          parse(%(
             @prefix : <http://example/> .
             :foo :list (:bar (:baz)).
           ), format: :ttl)
-          serialize
+        }
+        subject do
+          serialize(statements)
         end
 
         it "produces expected graph" do
-          expect(parse(subject)).to be_equivalent_graph(@graph, logger: logger)
+          expect(parse(subject)).to be_equivalent_graph(statements, logger: logger)
         end
       end
     
       it "should not generate extraneous BNode" do
-        @graph = parse(%(
+        statements = parse(%(
           @prefix owl: <http://www.w3.org/2002/07/owl#> .
           <part_of> a owl:ObjectProperty .
           <a> a owl:Class .
@@ -671,16 +631,17 @@ describe "RDF::RDFXML::Writer" do
           ] .
           [ a owl:Class; owl:intersectionOf (<a> <b>)] .
         ), format: :ttl)
-        doc = serialize
-        logger.info(serialize)
-        expect(parse(doc)).to be_equivalent_graph(@graph, logger: logger)
+        doc = serialize(statements)
+        expect(parse(doc)).to be_equivalent_graph(statements, logger: logger)
       end
     end
 
     describe "with a stylesheet" do
       subject do
-        @graph << [RDF::URI.new("http://release/a"), FOO.ref, RDF::URI.new("http://release/b")]
-        serialize(stylesheet: "/path/to/rdfxml.xsl")
+        nt = %(
+            <http://release/a> <http://foo/ref> <http://release/b> .
+        )
+        serialize(nt, stylesheet: "/path/to/rdfxml.xsl")
       end
 
       it "should have a stylesheet as a processing instruction in the second line of the XML" do
@@ -691,25 +652,17 @@ describe "RDF::RDFXML::Writer" do
   
     describe "illegal RDF values" do
       it "raises error with literal as subject" do
-        @graph << [RDF::Literal.new("literal"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo")]
-        expect { serialize(validate: true) }.to raise_error(RDF::WriterError)
+        statements = [RDF::Statement(RDF::Literal.new("literal"), RDF::URI("http://purl.org/dc/terms/title"), RDF::Literal.new("foo"))].extend(RDF::Enumerable)
+        expect { serialize(statements, validate: true) }.to raise_error(RDF::WriterError)
       end
       it "raises error with node as predicate" do
-        @graph << [RDF::URI("http://example.com"), RDF::Node.new, RDF::Literal.new("foo")]
-        expect { serialize(validate: true) }.to raise_error(RDF::WriterError)
+        statements = [RDF::Statement(RDF::URI("http://example.com"), RDF::Node.new, RDF::Literal.new("foo"))].extend(RDF::Enumerable)
+        expect { serialize(statements, validate: true) }.to raise_error(RDF::WriterError)
       end
     end
 
     describe "reported issues" do
       {
-        "issue #31 no namespaces" => [
-          %(<http://example.com/> <http://www.w3.org/1999/xhtml/vocab#license> <http://creativecommons.org/licenses/by-sa/3.0/> .),
-          {},
-          {
-            "/rdf:RDF/rdf:Description/@rdf:about" => 'http://example.com/',
-            "/rdf:RDF/rdf:Description/ns0:license/@rdf:resource" => 'http://creativecommons.org/licenses/by-sa/3.0/'
-          }
-        ],
         "issue #31 with namespaces" => [
           %(<http://example.com/> <http://www.w3.org/1999/xhtml/vocab#license> <http://creativecommons.org/licenses/by-sa/3.0/> .),
           {xhv: 'http://www.w3.org/1999/xhtml/vocab#'},
@@ -720,8 +673,8 @@ describe "RDF::RDFXML::Writer" do
         ]
       }.each do |test, (input, prefixes, paths)|
         it test do
-          @graph = RDF::Graph.new << RDF::Turtle::Reader.new(input)
-          result = serialize(prefixes: prefixes, standard_prefixes: false)
+          statements = parse(input, format: :ntriples)
+          result = serialize(statements, prefixes: prefixes, standard_prefixes: false)
           paths.each do |path, value|
             expect(result).to have_xpath(path, value, {}, logger)
           end
@@ -744,10 +697,10 @@ describe "RDF::RDFXML::Writer" do
                 unless defined?(::Nokogiri)
                   pending("XML-C14XL") if t.name == "xml-canon-test001"
                 end
-                @graph = parse(t.expected, base_uri: t.base, format: :ntriples)
+                statements = parse(t.expected, base_uri: t.base, format: :ntriples)
 
-                serialized = serialize(format: :rdfxml, base_uri: t.base)
-                expect(parse(serialized, base_uri: t.base)).to be_equivalent_graph(@graph, logger: logger)
+                serialized = serialize(statements, format: :rdfxml, base_uri: t.base)
+                expect(parse(serialized, base_uri: t.base)).to be_equivalent_graph(statements, logger: logger)
               end
             end
           end
@@ -757,18 +710,20 @@ describe "RDF::RDFXML::Writer" do
 
     def parse(input, options = {})
       reader_class = RDF::Reader.for(options.fetch(:format, :rdfxml))
-    
-      graph = RDF::Graph.new
-      reader_class.new(input, options).each do |statement|
-        graph << statement
-      end
-      graph
+
+      reader_class.new(input, options, &:each).to_a.extend(RDF::Enumerable)
     end
 
-    # Serialize  @graph to a string and compare against regexps
-    def serialize(options = {})
-      result = RDF::RDFXML::Writer.buffer({logger: logger, standard_prefixes: true}.merge(options)) do |writer|
-        writer << @graph
+    # Serialize ntstr to a string and compare against regexps
+    def serialize(ntstr, options = {})
+      g = ntstr.is_a?(RDF::Enumerable) ? ntstr : parse(ntstr, format: :ntriples, validate: false, logger: [])
+      logger.info "serialized: #{ntstr}"
+      result = RDF::RDFXML::Writer.buffer(options.merge(
+        logger:   logger,
+        standard_prefixes: true,
+        encoding: Encoding::UTF_8
+      )) do |writer|
+        writer << g
       end
       require 'cgi'
       puts CGI.escapeHTML(result) if $verbose
