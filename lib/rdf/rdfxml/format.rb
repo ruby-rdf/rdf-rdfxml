@@ -20,7 +20,7 @@ module RDF::RDFXML
   #
   # @see http://www.w3.org/TR/rdf-testcases/#ntriples
   class Format < RDF::Format
-    content_type     'application/rdf+xml', extension: :rdf
+    content_type     'application/rdf+xml', extensions: [:rdf, :owl]
     content_encoding 'utf-8'
 
     reader { RDF::RDFXML::Reader }
@@ -45,7 +45,7 @@ module RDF::RDFXML
     end
 
     def self.symbols
-      [:rdfxml, :rdf]
+      [:rdfxml, :rdf, :owl]
     end
   end
 end
