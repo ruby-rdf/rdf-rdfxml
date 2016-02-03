@@ -25,8 +25,8 @@ describe RDF::RDFXML::Reader do
 
               if reader.instance_variable_get(:@library) == :rexml
                 pending("no namespace attributes") if t.name == "unrecognised-xml-attributes-test002"
-                pending("XML-C14XL") if t.name == "xml-canon-test001"
               end
+              pending("XML-C14XL") if t.name == "xml-canon-test001"
 
               if t.positive_test?
                 begin

@@ -23,8 +23,8 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 2.0'
   gem.requirements          = []
 
-  gem.add_runtime_dependency     'rdf',             '>= 1.99', '< 3'
-  gem.add_runtime_dependency     'rdf-rdfa',        '>= 1.99', '< 3'
+  gem.add_runtime_dependency     'rdf',             '>= 2.0.0.beta', '< 3'
+  gem.add_runtime_dependency     'rdf-rdfa',        '>= 2.0.0.beta', '< 3'
   gem.add_runtime_dependency     'rdf-xsd',         '>= 1.99', '< 3'
   gem.add_runtime_dependency     'htmlentities',    '~> 4.3'
 
@@ -35,9 +35,9 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'json-ld',         '>= 1.99', '< 3'
   gem.add_development_dependency 'rspec',           '~> 3.2'
   gem.add_development_dependency 'rspec-its',       '~> 1.0'
-  gem.add_development_dependency 'rdf-isomorphic',  '>= 1.99', '< 3'
-  gem.add_development_dependency 'rdf-turtle',      '>= 1.99', '< 3'
-  gem.add_development_dependency 'rdf-spec',        '>= 1.99', '< 3'
+  gem.add_development_dependency 'rdf-isomorphic',  '>= 2.0.0.beta', '< 3'
+  gem.add_development_dependency 'rdf-turtle',      '>= 2.0.0.beta', '< 3'
+  gem.add_development_dependency 'rdf-spec',        '>= 2.0.0.beta', '< 3'
   gem.add_development_dependency 'rdf-vocab',       '>= 0.8'
   gem.add_development_dependency 'yard' ,           '~> 0.8'
 
