@@ -30,7 +30,7 @@ data = <<-EOF;
   </rdf:RDF>
 EOF
 
-RDF::RDFXML::Reader.new(data, :base_uri => 'http://example.org/example.xml') do |reader|
+RDF::RDFXML::Reader.new(data, base_uri: 'http://example.org/example.xml') do |reader|
   reader.each_statement do |statement|
     statement.inspect!
   end

@@ -16,7 +16,7 @@ def earl_preamble(options)
   options[:output].puts %(@prefix earl: <http://www.w3.org/ns/earl#> .)
   RDF::RDFXML::Reader.open(File.expand_path("../../etc/doap.rdf", __FILE__)) do |reader|
     g = RDF::Graph.new << reader
-    options[:output].write g.dump(:ttl, :prefixes => reader.prefixes)
+    options[:output].write g.dump(:ttl, prefixes: reader.prefixes)
   end
   options[:output].puts %(
 <> foaf:primaryTopic <http://rubygems.org/gems/rdf-rdfxml> ;
@@ -43,9 +43,9 @@ def run_tc(tc, options)
 
   begin
     puts "open #{tc.action}" if options[:verbose]
-    options = {:base_uri => tc.base}.merge(options)
+    options = {base_uri: tc.base}.merge(options)
 
-    reader = RDF::Reader.for(tc.action).new(tc.input, :base_uri => tc.base, :validate => tc.syntax?)
+    reader = RDF::Reader.for(tc.action).new(tc.input, base_uri: tc.base, validate: tc.syntax?, logger: options[:logger])
 
     graph = RDF::Repository.new
     result = nil
@@ -68,12 +68,15 @@ def run_tc(tc, options)
     end
 
     if tc.evaluate? && result.nil?
-      output_graph = RDF::Repository.load(tc.result, :format => :ntriples, :base_uri => tc.base)
+      output_graph = RDF::Repository.load(tc.result, format: :ntriples, base_uri: tc.base)
       result = graph.isomorphic_with?(output_graph) ? "passed" : "failed"
     else
       result ||= "passed"
     end
 
+  rescue Interrupt
+    STDERR.puts "\nHalting"
+    exit(1)
   rescue Exception => e
     STDERR.puts "#{"exception:" unless options[:quiet]}: #{e}"
     if options[:quiet]
@@ -83,7 +86,7 @@ def run_tc(tc, options)
     end
   end
 
-  options[:output].puts("\nOutput:\n" + graph.dump(:ntriples, :validate => false)) unless options[:quiet]
+  options[:output].puts("\nOutput:\n" + graph.dump(:ntriples, validate: false)) unless options[:quiet]
 
   if options[:earl]
     options[:output].puts %{
@@ -105,8 +108,13 @@ def run_tc(tc, options)
   puts "#{"test result:" unless options[:quiet]} #{result}"
 end
 
+logger = Logger.new(STDERR)
+logger.level = Logger::WARN
+logger.formatter = lambda {|severity, datetime, progname, msg| "#{severity}: #{msg}\n"}
+
 options = {
-  :output => STDOUT,
+  output: STDOUT,
+  logger: logger
 }
 
 opts = GetoptLong.new(
@@ -133,10 +141,10 @@ end
 opts.each do |opt, arg|
   case opt
   when '--help'             then help(options)
-  when '--dbg'              then ::RDF::RDFXML::debug = true
+  when '--dbg'              then logger.level = Logger::DEBUG
   when '--earl'             then options[:quiet] = options[:earl] = true
   when '--output'           then options[:output] = File.open(arg, "w")
-  when '--quiet'            then options[:quiet] = true
+  when '--quiet'            then options[:quiet] = true; logger.level = Logger::FATAL
   when '--verbose'          then options[:verbose] = true
   end
 end

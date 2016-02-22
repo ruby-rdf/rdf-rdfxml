@@ -2,6 +2,7 @@
 $:.unshift "."
 require File.join(File.dirname(__FILE__), 'spec_helper')
 require 'rdf/spec/reader'
+require 'rdf/vocab'
 
 # Some specific issues that fail with jRuby to be resolved
 have_nokogiri = true
@@ -23,7 +24,7 @@ describe RDF::RDFXML::Writer, skip: ("Nokogiri not loaded" unless have_nokogiri)
   context "resource without type" do
     subject do
       @graph = RDF::Repository.new << [RDF::URI.new("http://release/"), RDF::URI("http://purl.org/dc/terms/title"), "foo"]
-      serialize(:max_depth => 1, :attributes => :untyped)
+      serialize(max_depth: 1, attributes: :untyped)
     end
 
     {
@@ -39,7 +40,7 @@ describe RDF::RDFXML::Writer, skip: ("Nokogiri not loaded" unless have_nokogiri)
   # Serialize  @graph to a string and compare against regexps
   def serialize(options = {})
     @debug = []
-    result = RDF::RDFXML::Writer.buffer({:debug => true, :standard_prefixes => true}.merge(options)) do |writer|
+    result = RDF::RDFXML::Writer.buffer({logger: false, standard_prefixes: true}.merge(options)) do |writer|
       writer << @graph
     end
     require 'cgi'

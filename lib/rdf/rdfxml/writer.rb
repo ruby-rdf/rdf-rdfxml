@@ -13,9 +13,9 @@ module RDF::RDFXML
   # @example Obtaining a RDF/XML writer class
   #   RDF::Writer.for(:rdf)         #=> RDF::RDFXML::Writer
   #   RDF::Writer.for("etc/test.rdf")
-  #   RDF::Writer.for(:file_name      => "etc/test.rdf")
-  #   RDF::Writer.for(:file_extension => "rdf")
-  #   RDF::Writer.for(:content_type   => "application/rdf+xml")
+  #   RDF::Writer.for(file_name: "etc/test.rdf")
+  #   RDF::Writer.for(file_extension: "rdf")
+  #   RDF::Writer.for(content_type: "application/rdf+xml")
   #
   # @example Serializing RDF graph into an RDF/XML file
   #   RDF::RDFXML::Write.open("etc/test.rdf") do |writer|
@@ -37,9 +37,9 @@ module RDF::RDFXML
   #   end
   #
   # @example Creating @base and @prefix definitions in output
-  #   RDF::RDFXML::Writer.buffer(:base_uri => "http://example.com/", :prefixes => {
+  #   RDF::RDFXML::Writer.buffer(base_uri: "http://example.com/", prefixes: {
   #       nil => "http://example.com/ns#",
-  #       :foaf => "http://xmlns.com/foaf/0.1/"}
+  #       foaf: "http://xmlns.com/foaf/0.1/"}
   #   ) do |writer|
   #     graph.each_statement do |statement|
   #       writer << statement
@@ -49,8 +49,42 @@ module RDF::RDFXML
   # @author [Gregg Kellogg](http://kellogg-assoc.com/)
   class Writer < RDF::RDFa::Writer
     format RDF::RDFXML::Format
+    include RDF::Util::Logger
 
     VALID_ATTRIBUTES = [:none, :untyped, :typed]
+
+    ##
+    # RDF/XML Writer options
+    # @see http://www.rubydoc.info/github/ruby-rdf/rdf/RDF/Writer#options-class_method
+    def self.options
+      super + [
+        RDF::CLI::Option.new(
+          symbol: :attributes,
+          datatype: %w(none untyped typed),
+          on: ["--attributes ATTRIBUTES",  %w(none untyped typed)],
+          description: "How to use XML attributes when serializing, one of :none, :untyped, :typed. The default is :none.") {|arg| arg.to_sym},
+        RDF::CLI::Option.new(
+          symbol: :default_namespace,
+          datatype: RDF::URI,
+          on: ["--default-namespace URI", :REQUIRED],
+          description: "URI to use as default namespace, same as prefixes.") {|arg| RDF::URI(arg)},
+        RDF::CLI::Option.new(
+          symbol: :lang,
+          datatype: String,
+          on: ["--lang"],
+          description: "Output as root @lang attribute, and avoid generation _@lang_ where possible."),
+        RDF::CLI::Option.new(
+          symbol: :max_depth,
+          datatype: Integer,
+          on: ["--max-depth"],
+          description: "Maximum depth for recursively defining resources, defaults to 3.") {|arg| arg.to_i},
+        RDF::CLI::Option.new(
+          symbol: :stylesheet,
+          datatype: RDF::URI,
+          on: ["--stylesheet URI", :REQUIRED],
+          description: "URI to use as @href for output stylesheet processing instruction.") {|arg| RDF::URI(arg)},
+      ]
+    end
 
     ##
     # Initializes the RDF/XML writer instance.
@@ -155,7 +189,7 @@ module RDF::RDFXML
       end
 
       predicates -= attr_props.keys.map {|k| expand_curie(k).to_s}
-      super(subject, predicates, options.merge(:attr_props => attr_props), &block)
+      super(subject, predicates, options.merge(attr_props: attr_props), &block)
     end
     # See if we can serialize as attribute.
     # * untyped attributes that aren't duplicated where xml:lang == @lang
@@ -195,7 +229,7 @@ module RDF::RDFXML
     # @return String
     #   The rendered document is returned as a string
     def render_document(subjects, options = {}, &block)
-      super(subjects, options.merge(:stylesheet => @options[:stylesheet]), &block)
+      super(subjects, options.merge(stylesheet: @options[:stylesheet]), &block)
     end
 
     # Render a single- or multi-valued predicate using `haml_template[:property_value]` or `haml_template[:property_values]`. Yields each object for optional rendering. The block should only render for recursive subject definitions (i.e., where the object is also a subject and is rendered underneath the first referencing subject).
@@ -223,7 +257,7 @@ module RDF::RDFXML
     # @return String
     #   The rendered document is returned as a string
     def render_property(predicate, objects, options = {}, &block)
-      add_debug {"render_property(#{predicate}): #{objects.inspect}, #{options.inspect}"}
+      log_debug {"render_property(#{predicate}): #{objects.inspect}, #{options.inspect}"}
       # If there are multiple objects, and no :property_values is defined, call recursively with
       # each object
 
@@ -233,19 +267,19 @@ module RDF::RDFXML
       # Separate out the objects which are lists and render separately
       lists = objects.
         select(&:node?).
-        map {|o| RDF::List.new(o, @graph)}.
+        map {|o| RDF::List.new(subject: o, graph: @graph)}.
         select {|l| l.valid? && l.none?(&:literal?)}
 
       unless lists.empty?
         # Render non-list objects
-        add_debug {"properties with lists: #{lists} non-lists: #{objects - lists.map(&:subject)}"}
-        nl = depth {render_property(predicate, objects - lists.map(&:subject), options, &block)} unless objects == lists.map(&:subject)
+        log_debug {"properties with lists: #{lists} non-lists: #{objects - lists.map(&:subject)}"}
+        nl = log_depth {render_property(predicate, objects - lists.map(&:subject), options, &block)} unless objects == lists.map(&:subject)
         return nl.to_s + lists.map do |list|
           # Render each list as multiple properties and set :inlist to true
           list.each_statement {|st| subject_done(st.subject)}
 
-          add_debug {"list: #{list.inspect} #{list.to_a}"}
-          depth do
+          log_debug {"list: #{list.inspect} #{list.to_a}"}
+          log_depth do
             render_collection(predicate, list, options) do |object|
               yield(object, true) if block_given?
             end
@@ -256,16 +290,16 @@ module RDF::RDFXML
       if objects.length > 1
         # Render each property using property_value template
         objects.map do |object|
-          depth {render_property(predicate, [object], options, &block)}
+          log_depth {render_property(predicate, [object], options, &block)}
         end.join(" ")
       else
-        raise RDF::WriterError, "Missing property template" if template.nil?
+        log_fatal("Missing property template", exception:  RDF::WriterError) if template.nil?
 
         options = {
           object:     objects.first,
           predicate:  predicate,
           property:   get_qname(predicate),
-          recurse:    @depth <= @max_depth
+          recurse:    log_depth <= @max_depth
         }.merge(options)
         hamlify(template, options, &block)
       end
@@ -292,7 +326,7 @@ module RDF::RDFXML
         list:       list,
         predicate:  predicate,
         property:   get_qname(predicate),
-        recurse:    @depth <= @max_depth,
+        recurse:    log_depth <= @max_depth,
       }.merge(options)
       hamlify(template, options) do |object|
         yield object
@@ -365,7 +399,7 @@ module RDF::RDFXML
         base_uri = uri.to_s[0..separation]
         suffix = uri.to_s[separation+1..-1]
         @gen_prefix = @gen_prefix ? @gen_prefix.succ : "ns0"
-        add_debug {"ensure_curie: generated prefix #{@gen_prefix} for #{base_uri}"}
+        log_debug {"ensure_curie: generated prefix #{@gen_prefix} for #{base_uri}"}
         @uri_to_prefix[base_uri] = @gen_prefix
         @uri_to_term_or_curie[uri] = "#{@gen_prefix}:#{suffix}"
         prefix(@gen_prefix, base_uri)
