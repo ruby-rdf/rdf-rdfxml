@@ -7,7 +7,7 @@ Gem::Specification.new do |gem|
 
   gem.name                  = %q{rdf-rdfxml}
   gem.homepage              = %q{http://ruby-rdf.github.com/rdf-rdfxml}
-  gem.license               = 'Public Domain' if gem.respond_to?(:license=)
+  gem.license               = 'Unlicense'
   gem.summary               = %q{RDF/XML reader/writer for RDF.rb.}
   gem.description           = %q{RDF::RDFXML is an RDF/XML reader and writer for the RDF.rb library suite.}
   gem.rubyforge_project     = 'rdf-rdfxml'
@@ -25,20 +25,20 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency     'rdf',             '>= 2.0.0.beta', '< 3'
   gem.add_runtime_dependency     'rdf-rdfa',        '>= 2.0.0.beta', '< 3'
-  gem.add_runtime_dependency     'rdf-xsd',         '>= 1.99', '< 3'
+  gem.add_runtime_dependency     'rdf-xsd',         '>= 2.0.0.beta', '< 3'
   gem.add_runtime_dependency     'htmlentities',    '~> 4.3'
 
   #gem.add_development_dependency 'nokogiri' ,       '>= 1.6.1' # conditionally done in Gemfile
   #gem.add_development_dependency 'equivalent-xml' , '~> 0.2' # conditionally done in Gemfile
   gem.add_development_dependency 'open-uri-cached', '~> 0.0', '>= 0.0.5'
   gem.add_development_dependency 'spira',           '= 0.0.12'
-  gem.add_development_dependency 'json-ld',         '>= 1.99', '< 3'
-  gem.add_development_dependency 'rspec',           '~> 3.2'
-  gem.add_development_dependency 'rspec-its',       '~> 1.0'
+  gem.add_development_dependency 'json-ld',         '>= 2.0.0.beta', '< 3'
+  gem.add_development_dependency 'rspec',           '~> 3.4'
+  gem.add_development_dependency 'rspec-its',       '~> 1.2'
   gem.add_development_dependency 'rdf-isomorphic',  '>= 2.0.0.beta', '< 3'
   gem.add_development_dependency 'rdf-turtle',      '>= 2.0.0.beta', '< 3'
   gem.add_development_dependency 'rdf-spec',        '>= 2.0.0.beta', '< 3'
-  gem.add_development_dependency 'rdf-vocab',       '>= 0.8'
+  gem.add_development_dependency 'rdf-vocab',       '>= 2.0.0.beta', '< 3'
   gem.add_development_dependency 'yard' ,           '~> 0.8'
 
   # Rubinius has it's own dependencies
