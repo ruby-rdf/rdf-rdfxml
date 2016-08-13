@@ -21,7 +21,6 @@ group :development do
 end
 
 group :debug do
-  gem "wirble"
   gem "ruby-debug", platforms: :jruby
   gem "byebug",     platform: :mri
 end

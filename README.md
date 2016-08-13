@@ -18,7 +18,7 @@ Install with `gem install rdf-rdfxml`
 
 * 100% free and unencumbered [public domain](http://unlicense.org/) software.
 * Implements a complete parser for [RDF/XML][].
-* Compatible with Ruby >= 2.0.
+* Compatible with Ruby >= 2.2.2.
 
 ## Usage:
 Instantiate a parser and parse source, specifying type and base-URL
