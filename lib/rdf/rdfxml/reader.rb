@@ -337,8 +337,8 @@ module RDF::RDFXML
         # Determine the content type of this property element
         log_fatal "child must be a proxy not a #{child.class}" unless child.is_a?(@implementation::NodeProxy)
 
-        text_nodes = child.children.select {|e| e.text? && !e.blank?}
-        element_nodes = child.children.select {|c| c.element? }
+        text_nodes = child.children.select(&:text?)
+        element_nodes = child.children.select(&:element?)
         add_debug(child) {"#{text_nodes.to_a.length} text nodes, #{element_nodes.to_a.length} element nodes"}
 
         text_nodes.each do |node|

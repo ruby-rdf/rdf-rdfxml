@@ -202,6 +202,24 @@ describe "RDF::RDFXML::Reader" do
         expect(graph).to be_equivalent_graph(expected, logger: logger)
       end
 
+      it "reads text from CDATA" do
+        sampledoc = %(<?xml version="1.0" encoding="utf-8"?>
+          <rdf:RDF
+            xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+            xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+          >
+            <rdf:Property rdf:about="http://www.w3.org/ns/oa#annotationService">
+              <rdfs:comment><![CDATA[Text]]></rdfs:comment>
+            </rdf:Property>
+          </rdf:RDF>)
+        expected = %(
+        	<http://www.w3.org/ns/oa#annotationService> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> .
+        	<http://www.w3.org/ns/oa#annotationService> <http://www.w3.org/2000/01/rdf-schema#comment> "Text" .
+        )
+        graph = parse(sampledoc, validate: true)
+        expect(graph).to be_equivalent_graph(expected, logger: logger)
+      end
+
       context :exceptions do
         it "should raise an error if rdf:aboutEach is used, as per the negative parser test rdfms-abouteach-error001 (rdf:aboutEach attribute)" do
           sampledoc = %q(<?xml version="1.0" ?>
