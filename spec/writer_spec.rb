@@ -691,9 +691,9 @@ describe "RDF::RDFXML::Writer" do
             m.entries.each do |t|
               next unless t.positive_test? && t.evaluate?
               # Literal serialization adds namespace definitions
-              next if t.subject =~ /rdfms-xml-literal-namespaces|xml-canon/
 
               specify "#{t.name}" do
+                pending if t.name == 'xml-canon-test001'
                 unless defined?(::Nokogiri)
                   pending("XML-C14XL") if t.name == "xml-canon-test001"
                 end
