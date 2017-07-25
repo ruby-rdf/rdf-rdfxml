@@ -82,6 +82,14 @@ module RDF::RDFXML
         end
 
         ##
+        # Return true of this is a text node
+        #
+        # @return [Array<:text, :element, :attribute>]
+        def text?
+          (@node.text? || @node.cdata?) && !@node.blank?
+        end
+
+        ##
         # Return true of all child elements are text
         #
         # @return [Array<:text, :element, :attribute>]
@@ -104,7 +112,7 @@ module RDF::RDFXML
         def children
           @children ||= NodeSetProxy.new(@node.children, self)
         end
-        
+
         # Ancestors of this element, in order
         def ancestors
           @ancestors ||= parent ? parent.ancestors + [parent] : []

@@ -15,13 +15,12 @@ group :development do
   gem 'rdf-turtle',         github: "ruby-rdf/rdf-turtle",          branch: "develop"
   gem 'rdf-vocab',          github: "ruby-rdf/rdf-vocab",           branch: "develop"
   gem "rdf-xsd",            github: "ruby-rdf/rdf-xsd",             branch: "develop"
-  gem 'sxp',                github: "gkellogg/sxp-ruby",            branch: "develop"
+  gem 'sxp',                github: "dryruby/sxp.rb",               branch: "develop"
 
   gem "equivalent-xml"
 end
 
 group :debug do
-  gem "wirble"
   gem "ruby-debug", platforms: :jruby
   gem "byebug",     platform: :mri
 end
