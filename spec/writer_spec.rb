@@ -690,10 +690,7 @@ describe "RDF::RDFXML::Writer" do
           describe m.comment do
             m.entries.each do |t|
               next unless t.positive_test? && t.evaluate?
-              # Literal serialization adds namespace definitions
-
               specify "#{t.name}" do
-                pending if t.name == 'xml-canon-test001'
                 unless defined?(::Nokogiri)
                   pending("XML-C14XL") if t.name == "xml-canon-test001"
                 end
