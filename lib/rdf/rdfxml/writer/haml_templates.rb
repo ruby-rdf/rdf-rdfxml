@@ -38,8 +38,7 @@ module RDF::RDFXML
             - if expanded_type.start_with?('_:')
               - haml_tag(get_qname(RDF.type), "rdf:nodeID" => expanded_type[2..-1])
             -else
-              - # FIXME: closing tag forces close tag, as :/ is not honored in 5.0.1
-              - haml_tag(get_qname(RDF.type), "", "rdf:resource" => expanded_type)
+              - haml_tag(get_qname(RDF.type), "rdf:resource" => expanded_type)
           - predicates.each do |p|
             = yield(p)
       ),
@@ -60,11 +59,9 @@ module RDF::RDFXML
         - haml_tag(property, :"<", "xml:lang" => object.language, "rdf:datatype" => (object.datatype unless object.plain?)) do
           = object.value.to_s.encode(xml: :text)
       - elsif object.node?
-        - # FIXME: closing tag forces close tag, as :/ is not honored in 5.0.1
-        - haml_tag(property, "", "rdf:nodeID" => object.id)
+        - haml_tag(property, :"/", "rdf:nodeID" => object.id)
       - else
-        - # FIXME: closing tag forces close tag, as :/ is not honored in 5.0.1
-        - haml_tag(property, "", "rdf:resource" => relativize(object))
+        - haml_tag(property, :"/", "rdf:resource" => relativize(object))
       ),
 
       # Outpust for a list
@@ -78,11 +75,9 @@ module RDF::RDFXML
             - if recurse && res = yield(object)
               = res
             - elsif object.node?
-              - # FIXME: closing tag forces close tag, as :/ is not honored in 5.0.1
-              - haml_tag(get_qname(RDF.Description), "", "rdf:nodeID" => (object.id if ref_count(object) > 1))
+              - haml_tag(get_qname(RDF.Description), :"/", "rdf:nodeID" => (object.id if ref_count(object) > 1))
             - else
-              - # FIXME: closing tag forces close tag, as :/ is not honored in 5.0.1
-              - haml_tag(get_qname(RDF.Description), "", "rdf:about" => relativize(object))
+              - haml_tag(get_qname(RDF.Description), :"/", "rdf:about" => relativize(object))
       ),
     }
     HAML_TEMPLATES = {base: BASE_HAML}
