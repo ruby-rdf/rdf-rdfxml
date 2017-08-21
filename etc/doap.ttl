@@ -19,7 +19,7 @@
    doap:documenter <http://greggkellogg.net/foaf#me>;
    doap:download-page <http://rubygems.org/gems/rdf-rdfxml>;
    doap:helper <http://njh.me/>;
-   doap:homepage <http://github.com/gkellogg/rdf-rdfxml>;
+   doap:homepage <http://github.com/ruby-rdf/rdf-rdfxml>;
    doap:implements <http://www.w3.org/TR/rdf-syntax-grammar/>;
    doap:mailing-list <http://lists.w3.org/Archives/Public/public-rdf-ruby/>;
    doap:maintainer <http://greggkellogg.net/foaf#me>;
