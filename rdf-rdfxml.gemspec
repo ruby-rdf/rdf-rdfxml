@@ -31,12 +31,12 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency     'htmlentities',    '~> 4.3'
 
   #gem.add_development_dependency 'nokogiri' ,       '>= 1.6.1' # conditionally done in Gemfile
-  #gem.add_development_dependency 'equivalent-xml' , '~> 0.2' # conditionally done in Gemfile
+  #gem.add_development_dependency 'equivalent-xml' , '~> 0.6' # conditionally done in Gemfile
   gem.add_development_dependency 'open-uri-cached', '~> 0.0', '>= 0.0.5'
   gem.add_development_dependency 'spira',           '= 0.0.12'
   #gem.add_development_dependency 'json-ld',         '~> 3.0'
   gem.add_development_dependency 'json-ld',         '>= 2.1', '< 4.0'
-  gem.add_development_dependency 'rspec',           '~> 3.4'
+  gem.add_development_dependency 'rspec',           '~> 3.7'
   gem.add_development_dependency 'rspec-its',       '~> 1.2'
   #gem.add_development_dependency 'rdf-isomorphic',  '~> 3.0'
   #gem.add_development_dependency 'rdf-turtle',      '~> 3.0'
@@ -46,7 +46,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rdf-turtle',      '>= 2.2', '< 4.0'
   gem.add_development_dependency 'rdf-spec',        '>= 2.2', '< 4.0'
   gem.add_development_dependency 'rdf-vocab',       '>= 2.2', '< 4.0'
-  gem.add_development_dependency 'yard' ,           '~> 0.8'
+  gem.add_development_dependency 'yard' ,           '~> 0.9.12'
 
   # Rubinius has it's own dependencies
   if RUBY_ENGINE == "rbx" && RUBY_VERSION >= "2.1.0"
