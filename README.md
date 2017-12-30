@@ -40,8 +40,8 @@ Write a graph to a file:
     end
 
 ## Dependencies
-* [RDF.rb](http://rubygems.org/gems/rdf) (>= 2.0)
-* Soft dependency on [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.6.0)
+* [RDF.rb](http://rubygems.org/gems/rdf) (~> 3.0)
+* Soft dependency on [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.8.1)
 
 ## Documentation
 Full documentation available on [Rubydoc.info][RDF/XML doc])

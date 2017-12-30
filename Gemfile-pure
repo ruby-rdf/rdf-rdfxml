@@ -7,7 +7,7 @@ gem 'rdf',      github: "ruby-rdf/rdf",       branch: "develop"
 gem 'rdf-rdfa', github: "ruby-rdf/rdf-rdfa",  branch: "develop"
 
 group :development do
-  gem 'ebnf',               github: "gkellogg/ebnf",                branch: "develop"
+  gem 'ebnf',               github: "dryruby/ebnf",                 branch: "develop"
   gem 'json-ld',            github: "ruby-rdf/json-ld",             branch: "develop"
   gem 'rdf-aggregate-repo', github: "ruby-rdf/rdf-aggregate-repo",  branch: "develop"
   gem 'rdf-isomorphic',     github: "ruby-rdf/rdf-isomorphic",      branch: "develop"
