@@ -17,18 +17,16 @@ Gem::Specification.new do |gem|
   gem.platform              = Gem::Platform::RUBY
   gem.files                 = %w(README.md History.md AUTHORS CONTRIBUTORS VERSION UNLICENSE) + Dir.glob('lib/**/*.rb')
   gem.require_paths         = %w(lib)
-  gem.has_rdoc              = false
 
   gem.required_ruby_version = '>= 2.2.2'
   gem.requirements          = []
 
   gem.add_runtime_dependency     'rdf',             '~> 3.0'
   gem.add_runtime_dependency     'rdf-xsd',         '~> 3.0'
-  #gem.add_runtime_dependency     'rdf-rdfa',        '~> 3.0'
-  gem.add_runtime_dependency     'rdf-rdfa',        '>= 2.2', '< 4.0'
+  gem.add_runtime_dependency     'rdf-rdfa',        '~> 3.0'
   gem.add_runtime_dependency     'htmlentities',    '~> 4.3'
 
-  #gem.add_development_dependency 'nokogiri' ,       '>= 1.6.1' # conditionally done in Gemfile
+  #gem.add_development_dependency 'nokogiri' ,       '~> 1.8'
   #gem.add_development_dependency 'equivalent-xml' , '~> 0.6' # conditionally done in Gemfile
   gem.add_development_dependency 'open-uri-cached', '~> 0.0', '>= 0.0.5'
   gem.add_development_dependency 'spira',           '= 0.0.12'
