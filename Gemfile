@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gemspec
 
 gem "rdf", '~> 1.99'
-gem "rdf-rdfa", git: 'git://github.com/ruby-rdf/rdf-rdfa.git', branch: "haml5"
+gem "rdf-rdfa", git: 'git://github.com/ruby-rdf/rdf-rdfa.git', branch: "1.99-support"
 gem "nokogiri"
 
 group :debug do
