@@ -705,21 +705,22 @@ describe "RDF::RDFXML::Writer" do
       end
     end unless ENV['CI'] # Not for continuous integration
 
-    def parse(input, options = {})
+    def parse(input, **options)
       reader_class = RDF::Reader.for(options.fetch(:format, :rdfxml))
 
-      reader_class.new(input, options, &:each).to_a.extend(RDF::Enumerable)
+      reader_class.new(input, **options, &:each).to_a.extend(RDF::Enumerable)
     end
 
     # Serialize ntstr to a string and compare against regexps
-    def serialize(ntstr, options = {})
+    def serialize(ntstr, **options)
       g = ntstr.is_a?(RDF::Enumerable) ? ntstr : parse(ntstr, format: :ntriples, validate: false, logger: [])
       logger.info "serialized: #{ntstr}"
-      result = RDF::RDFXML::Writer.buffer(options.merge(
+      result = RDF::RDFXML::Writer.buffer(
         logger:   logger,
         standard_prefixes: true,
-        encoding: Encoding::UTF_8
-      )) do |writer|
+        encoding: Encoding::UTF_8,
+        **options
+      ) do |writer|
         writer << g
       end
       require 'cgi'
