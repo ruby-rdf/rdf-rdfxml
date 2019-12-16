@@ -113,7 +113,7 @@ module RDF::RDFXML
     #   URI to use as @href for output stylesheet processing instruction.
     # @yield  [writer]
     # @yieldparam [RDF::Writer] writer
-    def initialize(output = $stdout, options = {}, &block)
+    def initialize(output = $stdout, **options, &block)
       super
     end
 
@@ -170,7 +170,7 @@ module RDF::RDFXML
     # @return String
     #   The rendered document is returned as a string
     # Return Haml template for document from `haml_template[:subject]`
-    def render_subject(subject, predicates, options = {}, &block)
+    def render_subject(subject, predicates, **options, &block)
       # extract those properties that can be rendered as attributes
       attr_props = if [:untyped, :typed].include?(@attributes)
         options[:property_values].inject({}) do |memo, (prop, values)|
@@ -189,7 +189,7 @@ module RDF::RDFXML
       end
 
       predicates -= attr_props.keys.map {|k| expand_curie(k).to_s}
-      super(subject, predicates, options.merge(attr_props: attr_props), &block)
+      super(subject, predicates, **options.merge(attr_props: attr_props), &block)
     end
     # See if we can serialize as attribute.
     # * untyped attributes that aren't duplicated where xml:lang == @lang
@@ -228,8 +228,8 @@ module RDF::RDFXML
     # @yieldreturn [:ignored]
     # @return String
     #   The rendered document is returned as a string
-    def render_document(subjects, options = {}, &block)
-      super(subjects, options.merge(stylesheet: @options[:stylesheet]), &block)
+    def render_document(subjects, **options, &block)
+      super(subjects, **options.merge(stylesheet: @options[:stylesheet]), &block)
     end
 
     # Render a single- or multi-valued predicate using `haml_template[:property_value]` or `haml_template[:property_values]`. Yields each object for optional rendering. The block should only render for recursive subject definitions (i.e., where the object is also a subject and is rendered underneath the first referencing subject).
@@ -256,7 +256,7 @@ module RDF::RDFXML
     #   The block should only return a string for recursive object definitions.
     # @return String
     #   The rendered document is returned as a string
-    def render_property(predicate, objects, options = {}, &block)
+    def render_property(predicate, objects, **options, &block)
       log_debug {"render_property(#{predicate}): #{objects.inspect}, #{options.inspect}"}
       # If there are multiple objects, and no :property_values is defined, call recursively with
       # each object
@@ -280,7 +280,7 @@ module RDF::RDFXML
 
           log_debug {"list: #{list.inspect} #{list.to_a}"}
           log_depth do
-            render_collection(predicate, list, options) do |object|
+            render_collection(predicate, list, **options) do |object|
               yield(object, true) if block_given?
             end
           end
@@ -290,7 +290,7 @@ module RDF::RDFXML
       if objects.length > 1
         # Render each property using property_value template
         objects.map do |object|
-          log_depth {render_property(predicate, [object], options, &block)}
+          log_depth {render_property(predicate, [object], **options, &block)}
         end.join(" ")
       else
         log_fatal("Missing property template", exception:  RDF::WriterError) if template.nil?
@@ -301,7 +301,7 @@ module RDF::RDFXML
           property:   get_qname(predicate),
           recurse:    log_depth <= @max_depth
         }.merge(options)
-        hamlify(template, options, &block)
+        hamlify(template, **options, &block)
       end
     end
 
@@ -319,7 +319,7 @@ module RDF::RDFXML
     #   The block should only return a string for recursive object definitions.
     # @return String
     #   The rendered collection is returned as a string
-    def render_collection(predicate, list, options = {}, &block)
+    def render_collection(predicate, list, **options, &block)
       template = options[:haml] || haml_template[:collection]
 
       options = {
@@ -328,7 +328,7 @@ module RDF::RDFXML
         property:   get_qname(predicate),
         recurse:    log_depth <= @max_depth,
       }.merge(options)
-      hamlify(template, options) do |object|
+      hamlify(template, **options) do |object|
         yield object
       end
     end

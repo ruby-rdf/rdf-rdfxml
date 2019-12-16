@@ -9,6 +9,10 @@ module RDF::Util
     REMOTE_PATH = "http://www.w3.org/2013/RDFXMLTests/"
     LOCAL_PATH = ::File.expand_path("../w3c-rdf/rdf-xml", __FILE__) + '/'
 
+    class << self
+      alias_method :original_open_file, :open_file
+    end
+
     ##
     # Override to use Patron for http and https, Kernel.open otherwise.
     #
@@ -18,43 +22,49 @@ module RDF::Util
     #   HTTP Request headers.
     # @return [IO] File stream
     # @yield [IO] File stream
-    def self.open_file(filename_or_url, options = {}, &block)
-      case filename_or_url.to_s
-      when /^file:/
+    def self.open_file(filename_or_url, **options, &block)
+      case
+      when filename_or_url.to_s =~ /^file:/
         path = filename_or_url[5..-1]
-        Kernel.open(path.to_s, &block)
-      when /^#{REMOTE_PATH}/
-        begin
-          #puts "attempt to open #{filename_or_url} locally"
-          local_filename = filename_or_url.to_s.sub(REMOTE_PATH, LOCAL_PATH)
-          if ::File.exist?(local_filename)
-            response = ::File.open(local_filename)
-            #puts "use #{filename_or_url} locally"
-            case filename_or_url.to_s
-            when /\.rdf$/
-              def response.content_type; 'application/rdf+xml'; end
-            when /\.nt$/
-              def response.content_type; 'application/n-triples'; end
-            end
+        Kernel.open(path.to_s, options, &block)
+      when (filename_or_url.to_s =~ %r{^#{REMOTE_PATH}} && Dir.exist?(LOCAL_PATH))
+        #puts "attempt to open #{filename_or_url} locally"
+        localpath = filename_or_url.to_s.sub(REMOTE_PATH, LOCAL_PATH)
+        response = begin
+          ::File.open(localpath)
+        rescue Errno::ENOENT => e
+          raise IOError, e.message
+        end
+        document_options = {
+          base_uri:     RDF::URI(filename_or_url),
+          charset:      Encoding::UTF_8,
+          code:         200,
+          headers:      {}
+        }
+        #puts "use #{filename_or_url} locally"
+        document_options[:headers][:content_type] = case filename_or_url.to_s
+        when /\.html$/    then 'text/html'
+        when /\.xhtml$/   then 'application/xhtml+xml'
+        when /\.xml$/    then 'application/xml'
+        when /\.svg$/    then 'image/svg+xml'
+        when /\.ttl$/    then 'text/turtle'
+        when /\.ttl$/    then 'text/turtle'
+        when /\.jsonld$/ then 'application/ld+json'
+        else                  'unknown'
+        end
 
-            if block_given?
-              begin
-                yield response
-              ensure
-                response.close
-              end
-            else
-              response
-            end
-          else
-            Kernel.open(filename_or_url.to_s, &block)
-          end
-        rescue Errno::ENOENT #, OpenURI::HTTPError
-          # Not there, don't run tests
-          StringIO.new("")
+        document_options[:headers][:content_type] = response.content_type if response.respond_to?(:content_type)
+        # For overriding content type from test data
+        document_options[:headers][:content_type] = options[:contentType] if options[:contentType]
+
+        remote_document = RDF::Util::File::RemoteDocument.new(response.read, **document_options)
+        if block_given?
+          yield remote_document
+        else
+          remote_document
         end
       else
-        Kernel.open(filename_or_url.to_s, &block)
+        original_open_file(filename_or_url, **options, &block)
       end
     end
   end
@@ -93,7 +103,7 @@ module Fixtures
         g = RDF::Repository.load(file, format: :turtle)
         JSON::LD::API.fromRDF(g) do |expanded|
           JSON::LD::API.frame(expanded, FRAME) do |framed|
-            yield Manifest.new(framed['@graph'].first)
+            yield Manifest.new(framed)
           end
         end
       end

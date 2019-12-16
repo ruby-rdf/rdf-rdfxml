@@ -227,7 +227,7 @@ module RDF::RDFXML
       #
       # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml(input, options = {})
+      def initialize_xml(input, **options)
         require 'nokogiri' unless defined?(::Nokogiri)
         @doc = case input
         when ::Nokogiri::XML::Document

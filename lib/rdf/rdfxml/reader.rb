@@ -41,7 +41,7 @@ module RDF::RDFXML
       end
       
       # Clone existing evaluation context adding information from element
-      def clone(element, options = {}, &cb)
+      def clone(element, **options, &cb)
         new_ec = EvaluationContext.new(@base, nil, @graph)
         new_ec.uri_mappings = self.uri_mappings.clone
         new_ec.language = self.language
@@ -136,7 +136,7 @@ module RDF::RDFXML
     # @yieldparam  [RDF::Reader] reader
     # @yieldreturn [void] ignored
     # @raise [Error] Raises RDF::ReaderError if _validate_
-    def initialize(input = $stdin, options = {}, &block)
+    def initialize(input = $stdin, **options, &block)
       super do
         @library = case options[:library]
         when nil
@@ -156,7 +156,7 @@ module RDF::RDFXML
         self.extend(@implementation)
 
         input.rewind if input.respond_to?(:rewind)
-        initialize_xml(input, options) rescue log_fatal($!.message)
+        initialize_xml(input, **options) rescue log_fatal($!.message)
 
         log_error("Empty document") if root.nil?
         log_error("Synax errors") {doc_errors} if !doc_errors.empty?
@@ -427,7 +427,7 @@ module RDF::RDFXML
           else
             literal_opts[:language] = child_ec.language
           end
-          literal = RDF::Literal.new(child.inner_text, literal_opts)
+          literal = RDF::Literal.new(child.inner_text, **literal_opts)
           add_triple(child, subject, predicate, literal)
           reify(id, child, subject, predicate, literal, ec) if id
         elsif parseType == "Resource"

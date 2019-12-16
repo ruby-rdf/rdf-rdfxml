@@ -1126,8 +1126,8 @@ describe "RDF::RDFXML::Reader" do
     end
   end
 
-  def parse(input, options)
-    RDF::Repository.new << RDF::RDFXML::Reader.new(input, options.merge(logger: logger, library: @library))
+  def parse(input, **options)
+    RDF::Repository.new << RDF::RDFXML::Reader.new(input, logger: logger, library: @library, **options)
   end
 end
 

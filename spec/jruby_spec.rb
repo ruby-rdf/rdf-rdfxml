@@ -38,9 +38,9 @@ describe RDF::RDFXML::Writer, skip: ("Nokogiri not loaded" unless have_nokogiri)
   end
 
   # Serialize  @graph to a string and compare against regexps
-  def serialize(options = {})
+  def serialize(**options)
     @debug = []
-    result = RDF::RDFXML::Writer.buffer({logger: false, standard_prefixes: true}.merge(options)) do |writer|
+    result = RDF::RDFXML::Writer.buffer(logger: false, standard_prefixes: true, **options) do |writer|
       writer << @graph
     end
     require 'cgi'

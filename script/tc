@@ -30,7 +30,7 @@ def earl_preamble(options)
 )
 end
 
-def run_tc(tc, options)
+def run_tc(tc, **options)
   STDERR.write "run #{tc.name}"
 
   if options[:verbose]

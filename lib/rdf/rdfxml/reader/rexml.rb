@@ -245,7 +245,7 @@ module RDF::RDFXML
       #
       # @param  [Hash{Symbol => Object}] options
       # @return [void]
-      def initialize_xml(input, options = {})
+      def initialize_xml(input, **options)
         require 'rexml/document' unless defined?(::REXML)
         @doc = case input
         when ::REXML::Document
