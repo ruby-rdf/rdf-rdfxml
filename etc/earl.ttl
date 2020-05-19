@@ -9,7 +9,7 @@
 <http://rubygems.org/gems/rdf-rdfxml> a doap:Project;
    dc:creator <http://greggkellogg.net/foaf#me>;
    doap:blog <http://greggkellogg.net/>;
-   doap:bug-database <http://github.com/ruby-rdf/rdf-rdfxml/issues>;
+   doap:bug-database <https://github.com/ruby-rdf/rdf-rdfxml/issues>;
    doap:category <http://dbpedia.org/resource/Resource_Description_Framework>,
      <http://dbpedia.org/resource/Ruby_(programming_language)>;
    doap:created "2010-06-03"^^<http://www.w3.org/2001/XMLSchema#date>;
@@ -20,7 +20,7 @@
    doap:documenter <http://greggkellogg.net/foaf#me>;
    doap:download-page <http://rubygems.org/gems/rdf-rdfxml>;
    doap:helper <http://njh.me/>;
-   doap:homepage <http://github.com/gkellogg/rdf-rdfxml>;
+   doap:homepage <https://github.com/gkellogg/rdf-rdfxml>;
    doap:mailing-list <http://lists.w3.org/Archives/Public/public-rdf-ruby/>;
    doap:maintainer <http://greggkellogg.net/foaf#me>;
    doap:name "RDF::RDFXML";
