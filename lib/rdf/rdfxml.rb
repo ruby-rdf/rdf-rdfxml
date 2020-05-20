@@ -21,7 +21,6 @@ module RDF
   # @author [Gregg Kellogg](http://kellogg-assoc.com/)
   module RDFXML
     require 'rdf/rdfxml/format'
-    require 'rdf/rdfxml/vocab'
     autoload :Reader,  'rdf/rdfxml/reader'
     autoload :Writer,  'rdf/rdfxml/writer'
     autoload :VERSION, 'rdf/rdfxml/version'
