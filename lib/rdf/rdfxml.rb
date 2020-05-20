@@ -15,10 +15,10 @@ module RDF
   #     end
   #   end
   #
-  # @see http://rubygems.org/gems/rdf
+  # @see https://rubygems.org/gems/rdf
   # @see http://www.w3.org/TR/REC-rdf-syntax/
   #
-  # @author [Gregg Kellogg](http://kellogg-assoc.com/)
+  # @author [Gregg Kellogg](http://greggkellogg.net/)
   module RDFXML
     require 'rdf/rdfxml/format'
     autoload :Reader,  'rdf/rdfxml/reader'

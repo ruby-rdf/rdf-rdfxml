@@ -46,7 +46,7 @@ module RDF::RDFXML
   #     end
   #   end
   #
-  # @author [Gregg Kellogg](http://kellogg-assoc.com/)
+  # @author [Gregg Kellogg](http://greggkellogg.net/)
   class Writer < RDF::RDFa::Writer
     format RDF::RDFXML::Format
     include RDF::Util::Logger

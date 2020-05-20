@@ -11,7 +11,7 @@ module RDF::RDFXML
   #
   # Based on RDF/XML Syntax Specification: http://www.w3.org/TR/REC-rdf-syntax/
   #
-  # @author [Gregg Kellogg](http://kellogg-assoc.com/)
+  # @author [Gregg Kellogg](http://greggkellogg.net/)
   class Reader < RDF::Reader
     format Format
     include RDF::Util::Logger
