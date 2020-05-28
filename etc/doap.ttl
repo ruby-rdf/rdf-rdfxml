@@ -27,5 +27,5 @@
    doap:maintainer <https://greggkellogg.net/foaf#me>;
    doap:name "RDF::RDFXML";
    doap:shortdesc "RDF/XML reader/writer for Ruby."@en;
-   xhv:license <http://creativecommons.org/licenses/publicdomain/>;
+   xhv:license <https://unlicense.org/>;
    foaf:maker <https://greggkellogg.net/foaf#me> .

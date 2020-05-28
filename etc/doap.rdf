@@ -5,7 +5,7 @@
     xmlns:dc="http://purl.org/dc/terms/"
     xmlns:xhv="http://www.w3.org/1999/xhtml/vocab#"
     xmlns:foaf="http://xmlns.com/foaf/0.1/"
-    xml:base="http://rubygems.org/gems/rdf-rdfxml">
+    xml:base="https://rubygems.org/gems/rdf-rdfxml">
   <doap:Project rdf:about="https://rubygems.org/gems/rdf-rdfxml">
     <dc:creator rdf:resource="https://greggkellogg.net/foaf#me"/>
     <doap:blog rdf:resource="https://greggkellogg.net/"/>
@@ -27,7 +27,7 @@
     <doap:maintainer rdf:resource="https://greggkellogg.net/foaf#me"/>
     <doap:name>RDF::RDFXML</doap:name>
     <doap:shortdesc xml:lang="en">RDF/XML reader/writer for Ruby.</doap:shortdesc>
-    <xhv:license rdf:resource="http://creativecommons.org/licenses/publicdomain/"/>
+    <xhv:license rdf:resource="https://unlicense.org/"/>
     <foaf:maker rdf:resource="https://greggkellogg.net/foaf#me"/>
   </doap:Project>
 </rdf:RDF>
