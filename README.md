@@ -3,7 +3,9 @@
 [RDF/XML][] reader/writer for [RDF.rb][].
 
 [![Gem Version](https://badge.fury.io/rb/rdf-rdfxml.png)](https://badge.fury.io/rb/rdf-rdfxml)
-[![Build Status](https://secure.travis-ci.org/ruby-rdf/rdf-rdfxml.png?branch=master)](https://travis-ci.org/ruby-rdf/rdf-rdfxml)
+[![Build Status](https://github.com/ruby-rdf/rdf-rdfxml/workflows/CI/badge.svg?branch=develop)](https://github.com/ruby-rdf/rdf-rdfxml/actions?query=workflow%3ACI)
+[![Coverage Status](https://coveralls.io/repos/ruby-rdf/rdf-rdfxml/badge.svg)](https://coveralls.io/github/ruby-rdf/rdf-rdfxml)
+[![Gitter chat](https://badges.gitter.im/ruby-rdf/rdf.png)](https://gitter.im/ruby-rdf/rdf)
 
 ## DESCRIPTION
 

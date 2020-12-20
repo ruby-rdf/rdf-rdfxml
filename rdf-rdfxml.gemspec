@@ -28,15 +28,14 @@ Gem::Specification.new do |gem|
 
   #gem.add_development_dependency 'nokogiri' ,       '~> 1.10'
   #gem.add_development_dependency 'equivalent-xml' , '~> 0.6' # conditionally done in Gemfile
-  gem.add_development_dependency 'open-uri-cached', '~> 0.0', '>= 0.0.5'
   gem.add_development_dependency 'json-ld',         '>= 3.1'
-  gem.add_development_dependency 'rspec',           '~> 3.9'
+  gem.add_development_dependency 'rspec',           '~> 3.10'
   gem.add_development_dependency 'rspec-its',       '~> 1.3'
   gem.add_development_dependency 'rdf-isomorphic',  '~> 3.1'
   gem.add_development_dependency 'rdf-turtle',      '~> 3.1'
   gem.add_development_dependency 'rdf-spec',        '~> 3.1'
   gem.add_development_dependency 'rdf-vocab',       '~> 3.1'
-  gem.add_development_dependency 'yard' ,           '~> 0.9.20'
+  gem.add_development_dependency 'yard' ,           '~> 0.9'
 
   gem.post_install_message  = nil
 end
