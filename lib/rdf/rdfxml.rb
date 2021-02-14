@@ -2,6 +2,7 @@ $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..')))
 require 'rdf'
 
 module RDF
+  autoload :XML, 'rdf/rdfa/vocab'
   ##
   # **`RDF::RDFXML`** is an RDF/XML extension for RDF.rb.
   #
@@ -24,7 +25,6 @@ module RDF
     autoload :Reader,  'rdf/rdfxml/reader'
     autoload :Writer,  'rdf/rdfxml/writer'
     autoload :VERSION, 'rdf/rdfxml/version'
-    autoload :XML,     'rdf/rdfxml/vocab'
 
     # Regexp matching an NCName.
     NC_REGEXP = Regexp.new(
