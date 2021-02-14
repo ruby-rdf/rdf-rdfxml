@@ -14,6 +14,11 @@ describe "RDF::RDFXML::Reader" do
     let(:reader_input) {File.read(doap)}
     let(:reader) {RDF::RDFXML::Reader.new(reader_input)}
     let(:reader_count) {File.open(doap_nt).each_line.to_a.length}
+    let(:reader_invalid_input) {%(
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+       <rdf:Description rdf:ID='333-555-666' />
+      </rdf:RDF>
+    )}
   end
 
   context "discovery" do

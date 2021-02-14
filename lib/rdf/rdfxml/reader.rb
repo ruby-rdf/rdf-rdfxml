@@ -158,8 +158,11 @@ module RDF::RDFXML
         input.rewind if input.respond_to?(:rewind)
         initialize_xml(input, **options) rescue log_fatal($!.message)
 
-        log_error("Empty document") if root.nil?
-        log_error("Synax errors") {doc_errors} if !doc_errors.empty?
+        if root.nil?
+          log_info("Empty document")
+        elsif !doc_errors.empty?
+          log_error("Synax errors") {doc_errors}
+        end
 
         block.call(self) if block_given?
       end
