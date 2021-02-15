@@ -2,8 +2,10 @@
 
 [RDF/XML][] reader/writer for [RDF.rb][].
 
-[![Gem Version](https://badge.fury.io/rb/rdf-rdfxml.png)](http://badge.fury.io/rb/rdf-rdfxml)
-[![Build Status](https://secure.travis-ci.org/ruby-rdf/rdf-rdfxml.png?branch=master)](http://travis-ci.org/ruby-rdf/rdf-rdfxml)
+[![Gem Version](https://badge.fury.io/rb/rdf-rdfxml.png)](https://badge.fury.io/rb/rdf-rdfxml)
+[![Build Status](https://github.com/ruby-rdf/rdf-rdfxml/workflows/CI/badge.svg?branch=develop)](https://github.com/ruby-rdf/rdf-rdfxml/actions?query=workflow%3ACI)
+[![Coverage Status](https://coveralls.io/repos/ruby-rdf/rdf-rdfxml/badge.svg?branch=develop)](https://coveralls.io/github/ruby-rdf/rdf-rdfxml?branch=develop)
+[![Gitter chat](https://badges.gitter.im/ruby-rdf/rdf.png)](https://gitter.im/ruby-rdf/rdf)
 
 ## DESCRIPTION
 
@@ -16,7 +18,7 @@ Fully compliant [RDF/XML][] parser and serializer.
 
 Install with `gem install rdf-rdfxml`
 
-* 100% free and unencumbered [public domain](http://unlicense.org/) software.
+* 100% free and unencumbered [public domain](https://unlicense.org/) software.
 * Implements a complete parser for [RDF/XML][].
 * Compatible with Ruby >= 2.4.
 
@@ -40,8 +42,8 @@ Write a graph to a file:
     end
 
 ## Dependencies
-* [RDF.rb](http://rubygems.org/gems/rdf) (~> 3.1)
-* Soft dependency on [Nokogiri](http://rubygems.org/gems/nokogiri) (>= 1.10)
+* [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.1)
+* Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.10)
 
 ## Documentation
 Full documentation available on [Rubydoc.info][RDF/XML doc])
@@ -63,13 +65,13 @@ Full documentation available on [Rubydoc.info][RDF/XML doc])
 * [RDF/XML][RDF/XML]
 * [Distiller](http://rdf.greggkellogg.net)
 * [Documentation][RDF/XML doc]
-* [RDF Tests](http://www.w3.org/2000/10/rdf-tests/rdfcore/allTestCases.html)
+* [RDF Tests](https://www.w3.org/2000/10/rdf-tests/rdfcore/allTestCases.html)
 
 ## Author
-* [Gregg Kellogg](http://github.com/gkellogg) - <http://greggkellogg.net/>
+* [Gregg Kellogg](https://github.com/gkellogg) - <https://greggkellogg.net/>
 
 ## Contributors
-* [Nicholas Humfrey](http://github.com/njh) - <http://njh.me/>
+* [Nicholas Humfrey](https://github.com/njh) - <http://njh.me/>
 
 ## Contributing
 This repository uses [Git Flow](https://github.com/nvie/gitflow) to mange development and release activity. All submissions _must_ be on a feature branch based on the _develop_ branch to ease staging and integration.
@@ -84,25 +86,27 @@ This repository uses [Git Flow](https://github.com/nvie/gitflow) to mange develo
   list in the the `README`. Alphabetical order applies.
 * Do note that in order for us to merge any non-trivial changes (as a rule
   of thumb, additions larger than about 15 lines of code), we need an
-  explicit [public domain dedication][PDD] on record from you.
+  explicit [public domain dedication][PDD] on record from you,
+  which you will be asked to agree to on the first commit to a repo within the organization.
+  Note that the agreement applies to all repos in the [Ruby RDF](https://github.com/ruby-rdf/) organization.
 
 ## License
 
 This is free and unencumbered public domain software. For more information,
-see <http://unlicense.org/> or the accompanying {file:UNLICENSE} file.
+see <https://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 
 ## FEEDBACK
 
 * gregg@greggkellogg.net
-* <http://rubygems.org/rdf-rdfxml>
-* <http://github.com/ruby-rdf/rdf-rdfxml>
-* <http://lists.w3.org/Archives/Public/public-rdf-ruby/>
+* <https://rubygems.org/rdf-rdfxml>
+* <https://github.com/ruby-rdf/rdf-rdfxml>
+* <https://lists.w3.org/Archives/Public/public-rdf-ruby/>
 
-[Ruby]:         http://ruby-lang.org/
-[RDF]:          http://www.w3.org/RDF/
-[RDF.rb]:       http://rubygems.org/gems/rdf
-[RDF/XML]:      hhttp://www.w3.org/TR/rdf-syntax-grammar/ "RDF/XML Syntax Specification"
-[YARD]:         http://yardoc.org/
-[YARD-GS]:      http://rubydoc.info/docs/yard/file/docs/GettingStarted.md
-[PDD]:          http://lists.w3.org/Archives/Public/public-rdf-ruby/2010May/0013.html
-[RDF/XML doc]:  http://rubydoc.info/github/ruby-rdf/rdf-rdfxml/master/frames
+[Ruby]:         https://ruby-lang.org/
+[RDF]:          https://www.w3.org/RDF/
+[RDF.rb]:       https://rubygems.org/gems/rdf
+[RDF/XML]:      http://www.w3.org/TR/rdf-syntax-grammar/ "RDF/XML Syntax Specification"
+[YARD]:         https://yardoc.org/
+[YARD-GS]:      https://rubydoc.info/docs/yard/file/docs/GettingStarted.md
+[PDD]:              https://unlicense.org/#unlicensing-contributions
+[RDF/XML doc]:  https://rubydoc.info/github/ruby-rdf/rdf-rdfxml/master/frames

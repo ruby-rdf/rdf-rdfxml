@@ -7,3 +7,4 @@
 /spec/w3c-rdf
 *.lock
 *.byebug_history
+coverage

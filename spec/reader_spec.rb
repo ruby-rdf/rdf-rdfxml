@@ -1,6 +1,5 @@
 # coding: utf-8
-$:.unshift "."
-require File.join(File.dirname(__FILE__), 'spec_helper')
+require_relative 'spec_helper'
 require 'rdf/spec/reader'
 
 # w3c test suite: http://www.w3.org/TR/rdf-testcases/
@@ -15,6 +14,11 @@ describe "RDF::RDFXML::Reader" do
     let(:reader_input) {File.read(doap)}
     let(:reader) {RDF::RDFXML::Reader.new(reader_input)}
     let(:reader_count) {File.open(doap_nt).each_line.to_a.length}
+    let(:reader_invalid_input) {%(
+      <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+       <rdf:Description rdf:ID='333-555-666' />
+      </rdf:RDF>
+    )}
   end
 
   context "discovery" do
@@ -387,6 +391,96 @@ describe "RDF::RDFXML::Reader" do
 
           graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
           expect(graph).to be_equivalent_graph(expected, about: "http://example.com/", logger: logger)
+        end
+      end
+
+      context :parseType do
+        {
+          "Literal (xml-canon/test001)": {
+            input: %(
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                       xmlns:eg="http://example.org/">
+                <rdf:Description rdf:about="http://www.example.org/a">
+                  <eg:prop rdf:parseType="Literal">Foo</eg:prop>
+                </rdf:Description>
+              </rdf:RDF>
+            ),
+            expected: %(
+              <http://www.example.org/a> <http://example.org/prop> "Foo"^^<http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral> .
+            )
+          },
+          "Resource": {
+            input: %(
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:random="http://random.ioctl.org/#">
+
+              <rdf:Description rdf:about="http://random.ioctl.org/#bar">
+                <random:someProperty rdf:parseType="Resource" />
+              </rdf:Description>
+
+              </rdf:RDF>
+            ),
+            expected: %(
+              <http://random.ioctl.org/#bar> <http://random.ioctl.org/#someProperty> _:a1 .
+            )
+          },
+          "Collection": {
+            input: %(
+              <rdf:RDF
+                  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+                  xmlns:eg="http://example.org/eg#">
+
+                <rdf:Description rdf:about="http://example.org/eg#eric">
+                  <rdf:type rdf:parseType="Resource">
+                    <eg:intersectionOf rdf:parseType="Collection">
+                        <rdf:Description rdf:about="http://example.org/eg#Person"/>
+                        <rdf:Description rdf:about="http://example.org/eg#Male"/>
+                    </eg:intersectionOf>
+                  </rdf:type>
+                </rdf:Description>
+              </rdf:RDF>
+            ),
+            expected: %(
+              <http://example.org/eg#eric> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:a0 .
+              _:a0 <http://example.org/eg#intersectionOf> _:a1 .
+              _:a1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/eg#Person> .
+              _:a1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:a2 .
+              _:a2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/eg#Male> .
+              _:a2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+            )
+          },
+          "Collection (with rdf:resource)": {
+            input: %(
+              <rdf:RDF
+                  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+                  xmlns:eg="http://example.org/eg#">
+
+                <rdf:Description rdf:about="http://example.org/eg#eric">
+                  <rdf:type rdf:parseType="Resource">
+                    <eg:intersectionOf rdf:parseType="Collection">
+                        <rdf:Description rdf:resource="http://example.org/eg#Person"/>
+                        <rdf:Description rdf:resource="http://example.org/eg#Male"/>
+                    </eg:intersectionOf>
+                  </rdf:type>
+                </rdf:Description>
+              </rdf:RDF>
+            ),
+            expected: %(
+              <http://example.org/eg#eric> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> _:a0 .
+              _:a0 <http://example.org/eg#intersectionOf> _:a1 .
+              _:a1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/eg#Person> .
+              _:a1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> _:a2 .
+              _:a2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#first> <http://example.org/eg#Male> .
+              _:a2 <http://www.w3.org/1999/02/22-rdf-syntax-ns#rest> <http://www.w3.org/1999/02/22-rdf-syntax-ns#nil> .
+            )
+          },
+        }.each do |name, params|
+          it name do
+            graph = parse(params[:input], base_uri: "http://example.com", validate: true)
+            expect(graph).to be_equivalent_graph(params[:expected], about: "http://example.com/", logger: logger)
+          end
         end
       end
     end

@@ -1,10 +1,10 @@
 # coding: utf-8
-$:.unshift "."
-require 'spec_helper'
+require_relative 'spec_helper'
+require 'rdf/rdfxml'
 
 describe RDF::RDFXML::Reader do
   describe "w3c rdfcore tests" do
-    require 'suite_helper'
+    require_relative 'suite_helper'
 
     %w(manifest.ttl).each do |man|
       Fixtures::SuiteTest::Manifest.open(Fixtures::SuiteTest::BASE + man) do |m|
@@ -32,7 +32,8 @@ describe RDF::RDFXML::Reader do
                 begin
                   repo << reader
                 rescue Exception => e
-                  expect(e.message).to produce("Not exception #{e.inspect}", t.debug + e.backtrace.unshift("Backtrace:"))
+                  t.logger.debug e.e.backtrace.unshift("Backtrace:").join("\n")
+                  expect(e.message).to produce("Not exception #{e.inspect}", t.logger)
                 end
               else
                 expect {

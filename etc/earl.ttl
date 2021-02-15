@@ -6,10 +6,10 @@
 @prefix xhv: <http://www.w3.org/1999/xhtml/vocab#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<http://rubygems.org/gems/rdf-rdfxml> a doap:Project;
+<https://rubygems.org/gems/rdf-rdfxml> a doap:Project;
    dc:creator <http://greggkellogg.net/foaf#me>;
    doap:blog <http://greggkellogg.net/>;
-   doap:bug-database <http://github.com/ruby-rdf/rdf-rdfxml/issues>;
+   doap:bug-database <https://github.com/ruby-rdf/rdf-rdfxml/issues>;
    doap:category <http://dbpedia.org/resource/Resource_Description_Framework>,
      <http://dbpedia.org/resource/Ruby_(programming_language)>;
    doap:created "2010-06-03"^^<http://www.w3.org/2001/XMLSchema#date>;
@@ -18,17 +18,17 @@
     """@en;
    doap:developer <http://greggkellogg.net/foaf#me>;
    doap:documenter <http://greggkellogg.net/foaf#me>;
-   doap:download-page <http://rubygems.org/gems/rdf-rdfxml>;
+   doap:download-page <https://rubygems.org/gems/rdf-rdfxml>;
    doap:helper <http://njh.me/>;
-   doap:homepage <http://github.com/gkellogg/rdf-rdfxml>;
+   doap:homepage <https://github.com/gkellogg/rdf-rdfxml>;
    doap:mailing-list <http://lists.w3.org/Archives/Public/public-rdf-ruby/>;
    doap:maintainer <http://greggkellogg.net/foaf#me>;
    doap:name "RDF::RDFXML";
    doap:shortdesc "RDF/XML reader/writer for Ruby."@en;
-   xhv:license <http://creativecommons.org/licenses/publicdomain/>;
+   xhv:license <https://unlicense.org/1.0/>;
    foaf:maker <http://greggkellogg.net/foaf#me> .
 
-<> foaf:primaryTopic <http://rubygems.org/gems/rdf-rdfxml> ;
+<> foaf:primaryTopic <https://rubygems.org/gems/rdf-rdfxml> ;
   dc:issued "2014-01-29T11:10:43-08:00"^^xsd:dateTime ;
   foaf:maker <http://greggkellogg.net/foaf#me> .
 
@@ -39,7 +39,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#amp-in-url-test001>;
   earl:result [
     a earl:TestResult;
@@ -49,7 +49,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#datatypes-test001>;
   earl:result [
     a earl:TestResult;
@@ -59,7 +59,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#datatypes-test002>;
   earl:result [
     a earl:TestResult;
@@ -69,7 +69,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-charmod-literals-test001>;
   earl:result [
     a earl:TestResult;
@@ -79,7 +79,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-charmod-uris-test001>;
   earl:result [
     a earl:TestResult;
@@ -89,7 +89,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-charmod-uris-test002>;
   earl:result [
     a earl:TestResult;
@@ -99,7 +99,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-containers-syntax-vs-schema-error001>;
   earl:result [
     a earl:TestResult;
@@ -109,7 +109,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-containers-syntax-vs-schema-error002>;
   earl:result [
     a earl:TestResult;
@@ -119,7 +119,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-containers-syntax-vs-schema-test001>;
   earl:result [
     a earl:TestResult;
@@ -129,7 +129,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-containers-syntax-vs-schema-test002>;
   earl:result [
     a earl:TestResult;
@@ -139,7 +139,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-containers-syntax-vs-schema-test003>;
   earl:result [
     a earl:TestResult;
@@ -149,7 +149,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-containers-syntax-vs-schema-test004>;
   earl:result [
     a earl:TestResult;
@@ -159,7 +159,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-containers-syntax-vs-schema-test006>;
   earl:result [
     a earl:TestResult;
@@ -169,7 +169,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-containers-syntax-vs-schema-test007>;
   earl:result [
     a earl:TestResult;
@@ -179,7 +179,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-containers-syntax-vs-schema-test008>;
   earl:result [
     a earl:TestResult;
@@ -189,7 +189,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-element-not-mandatory-test001>;
   earl:result [
     a earl:TestResult;
@@ -199,7 +199,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0001>;
   earl:result [
     a earl:TestResult;
@@ -209,7 +209,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0003>;
   earl:result [
     a earl:TestResult;
@@ -219,7 +219,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0004>;
   earl:result [
     a earl:TestResult;
@@ -229,7 +229,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0005>;
   earl:result [
     a earl:TestResult;
@@ -239,7 +239,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0006>;
   earl:result [
     a earl:TestResult;
@@ -249,7 +249,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0009>;
   earl:result [
     a earl:TestResult;
@@ -259,7 +259,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0010>;
   earl:result [
     a earl:TestResult;
@@ -269,7 +269,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0011>;
   earl:result [
     a earl:TestResult;
@@ -279,7 +279,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0012>;
   earl:result [
     a earl:TestResult;
@@ -289,7 +289,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0013>;
   earl:result [
     a earl:TestResult;
@@ -299,7 +299,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdf-ns-prefix-confusion-test0014>;
   earl:result [
     a earl:TestResult;
@@ -309,7 +309,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-abouteach-error001>;
   earl:result [
     a earl:TestResult;
@@ -319,7 +319,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-abouteach-error002>;
   earl:result [
     a earl:TestResult;
@@ -329,7 +329,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-difference-between-ID-and-about-error1>;
   earl:result [
     a earl:TestResult;
@@ -339,7 +339,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-difference-between-ID-and-about-test1>;
   earl:result [
     a earl:TestResult;
@@ -349,7 +349,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-difference-between-ID-and-about-test2>;
   earl:result [
     a earl:TestResult;
@@ -359,7 +359,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-difference-between-ID-and-about-test3>;
   earl:result [
     a earl:TestResult;
@@ -369,7 +369,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-duplicate-member-props-test001>;
   earl:result [
     a earl:TestResult;
@@ -379,7 +379,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-error001>;
   earl:result [
     a earl:TestResult;
@@ -389,7 +389,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-error002>;
   earl:result [
     a earl:TestResult;
@@ -399,7 +399,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test001>;
   earl:result [
     a earl:TestResult;
@@ -409,7 +409,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test002>;
   earl:result [
     a earl:TestResult;
@@ -419,7 +419,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test004>;
   earl:result [
     a earl:TestResult;
@@ -429,7 +429,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test005>;
   earl:result [
     a earl:TestResult;
@@ -439,7 +439,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test006>;
   earl:result [
     a earl:TestResult;
@@ -449,7 +449,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test007>;
   earl:result [
     a earl:TestResult;
@@ -459,7 +459,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test008>;
   earl:result [
     a earl:TestResult;
@@ -469,7 +469,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test010>;
   earl:result [
     a earl:TestResult;
@@ -479,7 +479,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test011>;
   earl:result [
     a earl:TestResult;
@@ -489,7 +489,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test012>;
   earl:result [
     a earl:TestResult;
@@ -499,7 +499,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test013>;
   earl:result [
     a earl:TestResult;
@@ -509,7 +509,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test014>;
   earl:result [
     a earl:TestResult;
@@ -519,7 +519,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test015>;
   earl:result [
     a earl:TestResult;
@@ -529,7 +529,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test016>;
   earl:result [
     a earl:TestResult;
@@ -539,7 +539,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-empty-property-elements-test017>;
   earl:result [
     a earl:TestResult;
@@ -549,7 +549,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-identity-anon-resources-test001>;
   earl:result [
     a earl:TestResult;
@@ -559,7 +559,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-identity-anon-resources-test002>;
   earl:result [
     a earl:TestResult;
@@ -569,7 +569,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-identity-anon-resources-test003>;
   earl:result [
     a earl:TestResult;
@@ -579,7 +579,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-identity-anon-resources-test004>;
   earl:result [
     a earl:TestResult;
@@ -589,7 +589,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-identity-anon-resources-test005>;
   earl:result [
     a earl:TestResult;
@@ -599,7 +599,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-not-id-and-resource-attr-test001>;
   earl:result [
     a earl:TestResult;
@@ -609,7 +609,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-not-id-and-resource-attr-test002>;
   earl:result [
     a earl:TestResult;
@@ -619,7 +619,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-not-id-and-resource-attr-test004>;
   earl:result [
     a earl:TestResult;
@@ -629,7 +629,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-not-id-and-resource-attr-test005>;
   earl:result [
     a earl:TestResult;
@@ -639,7 +639,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-para196-test001>;
   earl:result [
     a earl:TestResult;
@@ -649,7 +649,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-id-error001>;
   earl:result [
     a earl:TestResult;
@@ -659,7 +659,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-id-error002>;
   earl:result [
     a earl:TestResult;
@@ -669,7 +669,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-id-error003>;
   earl:result [
     a earl:TestResult;
@@ -679,7 +679,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-id-error004>;
   earl:result [
     a earl:TestResult;
@@ -689,7 +689,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-id-error005>;
   earl:result [
     a earl:TestResult;
@@ -699,7 +699,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-id-error006>;
   earl:result [
     a earl:TestResult;
@@ -709,7 +709,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-id-error007>;
   earl:result [
     a earl:TestResult;
@@ -719,7 +719,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-001>;
   earl:result [
     a earl:TestResult;
@@ -729,7 +729,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-002>;
   earl:result [
     a earl:TestResult;
@@ -739,7 +739,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-003>;
   earl:result [
     a earl:TestResult;
@@ -749,7 +749,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-004>;
   earl:result [
     a earl:TestResult;
@@ -759,7 +759,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-005>;
   earl:result [
     a earl:TestResult;
@@ -769,7 +769,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-006>;
   earl:result [
     a earl:TestResult;
@@ -779,7 +779,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-007>;
   earl:result [
     a earl:TestResult;
@@ -789,7 +789,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-008>;
   earl:result [
     a earl:TestResult;
@@ -799,7 +799,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-009>;
   earl:result [
     a earl:TestResult;
@@ -809,7 +809,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-010>;
   earl:result [
     a earl:TestResult;
@@ -819,7 +819,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-011>;
   earl:result [
     a earl:TestResult;
@@ -829,7 +829,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-012>;
   earl:result [
     a earl:TestResult;
@@ -839,7 +839,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-013>;
   earl:result [
     a earl:TestResult;
@@ -849,7 +849,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-014>;
   earl:result [
     a earl:TestResult;
@@ -859,7 +859,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-015>;
   earl:result [
     a earl:TestResult;
@@ -869,7 +869,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-016>;
   earl:result [
     a earl:TestResult;
@@ -879,7 +879,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-017>;
   earl:result [
     a earl:TestResult;
@@ -889,7 +889,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-018>;
   earl:result [
     a earl:TestResult;
@@ -899,7 +899,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-019>;
   earl:result [
     a earl:TestResult;
@@ -909,7 +909,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-error-020>;
   earl:result [
     a earl:TestResult;
@@ -919,7 +919,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-001>;
   earl:result [
     a earl:TestResult;
@@ -929,7 +929,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-002>;
   earl:result [
     a earl:TestResult;
@@ -939,7 +939,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-003>;
   earl:result [
     a earl:TestResult;
@@ -949,7 +949,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-004>;
   earl:result [
     a earl:TestResult;
@@ -959,7 +959,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-005>;
   earl:result [
     a earl:TestResult;
@@ -969,7 +969,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-006>;
   earl:result [
     a earl:TestResult;
@@ -979,7 +979,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-007>;
   earl:result [
     a earl:TestResult;
@@ -989,7 +989,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-008>;
   earl:result [
     a earl:TestResult;
@@ -999,7 +999,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-009>;
   earl:result [
     a earl:TestResult;
@@ -1009,7 +1009,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-010>;
   earl:result [
     a earl:TestResult;
@@ -1019,7 +1019,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-011>;
   earl:result [
     a earl:TestResult;
@@ -1029,7 +1029,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-012>;
   earl:result [
     a earl:TestResult;
@@ -1039,7 +1039,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-013>;
   earl:result [
     a earl:TestResult;
@@ -1049,7 +1049,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-014>;
   earl:result [
     a earl:TestResult;
@@ -1059,7 +1059,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-015>;
   earl:result [
     a earl:TestResult;
@@ -1069,7 +1069,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-016>;
   earl:result [
     a earl:TestResult;
@@ -1079,7 +1079,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-017>;
   earl:result [
     a earl:TestResult;
@@ -1089,7 +1089,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-018>;
   earl:result [
     a earl:TestResult;
@@ -1099,7 +1099,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-019>;
   earl:result [
     a earl:TestResult;
@@ -1109,7 +1109,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-020>;
   earl:result [
     a earl:TestResult;
@@ -1119,7 +1119,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-021>;
   earl:result [
     a earl:TestResult;
@@ -1129,7 +1129,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-022>;
   earl:result [
     a earl:TestResult;
@@ -1139,7 +1139,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-023>;
   earl:result [
     a earl:TestResult;
@@ -1149,7 +1149,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-024>;
   earl:result [
     a earl:TestResult;
@@ -1159,7 +1159,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-025>;
   earl:result [
     a earl:TestResult;
@@ -1169,7 +1169,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-026>;
   earl:result [
     a earl:TestResult;
@@ -1179,7 +1179,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-027>;
   earl:result [
     a earl:TestResult;
@@ -1189,7 +1189,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-028>;
   earl:result [
     a earl:TestResult;
@@ -1199,7 +1199,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-029>;
   earl:result [
     a earl:TestResult;
@@ -1209,7 +1209,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-030>;
   earl:result [
     a earl:TestResult;
@@ -1219,7 +1219,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-031>;
   earl:result [
     a earl:TestResult;
@@ -1229,7 +1229,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-032>;
   earl:result [
     a earl:TestResult;
@@ -1239,7 +1239,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-033>;
   earl:result [
     a earl:TestResult;
@@ -1249,7 +1249,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-034>;
   earl:result [
     a earl:TestResult;
@@ -1259,7 +1259,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-035>;
   earl:result [
     a earl:TestResult;
@@ -1269,7 +1269,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-036>;
   earl:result [
     a earl:TestResult;
@@ -1279,7 +1279,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-test-037>;
   earl:result [
     a earl:TestResult;
@@ -1289,7 +1289,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-warn-001>;
   earl:result [
     a earl:TestResult;
@@ -1299,7 +1299,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-warn-002>;
   earl:result [
     a earl:TestResult;
@@ -1309,7 +1309,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-rdf-names-use-warn-003>;
   earl:result [
     a earl:TestResult;
@@ -1319,7 +1319,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-reification-required-test001>;
   earl:result [
     a earl:TestResult;
@@ -1329,7 +1329,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-seq-representation-test001>;
   earl:result [
     a earl:TestResult;
@@ -1339,7 +1339,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-syntax-incomplete-test001>;
   earl:result [
     a earl:TestResult;
@@ -1349,7 +1349,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-syntax-incomplete-test002>;
   earl:result [
     a earl:TestResult;
@@ -1359,7 +1359,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-syntax-incomplete-test003>;
   earl:result [
     a earl:TestResult;
@@ -1369,7 +1369,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-syntax-incomplete-test004>;
   earl:result [
     a earl:TestResult;
@@ -1379,7 +1379,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-syntax-incomplete-error001>;
   earl:result [
     a earl:TestResult;
@@ -1389,7 +1389,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-syntax-incomplete-error002>;
   earl:result [
     a earl:TestResult;
@@ -1399,7 +1399,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-syntax-incomplete-error003>;
   earl:result [
     a earl:TestResult;
@@ -1409,7 +1409,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-syntax-incomplete-error004>;
   earl:result [
     a earl:TestResult;
@@ -1419,7 +1419,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-syntax-incomplete-error005>;
   earl:result [
     a earl:TestResult;
@@ -1429,7 +1429,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-syntax-incomplete-error006>;
   earl:result [
     a earl:TestResult;
@@ -1439,7 +1439,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-uri-substructure-test001>;
   earl:result [
     a earl:TestResult;
@@ -1449,7 +1449,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-xmllang-test003>;
   earl:result [
     a earl:TestResult;
@@ -1459,7 +1459,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-xmllang-test004>;
   earl:result [
     a earl:TestResult;
@@ -1469,7 +1469,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-xmllang-test005>;
   earl:result [
     a earl:TestResult;
@@ -1479,7 +1479,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfms-xmllang-test006>;
   earl:result [
     a earl:TestResult;
@@ -1489,7 +1489,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfs-domain-and-range-test001>;
   earl:result [
     a earl:TestResult;
@@ -1499,7 +1499,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#rdfs-domain-and-range-test002>;
   earl:result [
     a earl:TestResult;
@@ -1509,7 +1509,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#unrecognised-xml-attributes-test001>;
   earl:result [
     a earl:TestResult;
@@ -1519,7 +1519,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#unrecognised-xml-attributes-test002>;
   earl:result [
     a earl:TestResult;
@@ -1529,7 +1529,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xml-canon-test001>;
   earl:result [
     a earl:TestResult;
@@ -1539,7 +1539,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test001>;
   earl:result [
     a earl:TestResult;
@@ -1549,7 +1549,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test002>;
   earl:result [
     a earl:TestResult;
@@ -1559,7 +1559,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test003>;
   earl:result [
     a earl:TestResult;
@@ -1569,7 +1569,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test004>;
   earl:result [
     a earl:TestResult;
@@ -1579,7 +1579,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test006>;
   earl:result [
     a earl:TestResult;
@@ -1589,7 +1589,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test007>;
   earl:result [
     a earl:TestResult;
@@ -1599,7 +1599,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test008>;
   earl:result [
     a earl:TestResult;
@@ -1609,7 +1609,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test009>;
   earl:result [
     a earl:TestResult;
@@ -1619,7 +1619,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test010>;
   earl:result [
     a earl:TestResult;
@@ -1629,7 +1629,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test011>;
   earl:result [
     a earl:TestResult;
@@ -1639,7 +1639,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test013>;
   earl:result [
     a earl:TestResult;
@@ -1649,7 +1649,7 @@
 
 [ a earl:Assertion;
   earl:assertedBy <http://greggkellogg.net/foaf#me>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/manifest.ttl#xmlbase-test014>;
   earl:result [
     a earl:TestResult;

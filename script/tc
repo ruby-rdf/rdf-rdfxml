@@ -19,7 +19,7 @@ def earl_preamble(options)
     options[:output].write g.dump(:ttl, prefixes: reader.prefixes)
   end
   options[:output].puts %(
-<> foaf:primaryTopic <http://rubygems.org/gems/rdf-rdfxml> ;
+<> foaf:primaryTopic <https://rubygems.org/gems/rdf-rdfxml> ;
   dct:issued "#{RUN_TIME.xmlschema}"^^xsd:dateTime ;
   foaf:maker <#{ASSERTOR}> .
 
@@ -92,7 +92,7 @@ def run_tc(tc, **options)
     options[:output].puts %{
 [ a earl:Assertion;
   earl:assertedBy <#{ASSERTOR}>;
-  earl:subject <http://rubygems.org/gems/rdf-rdfxml>;
+  earl:subject <https://rubygems.org/gems/rdf-rdfxml>;
   earl:test <#{tc.id}>;
   earl:result [
     a earl:TestResult;

@@ -11,7 +11,9 @@ module RDF::RDFXML
   #
   # Based on RDF/XML Syntax Specification: http://www.w3.org/TR/REC-rdf-syntax/
   #
-  # @author [Gregg Kellogg](http://kellogg-assoc.com/)
+  # Extension: A nodeElement can also use the rdf:resource attribute, if none of the other standard attributes are defined.
+  #
+  # @author [Gregg Kellogg](http://greggkellogg.net/)
   class Reader < RDF::Reader
     format Format
     include RDF::Util::Logger
@@ -158,8 +160,11 @@ module RDF::RDFXML
         input.rewind if input.respond_to?(:rewind)
         initialize_xml(input, **options) rescue log_fatal($!.message)
 
-        log_error("Empty document") if root.nil?
-        log_error("Synax errors") {doc_errors} if !doc_errors.empty?
+        if root.nil?
+          log_info("Empty document")
+        elsif !doc_errors.empty?
+          log_error("Synax errors") {doc_errors}
+        end
 
         block.call(self) if block_given?
       end
@@ -583,6 +588,7 @@ module RDF::RDFXML
       about = el.attribute_with_ns("about", RDF.to_uri.to_s)
       id = el.attribute_with_ns("ID", RDF.to_uri.to_s)
       nodeID = el.attribute_with_ns("nodeID", RDF.to_uri.to_s)
+      resource = el.attribute_with_ns("resource", RDF.to_uri.to_s)
       
       if nodeID && about
         add_error(el, "Cannot have rdf:nodeID and rdf:about.")
@@ -603,6 +609,10 @@ module RDF::RDFXML
         about = RDF::NTriples.unescape(about.value)
         add_debug(el) {"parse_subject, about: #{about.inspect}"}
         uri(ec.base, about)
+      when resource
+        resource = RDF::NTriples.unescape(resource.value)
+        add_debug(el) {"parse_subject, resource: #{resource.inspect}"}
+        uri(ec.base, resource)
       else
         add_debug(el, "parse_subject, BNode")
         RDF::Node.new
