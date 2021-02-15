@@ -11,6 +11,8 @@ module RDF::RDFXML
   #
   # Based on RDF/XML Syntax Specification: http://www.w3.org/TR/REC-rdf-syntax/
   #
+  # Extension: A nodeElement can also use the rdf:resource attribute, if none of the other standard attributes are defined.
+  #
   # @author [Gregg Kellogg](http://greggkellogg.net/)
   class Reader < RDF::Reader
     format Format
@@ -586,6 +588,7 @@ module RDF::RDFXML
       about = el.attribute_with_ns("about", RDF.to_uri.to_s)
       id = el.attribute_with_ns("ID", RDF.to_uri.to_s)
       nodeID = el.attribute_with_ns("nodeID", RDF.to_uri.to_s)
+      resource = el.attribute_with_ns("resource", RDF.to_uri.to_s)
       
       if nodeID && about
         add_error(el, "Cannot have rdf:nodeID and rdf:about.")
@@ -606,6 +609,10 @@ module RDF::RDFXML
         about = RDF::NTriples.unescape(about.value)
         add_debug(el) {"parse_subject, about: #{about.inspect}"}
         uri(ec.base, about)
+      when resource
+        resource = RDF::NTriples.unescape(resource.value)
+        add_debug(el) {"parse_subject, resource: #{resource.inspect}"}
+        uri(ec.base, resource)
       else
         add_debug(el, "parse_subject, BNode")
         RDF::Node.new
