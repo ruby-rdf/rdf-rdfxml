@@ -21,13 +21,11 @@ Gem::Specification.new do |gem|
   gem.required_ruby_version = '>= 2.4'
   gem.requirements          = []
 
-  gem.add_runtime_dependency     'rdf',             '~> 3.1'
+  gem.add_runtime_dependency     'rdf',             '~> 3.1', '>= 3.1.12'
   gem.add_runtime_dependency     'rdf-xsd',         '~> 3.1'
-  gem.add_runtime_dependency     'rdf-rdfa',        '~> 3.1'
+  gem.add_runtime_dependency     'rdf-rdfa',        '~> 3.1', '>= 3.1.2'
   gem.add_runtime_dependency     'htmlentities',    '~> 4.3'
 
-  #gem.add_development_dependency 'nokogiri' ,       '~> 1.10'
-  #gem.add_development_dependency 'equivalent-xml' , '~> 0.6' # conditionally done in Gemfile
   gem.add_development_dependency 'json-ld',         '>= 3.1'
   gem.add_development_dependency 'rspec',           '~> 3.10'
   gem.add_development_dependency 'rspec-its',       '~> 1.3'

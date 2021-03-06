@@ -2,9 +2,9 @@ source "https://rubygems.org"
 
 gemspec
 
-gem 'rdf',      github: "ruby-rdf/rdf",       branch: "develop"
-gem 'rdf-rdfa', github: "ruby-rdf/rdf-rdfa",  branch: "develop"
-gem "nokogiri"
+gem 'rdf',            github: "ruby-rdf/rdf",       branch: "develop"
+gem 'rdf-rdfa',       github: "ruby-rdf/rdf-rdfa",  branch: "develop"
+gem "nokogiri",       '~> 1.10', platforms: [:mri, :jruby]
 
 group :development do
   gem 'ebnf',               github: "dryruby/ebnf",                 branch: "develop"
@@ -21,11 +21,10 @@ group :development do
 end
 
 group :debug do
-  gem "ruby-debug", platforms: :jruby
   gem "byebug",     platform: :mri
 end
 
 group :test do
-  gem 'simplecov',      platforms: :mri
+  gem 'simplecov',      '~> 0.16', platforms: :mri
   gem 'coveralls',      '~> 0.8', platforms: :mri
 end
