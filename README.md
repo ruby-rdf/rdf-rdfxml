@@ -57,9 +57,6 @@ Full documentation available on [Rubydoc.info][RDF/XML doc])
 ### Additional vocabularies
 * {RDF::XML}
 
-## TODO
-* Consider a SAX-based parser for improved performance
-
 ## Resources
 * [RDF.rb][RDF.rb]
 * [RDF/XML][RDF/XML]
@@ -110,3 +107,4 @@ see <https://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 [YARD-GS]:      https://rubydoc.info/docs/yard/file/docs/GettingStarted.md
 [PDD]:              https://unlicense.org/#unlicensing-contributions
 [RDF/XML doc]:  https://rubydoc.info/github/ruby-rdf/rdf-rdfxml/master/frames
+[RDF-star]:         https://w3c.github.io/rdf-star/rdf-star-cg-spec.html
