@@ -4,7 +4,7 @@ gemspec
 
 gem 'rdf',            github: "ruby-rdf/rdf",       branch: "develop"
 gem 'rdf-rdfa',       github: "ruby-rdf/rdf-rdfa",  branch: "develop"
-gem "nokogiri",       '~> 1.10', platforms: [:mri, :jruby]
+gem "nokogiri",       '~> 1.12', platforms: [:mri, :jruby]
 
 group :development do
   gem 'ebnf',               github: "dryruby/ebnf",                 branch: "develop"
