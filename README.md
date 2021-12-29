@@ -54,9 +54,6 @@ Full documentation available on [Rubydoc.info][RDF/XML doc])
 * {RDF::RDFXML::Reader}
 * {RDF::RDFXML::Writer}
 
-### Additional vocabularies
-* {RDF::XML}
-
 ## Resources
 * [RDF.rb][RDF.rb]
 * [RDF/XML][RDF/XML]
