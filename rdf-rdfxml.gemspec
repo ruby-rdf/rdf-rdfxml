@@ -10,6 +10,13 @@ Gem::Specification.new do |gem|
   gem.license               = 'Unlicense'
   gem.summary               = %q{RDF/XML reader/writer for RDF.rb.}
   gem.description           = %q{RDF::RDFXML is an RDF/XML reader and writer for the RDF.rb library suite.}
+  gem.metadata           = {
+    "documentation_uri" => "https://ruby-rdf.github.io/rdf-rdfxml",
+    "bug_tracker_uri"   => "https://github.com/ruby-rdf/rdf-rdfxml/issues",
+    "homepage_uri"      => "https://github.com/ruby-rdf/rdf-rdfxml",
+    "mailing_list_uri"  => "https://lists.w3.org/Archives/Public/public-rdf-ruby/",
+    "source_code_uri"   => "https://github.com/ruby-rdf/rdf-rdfxml",
+  }
 
   gem.authors               = %w(Gregg Kellogg)
   gem.email                 = 'public-rdf-ruby@w3.org'
@@ -25,6 +32,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency     'rdf-xsd',         '~> 3.2'
   gem.add_runtime_dependency     'rdf-rdfa',        '~> 3.2'
   gem.add_runtime_dependency     'htmlentities',    '~> 4.3'
+  gem.add_runtime_dependency     'haml',            '~> 5.2' # Until workaround for haml_tag is found.
 
   gem.add_development_dependency 'json-ld',         '>= 3.2'
   gem.add_development_dependency 'rspec',           '~> 3.10'

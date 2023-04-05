@@ -25,7 +25,7 @@ module RDF::RDFXML
 
         # Create a new element child of an existing node
         def create_node(name, children)
-          native = ::Nokogiri::XML::Element.new(name, @node)
+          native = ::Nokogiri::XML::Element.new(name, @node.document)
           children.each do |c|
             native.add_child(c.node)
           end

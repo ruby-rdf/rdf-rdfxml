@@ -20,7 +20,9 @@ module RDF::RDFXML
   #
   # @see http://www.w3.org/TR/rdf-testcases/#ntriples
   class Format < RDF::Format
-    content_type     'application/rdf+xml', extensions: [:rdf, :owl]
+    content_type     'application/rdf+xml',
+                     extensions: [:rdf, :owl],
+                     uri: 'http://www.w3.org/ns/formats/RDF_XML'
     content_encoding 'utf-8'
 
     reader { RDF::RDFXML::Reader }

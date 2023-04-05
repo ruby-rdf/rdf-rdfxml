@@ -37,6 +37,10 @@ describe RDF::RDFXML::Format do
     specify {expect(described_class.to_sym).to eq :rdfxml}
   end
 
+  describe "#to_uri" do
+    specify {expect(described_class.to_uri).to eq RDF::URI('http://www.w3.org/ns/formats/RDF_XML')}
+  end
+
   describe ".detect" do
     {
       rdfxml: '<rdf:RDF about="foo"></rdf:RDF>',

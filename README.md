@@ -43,6 +43,7 @@ Write a graph to a file:
 
 ## Dependencies
 * [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.2)
+* [Haml](https://rubygems.org/gems/haml) (~>- 5.2)
 * Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.12)
 
 ## Documentation
@@ -103,5 +104,5 @@ see <https://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 [YARD]:         https://yardoc.org/
 [YARD-GS]:      https://rubydoc.info/docs/yard/file/docs/GettingStarted.md
 [PDD]:              https://unlicense.org/#unlicensing-contributions
-[RDF/XML doc]:  https://rubydoc.info/github/ruby-rdf/rdf-rdfxml/master/frames
+[RDF/XML doc]:  https://ruby-rdf.github.io/rdf-rdfxml/master/frames
 [RDF-star]:         https://w3c.github.io/rdf-star/rdf-star-cg-spec.html
