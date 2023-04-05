@@ -32,6 +32,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency     'rdf-xsd',         '~> 3.2'
   gem.add_runtime_dependency     'rdf-rdfa',        '~> 3.2'
   gem.add_runtime_dependency     'htmlentities',    '~> 4.3'
+  gem.add_runtime_dependency     'haml',            '~> 5.2' # Until workaround for haml_tag is found.
 
   gem.add_development_dependency 'json-ld',         '>= 3.2'
   gem.add_development_dependency 'rspec',           '~> 3.10'
