@@ -35,10 +35,8 @@ def run_tc(tc, **options)
 
   if options[:verbose]
     puts "\nTestCase: #{tc.inspect}"
-    puts "\nInput:\n" + tc.input.read 
-    puts "\nExpected:\n" + tc.expected.read
-    tc.input.rewind
-    tc.expected.rewind
+    puts "\nInput:\n" + tc.input 
+    puts "\nExpected:\n" + tc.expected
   end
 
   begin
@@ -158,7 +156,7 @@ result_count = {}
 Fixtures::SuiteTest::Manifest.open(manifest) do |m|
   m.entries.each do |tc|
     next unless ARGV.empty? || ARGV.any? {|n| tc.name.match(/#{n}/)}
-    run_tc(tc, options.merge(result_count: result_count))
+    run_tc(tc, **options.merge(result_count: result_count))
   end
 end
 

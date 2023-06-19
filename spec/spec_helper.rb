@@ -11,7 +11,7 @@ require 'rdf/spec/matchers'
 require 'matchers'
 begin
   require 'nokogiri'
-rescue LoadError => e
+rescue LoadError
   :rexml
 end
 begin
@@ -29,11 +29,10 @@ begin
   ])
   SimpleCov.start do
     add_filter "/spec/"
-    add_filter "/lib/rdf/rdfa/reader/rexml.rb"
-    add_filter "/lib/rdf/rdfa/context.rb"
   end
 rescue LoadError
 end
+
 require 'rdf/rdfxml'
 
 ::RSpec.configure do |c|

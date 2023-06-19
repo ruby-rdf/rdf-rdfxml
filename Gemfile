@@ -3,7 +3,6 @@ source "https://rubygems.org"
 gemspec
 
 gem 'rdf',            github: "ruby-rdf/rdf",       branch: "develop"
-gem 'rdf-rdfa',       github: "ruby-rdf/rdf-rdfa",  branch: "develop"
 gem "nokogiri",       '~> 1.13', '>= 1.13.4', platforms: [:mri, :jruby]
 
 group :development do

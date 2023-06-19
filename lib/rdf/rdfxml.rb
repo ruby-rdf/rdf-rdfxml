@@ -2,7 +2,8 @@ $:.unshift(File.expand_path(File.join(File.dirname(__FILE__), '..')))
 require 'rdf'
 
 module RDF
-  autoload :XML, 'rdf/rdfa/vocab'
+  XML = Class.new(Vocabulary("http://www.w3.org/XML/1998/namespace"))
+
   ##
   # **`RDF::RDFXML`** is an RDF/XML extension for RDF.rb.
   #

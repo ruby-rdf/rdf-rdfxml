@@ -43,8 +43,8 @@ Write a graph to a file:
 
 ## Dependencies
 * [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.2)
-* [Haml](https://rubygems.org/gems/haml) (~>- 5.2)
-* Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.12)
+* [Builder](https://rubygems.org/gems/builder) (~>- 3.2)
+* Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.13)
 
 ## Documentation
 Full documentation available on [Rubydoc.info][RDF/XML doc])

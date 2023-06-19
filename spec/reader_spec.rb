@@ -242,7 +242,7 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
   
           expect do
-            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+            parse(sampledoc, base_uri: "http://example.com", validate: true)
           end.to raise_error(RDF::ReaderError)
           expect(logger.to_s).to match(/Obsolete attribute .*aboutEach/)
         end
@@ -264,7 +264,7 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
   
           expect do
-            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+            parse(sampledoc, base_uri: "http://example.com", validate: true)
           end.to raise_error(RDF::ReaderError)
           expect(logger.to_s).to match(/Obsolete attribute .*aboutEachPrefix/)
         end
@@ -276,7 +276,7 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
   
           expect do
-            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+            parse(sampledoc, base_uri: "http://example.com", validate: true)
           end.to raise_error(RDF::ReaderError)
           expect(logger.to_s).to match(/ID addtribute '.*' must be a NCName/)
         end
@@ -291,7 +291,7 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
   
           expect do
-            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+            parse(sampledoc, base_uri: "http://example.com", validate: true)
           end.to raise_error(RDF::ReaderError)
           expect(logger.to_s).to match(/ID addtribute '.*' must be a NCName/)
         end
@@ -304,7 +304,7 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
   
           expect do
-            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+            parse(sampledoc, base_uri: "http://example.com", validate: true)
           end.to raise_error(RDF::ReaderError)
           expect(logger.to_s).to include("ID addtribute 'a/b' must be a NCName")
         end
@@ -316,7 +316,7 @@ describe "RDF::RDFXML::Reader" do
             </rdf:RDF>)
     
           expect do
-            graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
+            parse(sampledoc, base_uri: "http://example.com", validate: true)
           end.to raise_error(RDF::ReaderError)
           expect(logger.to_s).to match(/Obsolete attribute .*bagID/)
         end
