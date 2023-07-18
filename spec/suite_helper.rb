@@ -6,8 +6,8 @@ require 'json/ld'
 # For now, override RDF::Utils::File.open_file to look for the file locally before attempting to retrieve it
 module RDF::Util
   module File
-    REMOTE_PATH = "http://www.w3.org/2013/RDFXMLTests/"
-    LOCAL_PATH = ::File.expand_path("../w3c-rdf/rdf-xml", __FILE__) + '/'
+    REMOTE_PATH = "https://w3c.github.io/rdf-tests/rdf/"
+    LOCAL_PATH = ::File.expand_path("../w3c-rdf-tests/rdf/", __FILE__) + '/'
 
     class << self
       alias_method :original_open_file, :open_file
@@ -72,7 +72,7 @@ end
 
 module Fixtures
   module SuiteTest
-    BASE = "http://www.w3.org/2013/RDFXMLTests/"
+    BASE = "https://w3c.github.io/rdf-tests/rdf/"
     FRAME = JSON.parse(%q({
       "@context": {
         "xsd": "http://www.w3.org/2001/XMLSchema#",
@@ -124,7 +124,7 @@ module Fixtures
       attr_accessor :logger
 
       def base
-        "http://www.w3.org/2013/RDFXMLTests/" + action.split('/')[-2,2].join("/")
+        RDF::URI(action)
       end
 
       # Alias data and query

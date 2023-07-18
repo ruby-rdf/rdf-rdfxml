@@ -684,7 +684,7 @@ describe "RDF::RDFXML::Writer" do
     # W3C RDF/XML Test suite from https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/
     describe "w3c RDF/XML tests" do
       require 'suite_helper'
-      %w(manifest.ttl).each do |man|
+      %w(rdf11/rdf-xml/manifest.ttl).each do |man|
         Fixtures::SuiteTest::Manifest.open(Fixtures::SuiteTest::BASE + man) do |m|
           describe m.comment do
             m.entries.each do |t|
