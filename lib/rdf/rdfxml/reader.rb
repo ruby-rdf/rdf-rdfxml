@@ -1,6 +1,6 @@
 begin
   require 'nokogiri'
-rescue LoadError => e
+rescue LoadError
   :rexml
 end
 require 'rdf/xsd'
@@ -91,7 +91,7 @@ module RDF::RDFXML
       # Produce the next list entry for this context
       def li_next
         @li_counter += 1
-        predicate = RDF["_#{@li_counter}"]
+        RDF["_#{@li_counter}"]
       end
 
       # Set XML base. Ignore any fragment
@@ -328,7 +328,6 @@ module RDF::RDFXML
       end
       
       # Handle the propertyEltList children events in document order
-      li_counter = 0 # this will increase for each li we iterate through
       el.children.each do |child|
         log_fatal "child must be a proxy not a #{child.class}" unless child.is_a?(@implementation::NodeProxy)
         next unless child.element?

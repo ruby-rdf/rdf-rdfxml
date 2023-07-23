@@ -2,7 +2,7 @@
 
 [RDF/XML][] reader/writer for [RDF.rb][].
 
-[![Gem Version](https://badge.fury.io/rb/rdf-rdfxml.png)](https://badge.fury.io/rb/rdf-rdfxml)
+[![Gem Version](https://badge.fury.io/rb/rdf-rdfxml.svg)](https://badge.fury.io/rb/rdf-rdfxml)
 [![Build Status](https://github.com/ruby-rdf/rdf-rdfxml/workflows/CI/badge.svg?branch=develop)](https://github.com/ruby-rdf/rdf-rdfxml/actions?query=workflow%3ACI)
 [![Coverage Status](https://coveralls.io/repos/ruby-rdf/rdf-rdfxml/badge.svg?branch=develop)](https://coveralls.io/github/ruby-rdf/rdf-rdfxml?branch=develop)
 [![Gitter chat](https://badges.gitter.im/ruby-rdf/rdf.png)](https://gitter.im/ruby-rdf/rdf)
@@ -43,8 +43,8 @@ Write a graph to a file:
 
 ## Dependencies
 * [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.2)
-* [Haml](https://rubygems.org/gems/haml) (~>- 5.2)
-* Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.12)
+* [Builder](https://rubygems.org/gems/builder) (~>- 3.2)
+* Soft dependency on [Nokogiri](https://rubygems.org/gems/nokogiri) (>= 1.13)
 
 ## Documentation
 Full documentation available on [Rubydoc.info][RDF/XML doc])

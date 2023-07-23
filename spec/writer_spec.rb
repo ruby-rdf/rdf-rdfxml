@@ -8,7 +8,7 @@ class FOO < RDF::Vocabulary("http://foo/"); end
 describe "RDF::RDFXML::Writer" do
   let(:logger) {RDF::Spec.logger}
   it_behaves_like 'an RDF::Writer' do
-    let(:writer) {RDF::RDFXML::Writer.new}
+    let(:writer) {RDF::RDFXML::Writer.new(::StringIO.new)}
   end
 
   describe "#buffer" do
@@ -517,13 +517,13 @@ describe "RDF::RDFXML::Writer" do
           end
         end
 
-        specify { expect(subject).to match /<Release/ }
-        specify { expect(subject).to match /<pred/ }
+        specify { expect(subject).to match(/<Release/) }
+        specify { expect(subject).to match(/<pred/) }
       end
 
       context "nil namespace" do
         subject do
-          serialize(nt, prefixes: {nil => "http://foo/"})
+          serialize(nt, prefixes: {"" => "http://foo/"})
         end
 
         {
@@ -534,8 +534,8 @@ describe "RDF::RDFXML::Writer" do
           end
         end
 
-        specify { expect(subject).to match /<Release/ }
-        specify { expect(subject).to match /<pred/ }
+        specify { expect(subject).to match(/<Release/) }
+        specify { expect(subject).to match(/<pred/) }
       end
     end
   
@@ -684,7 +684,7 @@ describe "RDF::RDFXML::Writer" do
     # W3C RDF/XML Test suite from https://dvcs.w3.org/hg/rdf/raw-file/default/rdf-xml/tests/
     describe "w3c RDF/XML tests" do
       require 'suite_helper'
-      %w(manifest.ttl).each do |man|
+      %w(rdf11/rdf-xml/manifest.ttl).each do |man|
         Fixtures::SuiteTest::Manifest.open(Fixtures::SuiteTest::BASE + man) do |m|
           describe m.comment do
             m.entries.each do |t|
@@ -696,6 +696,7 @@ describe "RDF::RDFXML::Writer" do
                 statements = parse(t.expected, base_uri: t.base, format: :ntriples)
 
                 serialized = serialize(statements, format: :rdfxml, base_uri: t.base)
+                logger.info "serialized: #{serialized}"
                 expect(parse(serialized, base_uri: t.base)).to be_equivalent_graph(statements, logger: logger)
               end
             end
@@ -723,7 +724,6 @@ describe "RDF::RDFXML::Writer" do
         writer << g
       end
       require 'cgi'
-      puts CGI.escapeHTML(result) if $verbose
       result
     end
   end

@@ -6,7 +6,7 @@ describe RDF::RDFXML::Reader do
   describe "w3c rdfcore tests" do
     require_relative 'suite_helper'
 
-    %w(manifest.ttl).each do |man|
+    %w(rdf11/rdf-xml/manifest.ttl).each do |man|
       Fixtures::SuiteTest::Manifest.open(Fixtures::SuiteTest::BASE + man) do |m|
         describe m.comment do
           m.entries.each do |t|

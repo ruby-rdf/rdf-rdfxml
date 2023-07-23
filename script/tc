@@ -31,21 +31,23 @@ def earl_preamble(options)
 end
 
 def run_tc(tc, **options)
-  STDERR.write "run #{tc.name}"
+  STDERR.write "run #{tc.name} "
 
   if options[:verbose]
     puts "\nTestCase: #{tc.inspect}"
-    puts "\nInput:\n" + tc.input.read 
-    puts "\nExpected:\n" + tc.expected.read
-    tc.input.rewind
-    tc.expected.rewind
+    puts "\nInput:\n" + tc.input 
+    puts "\nExpected:\n" + tc.expected
   end
 
   begin
     puts "open #{tc.action}" if options[:verbose]
-    options = {base_uri: tc.base}.merge(options)
+    options = {
+      base_uri:  tc.base,
+      validate:  tc.syntax?,
+      logger:    tc.logger
+    }.merge(options)
 
-    reader = RDF::Reader.for(tc.action).new(tc.input, base_uri: tc.base, validate: tc.syntax?, logger: options[:logger])
+    reader = RDF::Reader.for(tc.action).new(tc.input, **options)
 
     graph = RDF::Repository.new
     result = nil
@@ -86,7 +88,7 @@ def run_tc(tc, **options)
     end
   end
 
-  options[:output].puts("\nOutput:\n" + graph.dump(:ntriples, validate: false)) unless options[:quiet]
+  options[:output].puts("\nOutput:\n" + graph.dump(:ntriples, validate: false)) if options[:verbose]
 
   if options[:earl]
     options[:output].puts %{
@@ -149,16 +151,20 @@ opts.each do |opt, arg|
   end
 end
 
-manifest = Fixtures::SuiteTest::BASE + "manifest.ttl"
+manifests = [Fixtures::SuiteTest::BASE + "rdf11/rdf-xml/"].map {|m| "#{m}manifest.ttl"}
 
 earl_preamble(options) if options[:earl]
 
 result_count = {}
 
-Fixtures::SuiteTest::Manifest.open(manifest) do |m|
-  m.entries.each do |tc|
-    next unless ARGV.empty? || ARGV.any? {|n| tc.name.match(/#{n}/)}
-    run_tc(tc, options.merge(result_count: result_count))
+begin
+  manifests.each do |manifest|
+    Fixtures::SuiteTest::Manifest.open(manifest) do |m|
+      m.entries.each do |tc|
+        next unless ARGV.empty? || ARGV.any? {|n| tc.name.match(/#{n}/)}
+        run_tc(tc, result_count: result_count, **options)
+      end
+    end
   end
 end
 

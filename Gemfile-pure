@@ -4,7 +4,6 @@ source "https://rubygems.org"
 gemspec
 
 gem 'rdf',      github: "ruby-rdf/rdf",       branch: "develop"
-gem 'rdf-rdfa', github: "ruby-rdf/rdf-rdfa",  branch: "develop"
 
 group :development do
   gem 'ebnf',               github: "dryruby/ebnf",                 branch: "develop"
