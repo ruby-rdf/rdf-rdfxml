@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gemspec
 
 gem 'rdf',            github: "ruby-rdf/rdf",       branch: "develop"
-gem "nokogiri",       '~> 1.13', '>= 1.13.4', platforms: [:mri, :jruby]
+gem "nokogiri",       '~> 1.15', '>= 1.13.4', platforms: [:mri, :jruby]
 
 group :development do
   gem 'ebnf',               github: "dryruby/ebnf",                 branch: "develop"
@@ -24,6 +24,6 @@ group :debug do
 end
 
 group :test do
-  gem 'simplecov', '~> 0.21',  platforms: :mri
+  gem 'simplecov', '~> 0.22',  platforms: :mri
   gem 'simplecov-lcov', '~> 0.8',  platforms: :mri
 end
