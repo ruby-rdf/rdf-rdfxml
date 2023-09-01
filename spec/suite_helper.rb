@@ -82,6 +82,7 @@ module Fixtures
         "rdft": "http://www.w3.org/ns/rdftest#",
     
         "comment": "rdfs:comment",
+        "baseIri": {"@id": "mf:assumedTestBase", "@type": "@id"},
         "entries": {"@id": "mf:entries", "@container": "@list"},
         "name": "mf:name",
         "action": {"@id": "mf:action", "@type": "@id"},
@@ -116,15 +117,20 @@ module Fixtures
 
       def entries
         # Map entries to resources
-        attributes['entries'].map {|e| Entry.new(e)}
+        attributes['entries'].map {|e| Entry.new(e, base_iri: attributes['baseIri'])}
       end
     end
  
     class Entry < JSON::LD::Resource
       attr_accessor :logger
 
+      def initialize(json, base_iri:)
+        @base_iri = base_iri
+        super
+      end
+
       def base
-        RDF::URI(action)
+        RDF::URI(@base_iri || action)
       end
 
       # Alias data and query
