@@ -31,7 +31,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency     'rdf',             '~> 3.3'
   gem.add_runtime_dependency     'rdf-xsd',         '~> 3.3'
   gem.add_runtime_dependency     'htmlentities',    '~> 4.3'
-  gem.add_runtime_dependency     'builder',         '~> 3.2'
+  gem.add_runtime_dependency     'builder',         '~> 3.2', '>= 3.2.4'
 
   gem.add_development_dependency 'json-ld',         '>= 3.3'
   gem.add_development_dependency 'rspec',           '~> 3.12'
