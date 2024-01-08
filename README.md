@@ -41,6 +41,10 @@ Write a graph to a file:
        writer << graph
     end
 
+## Change Log
+
+See [Release Notes on GitHub](https://github.com/ruby-rdf/rdf-rdfxml/releases)
+
 ## Dependencies
 * [RDF.rb](https://rubygems.org/gems/rdf) (~> 3.3)
 * [Builder](https://rubygems.org/gems/builder) (~>- 3.2)
