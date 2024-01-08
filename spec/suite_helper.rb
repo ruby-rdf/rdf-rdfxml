@@ -117,20 +117,15 @@ module Fixtures
 
       def entries
         # Map entries to resources
-        attributes['entries'].map {|e| Entry.new(e, base_iri: attributes['baseIri'])}
+        attributes['entries'].map {|e| Entry.new(e)}
       end
     end
  
     class Entry < JSON::LD::Resource
       attr_accessor :logger
 
-      def initialize(json, base_iri:)
-        @base_iri = base_iri
-        super
-      end
-
       def base
-        RDF::URI(@base_iri || action)
+        RDF::URI(action)
       end
 
       # Alias data and query
