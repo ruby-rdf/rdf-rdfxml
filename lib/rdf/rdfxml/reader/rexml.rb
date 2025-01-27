@@ -74,6 +74,30 @@ module RDF::RDFXML
           @base == false ? nil : @base
         end
 
+        ##
+        # Element direction
+        #
+        # @return [String]
+        def direction
+          @node.attribute("dir", RDF::ITS.to_s)
+        end
+
+        ##
+        # ITS version
+        #
+        # @return [String]
+        def its_version
+          @node.attribute("version", RDF::ITS.to_s)
+        end
+
+        ##
+        # RDF version
+        #
+        # @return [String]
+        def version
+          @node.attribute("version", RDF.to_uri.to_s)
+        end
+
         def attribute_with_ns(name, namespace)
           @node.attribute(name, namespace)
         end
@@ -120,7 +144,11 @@ module RDF::RDFXML
         end
 
         def namespace
-          Namespace.new(@node.namespace, @node.prefix) unless @node.namespace.to_s.empty?
+          if @node.namespace
+            Namespace.new(@node.namespace, @node.prefix)
+          else
+            Namespace.new(RDF::XML.to_s, 'rdf')
+          end
         end
 
         def add_namespace(prefix, uri)

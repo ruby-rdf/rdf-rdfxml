@@ -17,6 +17,7 @@ group :development do
   gem 'sxp',                github: "dryruby/sxp.rb",               branch: "develop"
 
   gem "equivalent-xml"
+  gem 'ostruct', '~> 0.6.1'
 end
 
 group :debug do

@@ -30,12 +30,16 @@ module RDF::RDFXML
       attr_accessor :language
       attr_accessor :graph
       attr_accessor :li_counter
+      attr_accessor :direction
+      attr_accessor :version  # RDF Version, mirrored here
 
-      def initialize(base, element, graph, &cb)
+      def initialize(base, element, graph, version: nil, &cb)
         # Initialize the evaluation context, [5.1]
         self.base = RDF::URI(base)
         @uri_mappings = {}
         @language = nil
+        @direction = nil
+        @version = version
         @graph = graph
         @li_counter = 0
 
@@ -47,6 +51,8 @@ module RDF::RDFXML
         new_ec = EvaluationContext.new(@base, nil, @graph)
         new_ec.uri_mappings = self.uri_mappings.clone
         new_ec.language = self.language
+        new_ec.direction = self.direction
+        new_ec.version = self.version
 
         new_ec.extract_from_element(element, &cb) if element
         
@@ -68,6 +74,12 @@ module RDF::RDFXML
       # Extract Evaluation Context from an element
       def extract_from_element(el, &cb)
         self.language = el.language if el.language
+        # Direction only used in RDF 1.2 or greater
+        self.direction = el.direction if el.direction && self.version.to_s >= "1.2"
+        # Direction requires the appropriate ITS version
+        if el.direction && el.its_version != '2.0'
+          # XXX raise error?
+        end
         if b = el.base
           b = RDF::URI(b)
           self.base = b.absolute? ? b : self.base.join(b)
@@ -100,7 +112,7 @@ module RDF::RDFXML
       end
 
       def inspect
-        v = %w(base subject language).map {|a| "#{a}='#{self.send(a).nil? ? 'nil' : self.send(a)}'"}
+        v = %w(base subject language direction).map {|a| "#{a}='#{self.send(a).nil? ? 'nil' : self.send(a)}'"}
         v << "uri_mappings[#{uri_mappings.keys.length}]"
         v.join(",")
       end
@@ -111,6 +123,11 @@ module RDF::RDFXML
     # @!attribute [r] implementation
     # @return [Module]
     attr_reader :implementation
+
+    # Version of RDF to use. Currently, only "1.2" is defined.
+    # @!attribute [r] version
+    # @return [String]
+    attr_reader :version
 
     ##
     # Initializes the RDF/XML reader instance.
@@ -196,7 +213,11 @@ module RDF::RDFXML
         if rdf_nodes.size == 0
           # If none found, root element may be processed as an RDF Node
 
-          ec = EvaluationContext.new(base_uri, root, @graph) do |prefix, value|
+          # Extract RDF version from root
+          @version = root.version
+          add_debug(root, "version: #{@version.inspect}")
+
+          ec = EvaluationContext.new(base_uri, root, @graph, version: @version) do |prefix, value|
             prefix(prefix, value)
           end
 
@@ -206,8 +227,13 @@ module RDF::RDFXML
             log_fatal "node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
             # XXX Skip this element if it's contained within another rdf:RDF element
 
-            # Extract base, lang and namespaces from parents to create proper evaluation context
-            ec = EvaluationContext.new(base_uri, nil, @graph)
+            # Extract RDF version from node
+            # XXX potentially, one node is processed with version "1.2" and others are parsed without a version.
+            @version = node.version
+            add_debug(root, "version: #{@version.inspect}")
+
+            # Extract base, lang, direction, version and namespaces from parents to create proper evaluation context
+            ec = EvaluationContext.new(base_uri, nil, @graph, version: @version)
             ec.extract_from_ancestors(node) do |prefix, value|
               prefix(prefix, value)
             end
@@ -322,7 +348,11 @@ module RDF::RDFXML
         elsif is_propertyAttr?(attr)
           # Attributes not RDF.type
           predicate = attr.uri
-          lit = RDF::Literal.new(attr.value, language: ec.language, validate: validate?, canonicalize: canonicalize?)
+          lit = RDF::Literal.new(attr.value,
+                                 language: ec.language,
+                                 direction: (ec.direction if ec.language),
+                                 validate: validate?,
+                                 canonicalize: canonicalize?)
           add_triple(attr, subject, predicate, lit)
         end
       end
@@ -391,6 +421,8 @@ module RDF::RDFXML
             when "nodeID"     then nodeID = attr.value
             else                   attrs[attr] = attr.value
             end
+          elsif attr.namespace.href == RDF::ITS.to_s
+            # No production. Direction already extracted
           else
             attrs[attr] = attr.value
           end
@@ -430,6 +462,7 @@ module RDF::RDFXML
             literal_opts[:datatype] = uri(datatype)
           else
             literal_opts[:language] = child_ec.language
+            literal_opts[:direction] = (child_ec.direction if child_ec.language)
           end
           literal = RDF::Literal.new(child.inner_text, **literal_opts)
           add_triple(child, subject, predicate, literal)
@@ -527,7 +560,7 @@ module RDF::RDFXML
 
           if attrs.empty? && resourceAttr.nil? && nodeID.nil?
             
-            literal = RDF::Literal.new("", language: ec.language)
+            literal = RDF::Literal.new("", language: ec.language, direction: ec.direction)
             add_triple(child, subject, predicate, literal)
             
             # Reification
@@ -552,7 +585,7 @@ module RDF::RDFXML
                 next unless is_propertyAttr?(attr)
 
                 # Attributes not in RDF.type
-                lit = RDF::Literal.new(val, language: child_ec.language)
+                lit = RDF::Literal.new(val, language: child_ec.language, direction: child_ec.direction)
                 add_triple(child, resource, attr.uri, lit)
               end
             end

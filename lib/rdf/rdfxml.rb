@@ -4,6 +4,9 @@ require 'rdf'
 module RDF
   XML = Class.new(Vocabulary("http://www.w3.org/XML/1998/namespace"))
 
+  # Internationalization Tag Set
+  ITS = Class.new(Vocabulary("http://www.w3.org/2005/11/its"))
+
   ##
   # **`RDF::RDFXML`** is an RDF/XML extension for RDF.rb.
   #

@@ -55,6 +55,30 @@ module RDF::RDFXML
         end
 
         ##
+        # Element direction
+        #
+        # @return [String]
+        def direction
+          attribute_with_ns("dir", RDF::ITS.to_s)
+        end
+
+        ##
+        # ITS version
+        #
+        # @return [String]
+        def its_version
+          attribute_with_ns("version", RDF::ITS.to_s)
+        end
+
+        ##
+        # RDF version
+        #
+        # @return [String]
+        def version
+          attribute_with_ns("version", RDF.to_uri.to_s)
+        end
+
+        ##
         # Monkey patch attribute_with_ns, to insure nil is returned for #null?
         #
         # Get the attribute node with name and namespace

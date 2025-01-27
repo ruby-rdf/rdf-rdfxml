@@ -224,6 +224,106 @@ describe "RDF::RDFXML::Reader" do
         expect(graph).to be_equivalent_graph(expected, logger: logger)
       end
 
+      context :direction do
+        {
+          "Language with no direction": {
+            input: %(<?xml version="1.0" ?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:ex="http://example.org/"
+                xml:lang="en"
+                rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/joe" ex:name="bar" />
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/joe> <http://example.org/name> "bar"@en .
+            )
+          },
+          "Language with direction": {
+            input: %(<?xml version="1.0" ?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:ex="http://example.org/"
+                xmlns:its="http://www.w3.org/2005/11/its"
+                its:version="2.0"
+                its:dir="ltr"
+                xml:lang="en"
+                rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/joe" ex:name="bar" />
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/joe> <http://example.org/name> "bar"@en--ltr .
+            )
+          },
+          "Language with direction and no RDF version": {
+            input: %(<?xml version="1.0" ?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:ex="http://example.org/"
+                xmlns:its="http://www.w3.org/2005/11/its"
+                its:version="2.0"
+                its:dir="ltr"
+                xml:lang="en">
+                <rdf:Description rdf:about="http://example.org/joe" ex:name="bar" />
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/joe> <http://example.org/name> "bar"@en .
+            )
+          },
+          "Language with direction and no ITS version": {
+            # FIXME: Should this fail, or raise an exception?
+            input: %(<?xml version="1.0" ?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:ex="http://example.org/"
+                xmlns:its="http://www.w3.org/2005/11/its"
+                its:dir="ltr"
+                xml:lang="en"
+                rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/joe" ex:name="bar" />
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/joe> <http://example.org/name> "bar"@en--ltr .
+            )
+          },
+          "Language with direction on element directly": {
+            input: %(<?xml version="1.0" ?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:ex="http://example.org/"
+                xmlns:its="http://www.w3.org/2005/11/its"
+                rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/joe">
+                  <ex:name xml:lang="en" its:version="2.0" its:dir="ltr" >bar</ex:name>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/joe> <http://example.org/name> "bar"@en--ltr .
+            )
+          },
+          "Direction with no language": {
+            input: %(<?xml version="1.0" ?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:ex="http://example.org/"
+                xmlns:its="http://www.w3.org/2005/11/its"
+                its:version="2.0"
+                its:dir="ltr"
+                rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/joe" ex:name="bar" />
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/joe> <http://example.org/name> "bar" .
+            )
+          },
+        }.each do |title, properties|
+          it title do
+            if properties[:exception]
+              expect do
+                parse(properties[:input], validate: true)
+              end.to raise_error(RDF::ReaderError)
+            else
+              graph = parse(properties[:input], validate: true)
+              expect(graph).to be_equivalent_graph(properties[:expected], logger: logger)
+            end
+          end
+        end
+      end
+
       context :exceptions do
         it "should raise an error if rdf:aboutEach is used, as per the negative parser test rdfms-abouteach-error001 (rdf:aboutEach attribute)" do
           sampledoc = %q(<?xml version="1.0" ?>
