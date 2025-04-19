@@ -117,7 +117,7 @@ module RDF::RDFXML
 
         # URI of namespace + name
         def uri
-          ns = namespace || RDF::XML.to_s
+          ns = namespace
           ns = ns.href if ns.respond_to?(:href)
           RDF::URI.intern(ns + @node.name)
         end
@@ -144,10 +144,10 @@ module RDF::RDFXML
         end
 
         def namespace
-          if @node.namespace
+          if @node.namespace && !@node.namespace.empty?
             Namespace.new(@node.namespace, @node.prefix)
           else
-            Namespace.new(RDF::XML.to_s, 'rdf')
+            Namespace.new(RDF::XML.to_s, 'xml')
           end
         end
 

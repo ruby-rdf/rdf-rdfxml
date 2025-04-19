@@ -53,8 +53,9 @@ logger.formatter = lambda {|severity, datetime, progname, msg| "#{severity}: #{m
 
 parser_options = {
   base_uri:  nil,
-  validate:  false,
+  library: :nokogiri,
   logger: logger,
+  validate:  false,
 }
 
 writer_options = {
@@ -85,6 +86,7 @@ OPT_ARGS = [
   ["--help", "-?", GetoptLong::NO_ARGUMENT, "print this message"],
   ["--input-format", GetoptLong::REQUIRED_ARGUMENT, "Format of the input file, defaults to ttl"],
   ["--info", GetoptLong::NO_ARGUMENT, "Show progress on execution"],
+  ["--library", GetoptLong::REQUIRED_ARGUMENT, "XML library to use (nokogiri or rexml)"],
   ["--output", "-o", GetoptLong::REQUIRED_ARGUMENT, "Save output to file"],
   ["--quiet", GetoptLong::NO_ARGUMENT, "Do not show parser output"],
   ["--stream", GetoptLong::NO_ARGUMENT, "Use streaming writer"],
@@ -124,6 +126,7 @@ opts.each do |opt, arg|
   when '--format'       then options[:output_format] = arg.to_sym
   when "--help"         then usage()
   when '--input-format' then options[:input_format] = arg.to_sym
+  when '--library'      then parser_options[:library] = arg.to_sym
   when '--output'       then options[:output] = File.open(arg, "w")
   when '--rdfstar'      then parser_options[:rdfstar] = true
   when '--quiet'
