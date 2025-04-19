@@ -296,6 +296,19 @@ describe "RDF::RDFXML::Reader" do
               <http://example.org/joe> <http://example.org/name> "bar"@en--ltr .
             )
           },
+          "Language with version and direction on element directly": {
+            input: %(<?xml version="1.0" ?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:ex="http://example.org/"
+                xmlns:its="http://www.w3.org/2005/11/its">
+                <rdf:Description rdf:about="http://example.org/joe">
+                  <ex:name xml:lang="en" rdf:version="1.2" its:version="2.0" its:dir="ltr">bar</ex:name>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/joe> <http://example.org/name> "bar"@en--ltr .
+            )
+          },
           "Direction with no language": {
             input: %(<?xml version="1.0" ?>
               <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"

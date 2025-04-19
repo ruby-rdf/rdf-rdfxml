@@ -31,15 +31,15 @@ module RDF::RDFXML
       attr_accessor :graph
       attr_accessor :li_counter
       attr_accessor :direction
-      attr_accessor :version  # RDF Version, mirrored here
+      attr_accessor :version
 
-      def initialize(base, element, graph, version: nil, &cb)
+      def initialize(base, element, graph, &cb)
         # Initialize the evaluation context, [5.1]
         self.base = RDF::URI(base)
         @uri_mappings = {}
         @language = nil
         @direction = nil
-        @version = version
+        @version = nil
         @graph = graph
         @li_counter = 0
 
@@ -74,6 +74,7 @@ module RDF::RDFXML
       # Extract Evaluation Context from an element
       def extract_from_element(el, &cb)
         self.language = el.language if el.language
+        self.version = el.version if el.version
         # Direction only used in RDF 1.2 or greater
         self.direction = el.direction if el.direction && self.version.to_s >= "1.2"
         # Direction requires the appropriate ITS version
@@ -112,7 +113,7 @@ module RDF::RDFXML
       end
 
       def inspect
-        v = %w(base subject language direction).map {|a| "#{a}='#{self.send(a).nil? ? 'nil' : self.send(a)}'"}
+        v = %w(base subject language direction version).map {|a| "#{a}='#{self.send(a).nil? ? 'nil' : self.send(a)}'"}
         v << "uri_mappings[#{uri_mappings.keys.length}]"
         v.join(",")
       end
@@ -213,11 +214,7 @@ module RDF::RDFXML
         if rdf_nodes.size == 0
           # If none found, root element may be processed as an RDF Node
 
-          # Extract RDF version from root
-          @version = root.version
-          add_debug(root, "version: #{@version.inspect}")
-
-          ec = EvaluationContext.new(base_uri, root, @graph, version: @version) do |prefix, value|
+          ec = EvaluationContext.new(base_uri, root, @graph) do |prefix, value|
             prefix(prefix, value)
           end
 
@@ -227,13 +224,8 @@ module RDF::RDFXML
             log_fatal "node must be a proxy not a #{node.class}" unless node.is_a?(@implementation::NodeProxy)
             # XXX Skip this element if it's contained within another rdf:RDF element
 
-            # Extract RDF version from node
-            # XXX potentially, one node is processed with version "1.2" and others are parsed without a version.
-            @version = node.version
-            add_debug(root, "version: #{@version.inspect}")
-
             # Extract base, lang, direction, version and namespaces from parents to create proper evaluation context
-            ec = EvaluationContext.new(base_uri, nil, @graph, version: @version)
+            ec = EvaluationContext.new(base_uri, nil, @graph)
             ec.extract_from_ancestors(node) do |prefix, value|
               prefix(prefix, value)
             end
@@ -419,6 +411,7 @@ module RDF::RDFXML
             when "parseType"  then parseType = attr.value
             when "resource"   then resourceAttr = attr.value
             when "nodeID"     then nodeID = attr.value
+            when "version"    then nil # version already extracted
             else                   attrs[attr] = attr.value
             end
           elsif attr.namespace.href == RDF::ITS.to_s
