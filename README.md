@@ -41,6 +41,49 @@ Write a graph to a file:
        writer << graph
     end
 
+### Provisional support for RDF 1.2
+
+#### Version Announcement
+
+Features added for RDF 1.2 require announcement using the `rdf:version` attribute.
+
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:ex="http://www.example.org/"
+             rdf:version="1.2">
+     <rdf:Description rdf:about='http://example.org/s>
+       <ex:p xml:lang="en">value</ex:p>
+     </rdf:Description>
+    </rdf:RDF>
+
+#### Initial Text Direction
+
+The Initial Text Direction of a languaged-tagged literal can be set using the `its:dir` attribute with a value of `"ltr"` or `"rtl"`. This should also be accompanied by a `its:version` attribute with the value `"2.0"`.
+
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:ex="http://www.example.org/"
+             rdf:version="1.2">
+     <rdf:Description rdf:about='http://example.org/s>
+       <ex:p xml:lang="en" its:dir="rtl" its:version="2.0">value</ex:p>
+     </rdf:Description>
+    </rdf:RDF>
+
+#### parseType="Literal" (Triple Terms)
+
+RDF 1.2 introduces [triple terms](https://www.w3.org/TR/rdf12-concepts/#dfn-triple-term) which allow the object of a triple to be a triple term. Note that this is diffrent from traditional RDF/XML reification.
+
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:ex="http://example.org/stuff/1.0/"
+                xml:base="http://example.org/triples/"
+                rdf:version="1.2">
+      <rdf:Description rdf:about="http://example.org/">
+        <ex:prop rdf:parseType="Triple">
+          <rdf:Description rdf:about="http://example.org/stuff/1.0/s">
+            <ex:p rdf:resource="http://example.org/stuff/1.0/o" />
+          </rdf:Description>
+        </ex:prop>
+      </rdf:Description>
+    </rdf:RDF>
+
 ## Change Log
 
 See [Release Notes on GitHub](https://github.com/ruby-rdf/rdf-rdfxml/releases)
@@ -104,7 +147,7 @@ see <https://unlicense.org/> or the accompanying {file:UNLICENSE} file.
 [Ruby]:         https://ruby-lang.org/
 [RDF]:          https://www.w3.org/RDF/
 [RDF.rb]:       https://rubygems.org/gems/rdf
-[RDF/XML]:      http://www.w3.org/TR/rdf-syntax-grammar/ "RDF/XML Syntax Specification"
+[RDF/XML]:      http://www.w3.org/TR/rdf12-xml/ "RDF 1.2 XML Syntax"
 [YARD]:         https://yardoc.org/
 [YARD-GS]:      https://rubydoc.info/docs/yard/file/docs/GettingStarted.md
 [PDD]:              https://unlicense.org/#unlicensing-contributions

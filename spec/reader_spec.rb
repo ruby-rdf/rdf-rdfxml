@@ -122,7 +122,9 @@ describe "RDF::RDFXML::Reader" do
         it "should be able to parse a simple single-triple document" do
           sampledoc = %q(<?xml version="1.0" ?>
             <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-            xmlns:ex="http://www.example.org/" xml:lang="en" xml:base="http://www.example.org/foo">
+                     xmlns:ex="http://www.example.org/"
+                     xml:lang="en"
+                     xml:base="http://www.example.org/foo">
               <ex:Thing rdf:about="http://example.org/joe" ex:name="bar">
                 <ex:belongsTo rdf:resource="http://tommorris.org/" />
                 <ex:sampleText rdf:datatype="http://www.w3.org/2001/XMLSchema#string">foo</ex:sampleText>
@@ -435,6 +437,166 @@ describe "RDF::RDFXML::Reader" do
         end
       end
   
+      context "Triple Terms" do
+        {
+          "ignored triple term": {
+            input: %(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                          xmlns:ex="http://example.org/stuff/1.0/"
+                          xml:base="http://example.org/triples/">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:parseType="Triple">
+                    <rdf:Description rdf:about="http://example.org/stuff/1.0/s">
+                      <ex:p rdf:resource="http://example.org/stuff/1.0/o" />
+                    </rdf:Description>
+                  </ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %()
+          },
+          "Triple term having IRI subject": {
+            input: %(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                          xmlns:ex="http://example.org/stuff/1.0/"
+                          xml:base="http://example.org/triples/"
+                          rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:parseType="Triple">
+                    <rdf:Description rdf:about="http://example.org/stuff/1.0/s">
+                      <ex:p rdf:resource="http://example.org/stuff/1.0/o" />
+                    </rdf:Description>
+                  </ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/> <http://example.org/stuff/1.0/prop> <<(<http://example.org/stuff/1.0/s> <http://example.org/stuff/1.0/p> <http://example.org/stuff/1.0/o>)>> .
+            )
+          },
+          "Triple term having BNode subject": {
+            input: %(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                          xmlns:ex="http://example.org/stuff/1.0/"
+                          xml:base="http://example.org/triples/"
+                          rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:parseType="Triple">
+                    <rdf:Description>
+                      <ex:p rdf:resource="http://example.org/stuff/1.0/o" />
+                    </rdf:Description>
+                  </ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/> <http://example.org/stuff/1.0/prop> <<(_:b1 <http://example.org/stuff/1.0/p> <http://example.org/stuff/1.0/o>)>> .
+            )
+          },
+          "Triple term having a type": {
+            input: %(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                          xmlns:ex="http://example.org/stuff/1.0/"
+                          xml:base="http://example.org/triples/"
+                          rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:parseType="Triple">
+                    <rdf:Description rdf:type="http://example.org/stuff/1.0/t" />
+                  </ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/> <http://example.org/stuff/1.0/prop> <<(_:b1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/stuff/1.0/t>)>> .
+            )
+          },
+          "Triple term having BNode object": {
+            input: %(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                          xmlns:ex="http://example.org/stuff/1.0/"
+                          xml:base="http://example.org/triples/"
+                          rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:parseType="Triple">
+                    <rdf:Description rdf:about="http://example.org/stuff/1.0/s">
+                      <ex:p rdf:nodeID="b1" />
+                    </rdf:Description>
+                  </ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/> <http://example.org/stuff/1.0/prop> <<(<http://example.org/stuff/1.0/s> <http://example.org/stuff/1.0/p> _:b1)>> .
+            )
+          },
+          "Recursive triple term": {
+            input: %(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                          xmlns:ex="http://example.org/stuff/1.0/"
+                          xml:base="http://example.org/triples/"
+                          rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:parseType="Triple">
+                    <rdf:Description rdf:about="http://example.org/stuff/1.0/s">
+                      <ex:p rdf:parseType="Triple">
+                        <rdf:Description rdf:about="http://example.org/stuff/1.0/s2">
+                          <ex:p2 rdf:resource="http://example.org/stuff/1.0/o2" />
+                        </rdf:Description>
+                      </ex:p>
+                    </rdf:Description>
+                  </ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              <http://example.org/> <http://example.org/stuff/1.0/prop> <<(<http://example.org/stuff/1.0/s> <http://example.org/stuff/1.0/p> <<(<http://example.org/stuff/1.0/s2> <http://example.org/stuff/1.0/p2> <http://example.org/stuff/1.0/o2>)>>)>> .
+            )
+          },
+          "Invalid triple term having no predicate or object": {
+            input: %(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                          xmlns:ex="http://example.org/stuff/1.0/"
+                          xml:base="http://example.org/triples/"
+                          rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:parseType="Triple">
+                    <rdf:Description rdf:about="http://example.org/stuff/1.0/s">
+                    </rdf:Description>
+                  </ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            exception: RDF::ReaderError
+          },
+          "Invalid triple term having multiple triples": {
+            input: %(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                          xmlns:ex="http://example.org/stuff/1.0/"
+                          xml:base="http://example.org/triples/"
+                          rdf:version="1.2">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:parseType="Triple">
+                    <rdf:Description rdf:about="http://example.org/stuff/1.0/s">
+                      <ex:p rdf:resource="http://example.org/stuff/1.0/o1" />
+                      <ex:p rdf:resource="http://example.org/stuff/1.0/o2" />
+                    </rdf:Description>
+                  </ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            exception: RDF::ReaderError
+          },
+        }.each do |title, properties|
+          it title do
+            if properties[:exception]
+              expect do
+                parse(properties[:input], validate: true)
+              end.to raise_error(RDF::ReaderError)
+            else
+              graph = begin
+                parse(properties[:input], validate: true)
+              rescue RDF::ReaderError => e
+                fail("Parse failed:#{logger.to_s}")
+              end
+              egraph = RDF::Graph.new {|g| g << RDF::NTriples::Reader.new(properties[:expected], rdfstar: true)}
+              expect(graph).to be_equivalent_graph(egraph, logger: logger)
+            end
+          end
+        end
+      end
+
       context :reification do
         it "should be able to reify according to §2.17 of RDF/XML Syntax Specification" do
           sampledoc = %q(<?xml version="1.0"?>

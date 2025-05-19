@@ -301,12 +301,12 @@ module RDF::RDFXML
     # @param [URI, BNode] subject the subject of the statement
     # @param [URI] predicate the predicate of the statement
     # @param [URI, BNode, Literal] object the object of the statement
-    # @return [Statement] Added statement
+    # @yield [RDF::Statement] if block given, otherwise to saved `@callback`
     # @raise [RDF::ReaderError] Checks parameter types and raises if they are incorrect if validating.
     def add_triple(node, subject, predicate, object)
       statement = RDF::Statement(subject, predicate, object)
       add_debug(node) {"statement: #{statement}"}
-      @callback.call(statement)
+      block_given? ? yield(statement) : @callback.call(statement)
     end
 
     # XML nodeElement production
@@ -460,7 +460,7 @@ module RDF::RDFXML
           literal = RDF::Literal.new(child.inner_text, **literal_opts)
           add_triple(child, subject, predicate, literal)
           reify(id, child, subject, predicate, literal, ec) if id
-        elsif parseType == "Resource"
+        elsif parseType == 'Resource'
           # Production parseTypeResourcePropertyElt
           add_debug(child, "parseTypeResourcePropertyElt")
 
@@ -492,7 +492,7 @@ module RDF::RDFXML
             prefix(prefix, value)
           end
           nodeElement(node, new_ec)
-        elsif parseType == "Collection"
+        elsif parseType == 'Collection'
           # Production parseTypeCollectionPropertyElt
           add_debug(child, "parseTypeCollectionPropertyElt")
 
@@ -520,6 +520,39 @@ module RDF::RDFXML
             add_triple(child, n, RDF.first, object)
             add_triple(child, n, RDF.rest, o ? o : RDF.nil)
           end
+        elsif parseType == 'Triple'
+          # The contents describes a single triple.
+          # Production parseTypeTriplePropertyElt
+          add_debug(child, "parseTypeTriplePropertyElt")
+
+          unless child_ec.version.to_s >= "1.2"
+            add_debug(child, "Triple Property with wrong version (#{child_ec.version})")
+            next
+          end
+
+          unless attrs.empty?
+            add_error(child, "Triple Property with extra attributes") {attrs.inspect}
+          end
+
+          # Create a triple from the content, and use as a triple term resource in a new statement
+          triple = []
+          saved_callback = @callback
+          @callback = ->(t) {triple << t}
+          element_nodes.each do |node|
+            new_ec = child_ec.clone(nil) do |prefix, value|
+              prefix(prefix, value)
+            end
+            nodeElement(node, new_ec)
+          end
+          @callback = saved_callback
+
+          if triple.length != 1
+            add_error(child, "Triple property must encode a single triple") {attrs.inspect}
+            next
+          end
+          triple = triple.first
+          triple.options[:tripleTerm] = true
+          add_triple(child, subject, predicate, triple)
         elsif parseType   # Literal or Other
           # Production parseTypeResourcePropertyElt
           add_debug(child, parseType == "Literal" ? "parseTypeResourcePropertyElt" : "parseTypeOtherPropertyElt (#{parseType})")
