@@ -7,6 +7,8 @@ class FOO < RDF::Vocabulary("http://foo/"); end
 
 describe "RDF::RDFXML::Writer" do
   let(:logger) {RDF::Spec.logger}
+  after(:each) {|example| puts logger.to_s if example.exception}
+
   it_behaves_like 'an RDF::Writer' do
     let(:writer) {RDF::RDFXML::Writer.new(::StringIO.new)}
   end
@@ -632,6 +634,133 @@ describe "RDF::RDFXML::Writer" do
         ), format: :ttl)
         doc = serialize(statements)
         expect(parse(doc)).to be_equivalent_graph(statements, logger: logger)
+      end
+    end
+
+    context "base direction" do
+      {
+        "base direction ltr": {
+          input: %(<http://example/a> <http://example/b> "Hello"@en--ltr .),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2-basic",
+            "/rdf:RDF/@its:version" => "2.0",
+            "/rdf:RDF/rdf:Description/ns0:b/@xml:lang" => "en",
+            "/rdf:RDF/rdf:Description/ns0:b/@its:dir" => "ltr",
+            "/rdf:RDF/rdf:Description/ns0:b/text()" => "Hello",
+          }
+        },
+        "base direction rtl": {
+          input: %(<http://example/a> <http://example/b> "Hello"@en--rtl .),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2-basic",
+            "/rdf:RDF/@its:version" => "2.0",
+            "/rdf:RDF/rdf:Description/ns0:b/@xml:lang" => "en",
+            "/rdf:RDF/rdf:Description/ns0:b/@its:dir" => "rtl",
+            "/rdf:RDF/rdf:Description/ns0:b/text()" => "Hello",
+          }
+        },
+        "unknown base direction": {
+          input: %(<http://example/a> <http://example/b> "Hello"@en--unk .),
+          exception: RDF::WriterError
+        },
+        "base direction LTR": {
+          input: %(<http://example/a> <http://example/b> "Hello"@en--LTR .),
+          exception: RDF::WriterError
+        }
+      }.each do |name, params|
+        context name do
+          let!(:graph) {RDF::Graph.new {|g| g << parse(params[:input], rdfstar: true, format: :ntriples)}}
+          subject {serialize(graph)}
+
+          if params[:exception]
+            it "raises error" do
+              expect {
+                serialize(graph, validate: true)
+              }.to raise_error(params[:exception])
+            end
+          else
+            it "generates equivalent graph" do
+              doc = parse(subject)
+              expect(doc).to be_equivalent_graph(graph, logger: logger)
+            end
+          end
+
+          params.fetch(:xpath, {}).each do |path, value|
+            it "returns #{value.inspect} for xpath #{path}" do
+              expect(subject).to have_xpath(path, value, {}, logger)
+            end
+          end
+        end
+      end
+    end
+
+    context "triple terms" do
+      {
+        "object-iii":  {
+          input: %(<http://example/s> <http://example/p> <<(<http://example/s1> <http://example/p1> <http://example/o1>)>> .),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2",
+            "/rdf:RDF/rdf:Description/ns0:p/@rdf:parseType" => "Triple",
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description" => true,
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description/ns0:p1" => true,
+          }
+        },
+        "object-iib":  {
+          input: %(<http://example/s> <http://example/p> <<(<http://example/s1> <http://example/p1> _:o1)>> .),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2",
+            "/rdf:RDF/rdf:Description/ns0:p/@rdf:parseType" => "Triple",
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description" => true,
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description/ns0:p1" => true,
+          }
+        },
+        "object-iil":  {
+          input: %(<http://example/s> <http://example/p> <<(<http://example/s1> <http://example/p1> "o1")>> .),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2",
+            "/rdf:RDF/rdf:Description/ns0:p/@rdf:parseType" => "Triple",
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description" => true,
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description/ns0:p1" => true,
+          }
+        },
+        "recursive-object": {
+          input: %(<http://example/s> <http://example/p> <<(<http://example/s1> <http://example/p1> <<(<http://example/s2> <http://example/p2> <http://example/o2>)>>)>> .),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2",
+            "/rdf:RDF/rdf:Description/ns0:p/@rdf:parseType" => "Triple",
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description" => true,
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description/ns0:p1" => true,
+          }
+        },
+        "two-objects": {
+          input: %(
+            <http://example/s> <http://example/p> <<(<http://example/s1> <http://example/p1> <http://example/o1>)>> .
+            <http://example/s> <http://example/p> <<(<http://example/s2> <http://example/p2> <http://example/o2>)>> .
+          ),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2",
+            "/rdf:RDF/rdf:Description/ns0:p/@rdf:parseType" => "Triple",
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description" => true,
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description/ns0:p1" => true,
+            "/rdf:RDF/rdf:Description/ns0:p/rdf:Description/ns0:p2" => true,
+          }
+        }
+      }.each do |name, params|
+        context name do
+          let!(:graph) {RDF::Graph.new {|g| g << parse(params[:input], rdfstar: true, format: :ntriples)}}
+          subject {serialize(graph)}
+
+          it "generates equivalent graph" do
+            doc = parse(subject)
+            expect(doc).to be_equivalent_graph(graph, logger: logger)
+          end
+
+          params.fetch(:xpath, {}).each do |path, value|
+            it "returns #{value.inspect} for xpath #{path}" do
+              expect(subject).to have_xpath(path, value, {}, logger)
+            end
+          end
+        end
       end
     end
 

@@ -63,6 +63,12 @@ module RDF::RDFXML
     # @return [RDF::URI] Base URI used for relativizing URIs
     attr_accessor :base_uri
 
+    # @return [String] RDF Version to output, if any
+    attr_accessor :version
+
+    # @return [Boolean] Set to true if any literal includes a base direction
+    attr_accessor :has_direction
+
     ##
     # RDF/XML Writer options
     # @see https://ruby-rdf.github.io/rdf/RDF/Writer#options-class_method
@@ -132,6 +138,9 @@ module RDF::RDFXML
         @uri_to_qname = {}
         @top_classes = options[:top_classes] || [RDF::RDFS.Class]
 
+        # FIXME: If version is specified in media type, use it to set an explicit version
+        @version = nil
+
         block.call(self) if block_given?
       end
     end
@@ -159,6 +168,7 @@ module RDF::RDFXML
       log_debug {"\nserialize: graph size: #{@graph.size}"}
 
       preprocess
+
       # Prefixes
       prefix = prefixes.keys.map {|pk| "#{pk}: #{prefixes[pk]}"}.sort.join(" ") unless prefixes.empty?
       log_debug {"\nserialize: prefixes: #{prefix.inspect}"}
@@ -188,12 +198,12 @@ module RDF::RDFXML
       @subjects = {}
     end
 
-    # Render document using `haml_template[:doc]`. Yields each subject to be rendered separately.
+    # Render document. Yields each subject to be rendered separately.
     #
     # @param [Array<RDF::Resource>] subjects
     #   Ordered list of subjects. Template must yield to each subject, which returns
     #   the serialization of that subject (@see #subject_template)
-    # @param [Hash{Symbol => Object}] options Rendering options passed to Haml render.
+    # @param [Hash{Symbol => Object}] options Rendering options.
     # @option options [RDF::URI] base (nil)
     #   Base URI added to document, used for shortening URIs within the document.
     # @option options [Symbol, String] language (nil)
@@ -203,8 +213,6 @@ module RDF::RDFXML
     #   Value of html>head>title element.
     # @option options [String] prefix (nil)
     #   Value of @prefix attribute.
-    # @option options [String] haml (haml_template[:doc])
-    #   Haml template to render.
     # @yield [subject]
     #   Yields each subject
     # @yieldparam [RDF::URI] subject
@@ -219,6 +227,8 @@ module RDF::RDFXML
       attrs = prefix_attrs
       attrs[:"xml:lang"] = lang if lang
       attrs[:"xml:base"] = base if base
+      attrs[:"rdf:version"] = version.freeze if version
+      attrs[:"its:version"] = "2.0" if has_direction
 
       builder.rdf(:RDF, **attrs) do |b|
         subjects.each do |subject|
@@ -227,18 +237,18 @@ module RDF::RDFXML
       end
     end
 
-    # Render a subject using `haml_template[:subject]`.
+    # Render a subject.
     #
     # The _subject_ template may be called either as a top-level element, or recursively under another element if the _rel_ local is not nil.
     #
-    #  For RDF/XML, removes from predicates those that can be rendered as attributes, and adds the `:attr_props` local for the Haml template, which includes all attributes to be rendered as properties.
+    #  For RDF/XML, removes from predicates those that can be rendered as attributes, and adds the `:attr_props` local, which includes all attributes to be rendered as properties.
     #
     # Yields each property to be rendered separately.
     #
     # @param [Array<RDF::Resource>] subject
     #   Subject to render
     # @param [Builder::RdfXml] builder
-    # @param [Hash{Symbol => Object}] options Rendering options passed to Haml render.
+    # @param [Hash{Symbol => Object}] options Rendering options passed to builder.
     # @option options [String] about (nil)
     #   About description, a QName, URI or Node definition.
     #   May be nil if no @about is rendered (e.g. unreferenced Nodes)
@@ -252,8 +262,6 @@ module RDF::RDFXML
     #   If :about is nil, this defaults to the empty string ("").
     # @option options [:li, nil] element (nil)
     #   Render with &lt;li&gt;, otherwise with template default.
-    # @option options [String] haml (haml_template[:subject])
-    #   Haml template to render.
     # @yield [predicate]
     #   Yields each predicate
     # @yieldparam [RDF::URI] predicate
@@ -303,9 +311,10 @@ module RDF::RDFXML
     # @param [Array<RDF::Resource>] objects
     #   List of objects to render. If the list contains only a single element, the :property_value template will be used. Otherwise, the :property_values template is used.
     # @param [Builder::RdfXml] builder
-    # @param [Hash{Symbol => Object}] options Rendering options passed to Haml render.
+    # @param [Hash{Symbol => Object}] options Rendering options.
     def render_property(property, objects, builder, **options)
       log_debug {"render_property(#{property}): #{objects.inspect}"}
+      property = get_qname(property) if property.is_a?(RDF::URI)
 
       # Separate out the objects which are lists and render separately
       lists = objects.
@@ -351,7 +360,12 @@ module RDF::RDFXML
           attrs = {}
           attrs[:"xml:lang"] = object.language if object.language?
           attrs[:"rdf:datatype"] = object.datatype if object.datatype?
+          attrs[:"its:dir"] = object.direction if object.direction?
           builder.tag!(property, object.value.to_s, **attrs)
+        elsif object.statement?
+          builder.tag!(property, "rdf:parseType": "Triple") do |b|
+            render_triple_term(object, b, **options)
+          end
         elsif object.node?
            builder.tag!(property, "rdf:nodeID": object.id)
         else
@@ -364,6 +378,18 @@ module RDF::RDFXML
             render_property(property, [object], builder, **options)
           end
         end
+      end
+    end
+
+    ##
+    # Render a triple term, which may be recursive
+    def render_triple_term(term, builder, **options)
+      attr_props = {}
+      attr_props = attr_props.merge("rdf:nodeID": term.subject.id) if term.subject.node?
+      attr_props = attr_props.merge("rdf:about": term.subject.relativize(base_uri)) if term.subject.uri?
+
+      builder.tag!("rdf:Description", **attr_props) do |b|
+        render_property(term.predicate, [term.object], b)
       end
     end
 
@@ -441,6 +467,28 @@ module RDF::RDFXML
       ensure_qname(statement.predicate)
       statement.predicate == RDF.type && statement.object.uri? ? ensure_qname(statement.object) : get_qname(statement.object)
       get_qname(statement.object.datatype) if statement.object.literal? && statement.object.datatype?
+
+      # Base direction requires a prefix, used to set the its:version in the document
+      if statement.object.literal? && statement.object.direction?
+        prefix(:its, RDF::ITS.to_s)
+        @has_direction = true # Indirectly adds its:version to document element
+
+        # It's an error if version is frozen and not at least "1.2-basic"
+        if version && version.frozen?
+          log_error("Literal direction is incompatible with required version #{version}: #{statement.object.direction}") if
+            version == "1.1"
+        elsif version.nil?
+          @version = "1.2-basic"
+        end
+      elsif statement.object.statement?
+        # It's an error if version is frozen and not at least "1.2-basic"
+        if version && version.frozen?
+          log_error("Triple terms are incompatible with required version #{version}") if
+            version != "1.2"
+        else
+          @version = "1.2"
+        end
+      end
     end
 
   private
@@ -583,7 +631,7 @@ module RDF::RDFXML
           nil
         end
       when RDF::Node then resource.to_s
-      when RDF::Literal then nil
+      when RDF::Literal, RDF::Statement then nil
       else
         log_error("Getting QName for #{resource.inspect}, which must be a resource")
         nil
