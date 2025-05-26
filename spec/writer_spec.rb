@@ -764,6 +764,115 @@ describe "RDF::RDFXML::Writer" do
       end
     end
 
+    context "annotations" do
+      {
+        'turtle-star-annotation-1' => {
+          input: %(
+            PREFIX : <http://example/>
+            :s :p :o {| :r :z |} .
+          ),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2",
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p" => true,
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p/@rdf:resource" => 'http://example/o',
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p/@rdf:annotationNodeID" => %r(\w+),
+
+            "/rdf:RDF/rdf:Description[@rdf:nodeID]/rdf:reifies" => false,
+            "/rdf:RDF/rdf:Description[@rdf:nodeID]/ns0:r/@rdf:resource" => 'http://example/z',
+          }
+        },
+        'IRI reifier' => {
+          input: %(
+            PREFIX : <http://example/>
+            :s :p :o ~:id {| :r :z |} .
+          ),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2",
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p" => true,
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p/@rdf:resource" => 'http://example/o',
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p/@rdf:annotation" => 'http://example/id',
+
+            "/rdf:RDF/rdf:Description[@rdf:about]/rdf:reifies" => false,
+            "/rdf:RDF/rdf:Description[@rdf:about]/ns0:r/@rdf:resource" => 'http://example/z',
+          }
+        },
+        'BNode reifier' => {
+          input: %(
+            PREFIX : <http://example/>
+            :s :p :o ~ _:id {| :r :z |} .
+          ),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2",
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p" => true,
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p/@rdf:resource" => 'http://example/o',
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p/@rdf:annotationNodeID" => 'id',
+
+            "/rdf:RDF/rdf:Description[@rdf:nodeID]/rdf:reifies" => false,
+            "/rdf:RDF/rdf:Description[@rdf:nodeID]/ns0:r/@rdf:resource" => 'http://example/z',
+          }
+        },
+        'BNode reifier used as object' => {
+          input: %(
+            PREFIX : <http://example/>
+            :s :p :o ~ _:id {| :r :z |} .
+            :s1 :p1 _:id .
+          ),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2",
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p" => true,
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p/@rdf:resource" => 'http://example/o',
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p/@rdf:annotationNodeID" => 'id',
+
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s1']/ns0:p1/rdf:Description/@rdf:nodeID" => "id",
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s1']/ns0:p1/rdf:Description/ns0:r" => true,
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s1']/ns0:p1/rdf:Description/ns0:r/@rdf:resource" => "http://example/z",
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s1']/ns0:p1/rdf:Description/ns0:r/rdf:reifies" => false,
+          }
+        },
+        'turtle-star-annotation-2' => {
+          input: %(
+            PREFIX :       <http://example/>
+            PREFIX xsd:     <http://www.w3.org/2001/XMLSchema#>
+
+            :s :p :o {| :source [ :graph <http://host1/> ;
+                                  :date "2020-01-20"^^xsd:date
+                                ] ;
+                        :source [ :graph <http://host2/> ;
+                                  :date "2020-12-31"^^xsd:date
+                                ]
+                      |} .
+          ),
+          xpath: {
+            "/rdf:RDF/@rdf:version" => "1.2",
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p" => true,
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p/@rdf:resource" => 'http://example/o',
+            "/rdf:RDF/rdf:Description[@rdf:about='http://example/s']/ns0:p/@rdf:annotationNodeID" => %r(\w+),
+            "/rdf:RDF/rdf:Description[@rdf:nodeID]/ns0:graph[@rdf:resource='http://host1/]" => true,
+            "/rdf:RDF/rdf:Description[@rdf:nodeID]/ns0:graph[@rdf:resource='http://host2/]" => true,
+            "/rdf:RDF/rdf:Description[@rdf:nodeID]/ns0:source" => true,
+          }
+        }
+      }.each do |name, params|
+        context name do
+          let!(:graph) {RDF::Graph.new {|g| g << parse(params[:input], rdfstar: true, format: :ttl)}}
+          subject {serialize(graph)}
+
+          it "generates equivalent graph" do
+            logger.info("rendered:" + subject)
+            result = parse(subject)
+            expect(result).to be_equivalent_graph(graph, logger: logger)
+          end
+
+          params.fetch(:xpath, {}).each do |path, value|
+            it "returns #{value.inspect} for xpath #{path}" do
+              logger.info("rendered:" + subject)
+              expect(subject).to have_xpath(path, value, {}, logger)
+            end
+          end
+        end
+      end
+    end
+
     describe "with a stylesheet" do
       subject do
         nt = %(

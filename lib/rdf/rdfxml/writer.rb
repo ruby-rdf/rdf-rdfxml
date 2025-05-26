@@ -196,6 +196,8 @@ module RDF::RDFXML
       @references = {}
       @serialized = {}
       @subjects = {}
+      @reification = {}
+      @as_annotation = {}
     end
 
     # Render document. Yields each subject to be rendered separately.
@@ -245,7 +247,7 @@ module RDF::RDFXML
     #
     # Yields each property to be rendered separately.
     #
-    # @param [Array<RDF::Resource>] subject
+    # @param [RDF::Resource] subject
     #   Subject to render
     # @param [Builder::RdfXml] builder
     # @param [Hash{Symbol => Object}] options Rendering options passed to builder.
@@ -296,7 +298,7 @@ module RDF::RDFXML
 
         log_depth do
           embed_props.each do |p, objects|
-            render_property(p, objects, b, **options)
+            render_property(subject, p, objects, b, **options)
           end
         end
       end
@@ -306,13 +308,14 @@ module RDF::RDFXML
     #
     # If a multi-valued property definition is not found within the template, the writer will use the single-valued property definition multiple times.
     #
+    # @param [RDF::Resource] subject
     # @param [String] property
     #   Property to render, already in QName form.
     # @param [Array<RDF::Resource>] objects
     #   List of objects to render. If the list contains only a single element, the :property_value template will be used. Otherwise, the :property_values template is used.
     # @param [Builder::RdfXml] builder
     # @param [Hash{Symbol => Object}] options Rendering options.
-    def render_property(property, objects, builder, **options)
+    def render_property(subject, property, objects, builder, **options)
       log_debug {"render_property(#{property}): #{objects.inspect}"}
       property = get_qname(property) if property.is_a?(RDF::URI)
 
@@ -329,7 +332,7 @@ module RDF::RDFXML
         log_debug(depth: log_depth + 1) {"properties with lists: #{lists} non-lists: #{objects - lists.map(&:subject)}"}
 
         unless objects.empty?
-          render_property(property,  objects, builder, **options)
+          render_property(subject, property,  objects, builder, **options)
         end
 
         # Render each list
@@ -347,35 +350,49 @@ module RDF::RDFXML
       if objects.length == 1
         recurse = log_depth <= @max_depth
         object = objects.first
-        
+        attrs = {}
+
+        # If there is a single reifier for this statement, write out annotation
+        tt = RDF::Statement(subject, @uri_to_qname.invert[property], object)
+        reifs = @reification.select {|k, v| v.include?(tt)}.keys
+        if reifs.length == 1
+          reif = reifs.first
+          @as_annotation[reif] = tt
+          if reif.iri?
+            attrs['rdf:annotation'] = reif.relativize(base_uri)
+          else
+            attrs['rdf:annotationNodeID'] = reif.id
+          end
+        end
+
         if recurse && !is_done?(object)
-          builder.tag!(property) do |b|
+          builder.tag!(property, **attrs) do |b|
             render_subject(object, b, **options)
           end
         elsif object.literal? && object.datatype == RDF.XMLLiteral
-          builder.tag!(property, "rdf:parseType": "Literal", no_whitespace: true) do |b|
+          builder.tag!(property, "rdf:parseType": "Literal", no_whitespace: true, **attrs) do |b|
             b << object.value
           end
         elsif object.literal?
-          attrs = {}
           attrs[:"xml:lang"] = object.language if object.language?
           attrs[:"rdf:datatype"] = object.datatype if object.datatype?
           attrs[:"its:dir"] = object.direction if object.direction?
           builder.tag!(property, object.value.to_s, **attrs)
         elsif object.statement?
+          # Just write out the triple term, unless it is annotated
           builder.tag!(property, "rdf:parseType": "Triple") do |b|
             render_triple_term(object, b, **options)
-          end
+          end unless @as_annotation.key?(subject)
         elsif object.node?
-           builder.tag!(property, "rdf:nodeID": object.id)
-        else
-          builder.tag!(property, "rdf:resource": object.relativize(base_uri))
+           builder.tag!(property, "rdf:nodeID": object.id, **attrs)
+        elsif object
+          builder.tag!(property, "rdf:resource": object.relativize(base_uri), **attrs)
         end
       else
         # Render each property using property_value template
         objects.each do |object|
           log_depth do
-            render_property(property, [object], builder, **options)
+            render_property(subject, property, [object], builder, **options)
           end
         end
       end
@@ -389,7 +406,7 @@ module RDF::RDFXML
       attr_props = attr_props.merge("rdf:about": term.subject.relativize(base_uri)) if term.subject.uri?
 
       builder.tag!("rdf:Description", **attr_props) do |b|
-        render_property(term.predicate, [term.object], b)
+        render_property(term.subject, term.predicate, [term.object], b)
       end
     end
 
@@ -488,6 +505,20 @@ module RDF::RDFXML
         else
           @version = "1.2"
         end
+
+        bump_reference(statement.subject)
+
+        # If this statement is also asserted, note it as an annotation
+        
+        # Also count references of triple terms
+        preprocess_statement(statement.object) if statement.object.statement?
+
+        # If it fits, allow this to be rendered as an annotation
+        if statement.predicate == RDF.reifies
+          @reification[statement.subject] ||= []
+          @reification[statement.subject] << statement.object unless
+            @reification[statement.subject].include?(statement.object)
+        end
       end
     end
 
@@ -526,7 +557,8 @@ module RDF::RDFXML
 
       log_debug {"order_subjects: #{recursable.inspect}"}
 
-      subjects += recursable.map{|r| r.last}
+      # Sort recursable unto those that are not reifiers and those that are, so that reifieres come last.
+      subjects += recursable.map{|r| r.last}.partition {|r| !@reification.key?(r)}.flatten
     end
 
     # @param [RDF::Resource] subject

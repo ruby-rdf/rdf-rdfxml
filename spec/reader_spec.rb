@@ -8,6 +8,7 @@ describe "RDF::RDFXML::Reader" do
   let(:logger) {RDF::Spec.logger}
   let!(:doap) {File.expand_path("../../etc/doap.rdf", __FILE__)}
   let!(:doap_nt) {File.expand_path("../../etc/doap.nt", __FILE__)}
+  after(:each) {|example| puts logger.to_s if example.exception}
 
   # @see lib/rdf/spec/reader.rb in rdf-spec
   it_behaves_like 'an RDF::Reader' do
@@ -596,30 +597,389 @@ describe "RDF::RDFXML::Reader" do
           end
         end
       end
+  
+      context "Annotations" do
+        {
+          "on literal with IRI reifier": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                       xmlns:ex="http://example.org/stuff/1.0/"
+                       xml:base="http://example.org/triples/">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:annotation="http://example.org/triple1">blah</ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %q(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix ex: <http://example.org/stuff/1.0/> .
+              <http://example.org/> ex:prop "blah" .
+
+              <http://example.org/> ex:prop "blah" ~<http://example.org/triple1> .
+            )
+          },
+          "on literal with BNode reifier": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                       xmlns:ex="http://example.org/stuff/1.0/"
+                       xml:base="http://example.org/triples/">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:annotationNodeID="triple1">blah</ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %q(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix ex: <http://example.org/stuff/1.0/> .
+              <http://example.org/> ex:prop "blah" .
+
+              <http://example.org/> ex:prop "blah" ~ _:triple1 .
+            )
+          },
+          "on literal with IRI reifier and annotations": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                       xmlns:ex="http://example.org/stuff/1.0/"
+                       xml:base="http://example.org/triples/">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:annotation="http://example.org/triple1">blah</ex:prop>
+                </rdf:Description>
+                <rdf:Description rdf:about="http://example.org/triple1">
+                  <ex:prop>foo</ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %q(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix ex: <http://example.org/stuff/1.0/> .
+              <http://example.org/> ex:prop "blah" .
+
+              <http://example.org/> ex:prop "blah" ~<http://example.org/triple1> {|ex:prop "foo"|} .
+            )
+          },
+          "rdfms-empty-property-elements-test005": {
+            comment: "An empty property element just gives an empty literal. We annotate the statement at the same time.",
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:random="http://random.ioctl.org/#">
+            
+               <rdf:Description rdf:about="http://random.ioctl.org/#bar">
+                 <random:someProperty rdf:annotation="http://example.org/triple1" />
+               </rdf:Description>
+             </rdf:RDF>
+            ),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+              <http://random.ioctl.org/#bar> <http://random.ioctl.org/#someProperty> "" ~ <http://example.org/triple1> .
+            )
+          },
+          "rdfms-empty-property-elements-test006": {
+            comment: "Here the parseType indicates that we should create a resource. We annotate the statement at the same time.",
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:random="http://random.ioctl.org/#">
+            
+               <rdf:Description rdf:about="http://random.ioctl.org/#bar">
+                 <random:someProperty rdf:annotation="http://example.org/triple1" rdf:parseType="Resource" />
+               </rdf:Description>
+             </rdf:RDF>
+            ),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+              <http://random.ioctl.org/#bar> <http://random.ioctl.org/#someProperty> _:b ~ <http://example.org/triple1> .
+            )
+          },
+          "rdfms-not-id-and-resource-attr-test001": {
+            comment: "rdf:annotation on an empty property element indicates reification.",
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:eg="http://example.org/">
+            
+               <rdf:Description>
+                 <eg:prop1 rdf:annotation="http://example.org/triple1" eg:prop2="val"></eg:prop1>
+               </rdf:Description>
+             </rdf:RDF>
+            ),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+              [] <http://example.org/prop1> [<http://example.org/prop2> "val"] ~ <http://example.org/triple1> .
+            )
+          },
+          "st07a – Node with annotation having a type": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:eg="http://example.org/">
+            
+               <rdf:Description rdf:about="http://example.org/">
+                 <rdf:type rdf:annotation="http://example.org/triple1"
+                           rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
+               </rdf:Description>
+             </rdf:RDF>
+            ),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+              <http://example.org/> a rdf:Resource ~ <http://example.org/triple1> .
+            )
+          },
+          "st08a – Node with reification having an IRI value": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:eg="http://example.org/">
+            
+               <rdf:Description rdf:about="http://example.org/">
+                 <eg:prop rdf:annotation="http://example.org/triple1" rdf:resource="http://example.org/object"/>
+               </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+              <http://example.org/> <http://example.org/prop> <http://example.org/object> ~ <http://example.org/triple1> .
+            )
+          },
+          "st09a – Node with reification having an BNode value": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:eg="http://example.org/">
+            
+               <rdf:Description rdf:about="http://example.org/">
+                 <eg:prop rdf:annotation="http://example.org/triple1" rdf:nodeID="object"/>
+               </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+              <http://example.org/> <http://example.org/prop> _:object ~ <http://example.org/triple1> .
+            )
+          },
+          "st10a – Node with recursive reification": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:eg="http://example.org/">
+            
+               <rdf:Description rdf:about="http://example.org/a">
+                 <eg:prop rdf:annotation="http://example.org/triple1">
+                   <rdf:Description rdf:about="http://example.org/b">
+                     <eg:prop rdf:annotation="http://example.org/triple2" rdf:resource="http://example.org/c"/>
+                   </rdf:Description>
+                 </eg:prop>
+               </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+              <http://example.org/a> <http://example.org/prop> <http://example.org/b> ~ <http://example.org/triple1> .
+              <http://example.org/b> <http://example.org/prop> <http://example.org/c> ~ <http://example.org/triple2> .
+            )
+          },
+        }.each do |title, properties|
+          it title do
+            if properties[:exception]
+              expect do
+                parse(properties[:input], validate: true)
+              end.to raise_error(RDF::ReaderError)
+            else
+              graph = begin
+                parse(properties[:input], validate: true)
+              rescue RDF::ReaderError => e
+                fail("Parse failed:#{logger.to_s}")
+              end
+              egraph = RDF::Graph.new {|g| g << RDF::Turtle::Reader.new(properties[:expected], rdfstar: true)}
+              expect(graph).to be_equivalent_graph(egraph, logger: logger)
+            end
+          end
+        end
+      end
 
       context :reification do
-        it "should be able to reify according to §2.17 of RDF/XML Syntax Specification" do
-          sampledoc = %q(<?xml version="1.0"?>
-            <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-                     xmlns:ex="http://example.org/stuff/1.0/"
-                     xml:base="http://example.org/triples/">
-              <rdf:Description rdf:about="http://example.org/">
-                <ex:prop rdf:ID="triple1">blah</ex:prop>
-              </rdf:Description>
-            </rdf:RDF>)
+        {
+          "on literal": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                       xmlns:ex="http://example.org/stuff/1.0/"
+                       xml:base="http://example.org/triples/">
+                <rdf:Description rdf:about="http://example.org/">
+                  <ex:prop rdf:ID="triple1">blah</ex:prop>
+                </rdf:Description>
+              </rdf:RDF>),
+            expected: %q(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix ex: <http://example.org/stuff/1.0/> .
+              <http://example.org/> ex:prop "blah" .
+              <http://example.org/triples/#triple1> a rdf:Statement;
+                rdf:subject <http://example.org/>;
+                rdf:predicate ex:prop;
+                rdf:object "blah" .
+            )
+          },
+          "rdfms-empty-property-elements-test005": {
+            comment: "An empty property element just gives an empty literal. We reify the statement at the same time.",
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:random="http://random.ioctl.org/#">
+            
+               <rdf:Description rdf:about="http://random.ioctl.org/#bar">
+                 <random:someProperty rdf:ID="foo" />
+               </rdf:Description>
+             </rdf:RDF>
+            ),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-          expected = %q(
-            @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-            @prefix ex: <http://example.org/stuff/1.0/> .
-            <http://example.org/> ex:prop "blah" .
-            <http://example.org/triples/#triple1> a rdf:Statement;
-              rdf:subject <http://example.org/>;
-              rdf:predicate ex:prop;
-              rdf:object "blah" .
-          )
+              <http://example.com#foo> a rdf:Statement;
+                rdf:object "";
+                rdf:predicate <http://random.ioctl.org/#someProperty>;
+                rdf:subject <http://random.ioctl.org/#bar> .
 
-          graph = parse(sampledoc, base_uri: "http://example.com", validate: true)
-          expect(graph).to be_equivalent_graph(expected, about: "http://example.com/", logger: logger)
+              <http://random.ioctl.org/#bar> <http://random.ioctl.org/#someProperty> "" .
+            )
+          },
+          "rdfms-empty-property-elements-test006": {
+            comment: "Here the parseType indicates that we should create a resource. We reify the statement at the same time.",
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:random="http://random.ioctl.org/#">
+            
+               <rdf:Description rdf:about="http://random.ioctl.org/#bar">
+                 <random:someProperty rdf:ID="foo" rdf:parseType="Resource" />
+               </rdf:Description>
+             </rdf:RDF>
+            ),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+              <http://example.com#foo> a rdf:Statement;
+                rdf:object _:b;
+                rdf:predicate <http://random.ioctl.org/#someProperty>;
+                rdf:subject <http://random.ioctl.org/#bar> .
+
+              <http://random.ioctl.org/#bar> <http://random.ioctl.org/#someProperty> _:b .
+            )
+          },
+          "rdfms-not-id-and-resource-attr-test001": {
+            comment: "rdf:ID on an empty property element indicates reification.",
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:eg="http://example.org/">
+            
+               <rdf:Description>
+                 <eg:prop1  rdf:ID="reify" eg:prop2="val"></eg:prop1>
+               </rdf:Description>
+             </rdf:RDF>
+            ),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+              <http://example.com#reify> a rdf:Statement;
+                rdf:object _:b1;
+                rdf:predicate <http://example.org/prop1>;
+                rdf:subject [<http://example.org/prop1> _:b1] .
+
+              _:b1 <http://example.org/prop2> "val" .
+            )
+          },
+          "st07a – Node with reification having a type": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:eg="http://example.org/">
+            
+               <rdf:Description rdf:about="http://example.org/">
+                 <rdf:type rdf:ID="reify" rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource"/>
+               </rdf:Description>
+             </rdf:RDF>
+            ),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+              <http://example.com#reify> a rdf:Statement;
+                rdf:object rdf:Resource;
+                rdf:predicate rdf:type;
+                rdf:subject <http://example.org/> .
+
+              <http://example.org/> a rdf:Resource .
+            )
+          },
+          "st08a – Node with reification having an IRI value": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:eg="http://example.org/">
+            
+               <rdf:Description rdf:about="http://example.org/">
+                 <eg:prop rdf:ID="reify" rdf:resource="http://example.org/object"/>
+               </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+              <http://example.com#reify> a rdf:Statement;
+                rdf:object <http://example.org/object>;
+                rdf:predicate <http://example.org/prop>;
+                rdf:subject <http://example.org/> .
+
+              <http://example.org/> <http://example.org/prop> <http://example.org/object> .
+            )
+          },
+          "st09a – Node with reification having an BNode value": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:eg="http://example.org/">
+            
+               <rdf:Description rdf:about="http://example.org/">
+                 <eg:prop rdf:ID="reify" rdf:nodeID="object"/>
+               </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+              <http://example.com#reify> a rdf:Statement;
+                rdf:object _:object;
+                rdf:predicate <http://example.org/prop>;
+                rdf:subject <http://example.org/> .
+
+              <http://example.org/> <http://example.org/prop> _:object .
+            )
+          },
+          "st10a – Node with recursive reification": {
+            input: %q(<?xml version="1.0"?>
+              <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+               xmlns:eg="http://example.org/">
+            
+               <rdf:Description rdf:about="http://example.org/a">
+                 <eg:prop rdf:ID="reify">
+                   <rdf:Description rdf:about="http://example.org/b">
+                     <eg:prop rdf:ID="reify2" rdf:resource="http://example.org/c"/>
+                   </rdf:Description>
+                 </eg:prop>
+               </rdf:Description>
+              </rdf:RDF>),
+            expected: %(
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+              <http://example.com#reify> a rdf:Statement;
+                rdf:object <http://example.org/b>;
+                rdf:predicate <http://example.org/prop>;
+                rdf:subject <http://example.org/a> .
+
+              <http://example.com#reify2> a rdf:Statement;
+                rdf:object <http://example.org/c>;
+                rdf:predicate <http://example.org/prop>;
+                rdf:subject <http://example.org/b> .
+
+              <http://example.org/a> <http://example.org/prop> <http://example.org/b> .
+              <http://example.org/b> <http://example.org/prop> <http://example.org/c> .
+            )
+          },
+        }.each do |name, params|
+          it name do
+            graph = parse(params[:input], base_uri: "http://example.com", validate: true)
+            expect(graph).to be_equivalent_graph(params[:expected], about: "http://example.com/", logger: logger)
+          end
         end
       end
   

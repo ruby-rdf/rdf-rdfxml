@@ -18,7 +18,7 @@ module RDF::RDFXML
     format Format
     include RDF::Util::Logger
 
-    CORE_SYNTAX_TERMS = %w(RDF ID about parseType resource nodeID datatype).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
+    CORE_SYNTAX_TERMS = %w(RDF ID annotation annotationNodeID about parseType resource nodeID datatype).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
     OLD_TERMS = %w(aboutEach aboutEachPrefix bagID).map {|n| "http://www.w3.org/1999/02/22-rdf-syntax-ns##{n}"}
 
     # The Recursive Baggage
@@ -393,6 +393,7 @@ module RDF::RDFXML
         # is deleted.
         attrs = {}
         id = datatype = parseType = resourceAttr = nodeID = nil
+        annotation = annotationNodeID = nil
         
         child.attribute_nodes.each do |attr|
           if attr.namespace.to_s.empty?
@@ -406,13 +407,18 @@ module RDF::RDFXML
             # No production. Lang and base elements already extracted
           elsif attr.namespace.href == RDF.to_uri.to_s
             case attr.name
-            when "ID"         then id = attr.value
-            when "datatype"   then datatype = attr.value
-            when "parseType"  then parseType = attr.value
-            when "resource"   then resourceAttr = attr.value
-            when "nodeID"     then nodeID = attr.value
-            when "version"    then nil # version already extracted
-            else                   attrs[attr] = attr.value
+            when "annotation"
+              annotation = ec.base.join(RDF::NTriples.unescape(attr.value))
+            when "annotationNodeID"
+              nodeID_check(child, RDF::NTriples.unescape(attr.value))
+              annotationNodeID = bnode(attr.value)
+            when "datatype"         then datatype = attr.value
+            when "ID"               then id = attr.value
+            when "nodeID"           then nodeID = attr.value
+            when "parseType"        then parseType = attr.value
+            when "resource"         then resourceAttr = attr.value
+            when "version"          then nil # version already extracted
+            else                         attrs[attr] = attr.value
             end
           elsif attr.namespace.href == RDF::ITS.to_s
             # No production. Direction already extracted
@@ -420,21 +426,24 @@ module RDF::RDFXML
             attrs[attr] = attr.value
           end
         end
-        
-        add_error(el, "Cannot have rdf:nodeID and rdf:resource.") if nodeID && resourceAttr
+
+        add_error(child, "Cannot have rdf:nodeID and rdf:resource.") if nodeID && resourceAttr
+        add_error(child, "Cannot have rdf:annotationNodeID and rdf:annotation.") if annotationNodeID && annotation
 
         # Apply character transformations
         id = id_check(el, RDF::NTriples.unescape(id), nil) if id
         resourceAttr = RDF::NTriples.unescape(resourceAttr) if resourceAttr
         nodeID = nodeID_check(el, RDF::NTriples.unescape(nodeID)) if nodeID
 
-        add_debug(child) {"attrs: #{attrs.inspect}"}
+        #add_debug(child) {"attrs: #{attrs.inspect}"}
         add_debug(child) {"datatype: #{datatype}"} if datatype
         add_debug(child) {"parseType: #{parseType}"} if parseType
         add_debug(child) {"resource: #{resourceAttr}"} if resourceAttr
         add_debug(child) {"nodeID: #{nodeID}"} if nodeID
+        add_debug(child) {"annotation: #{nodeID}"} if annotation
+        add_debug(child) {"annotationNodeID: #{nodeID}"} if annotationNodeID
         add_debug(child) {"id: #{id}"} if id
-        
+
         if attrs.empty? && datatype.nil? && parseType.nil? && element_nodes.size == 1
           # Production resourcePropertyElt
 
@@ -446,6 +455,9 @@ module RDF::RDFXML
           add_debug(child) {"resourcePropertyElt: #{node_path(new_node_element)}"}
           new_subject = nodeElement(new_node_element, new_ec)
           add_triple(child, subject, predicate, new_subject)
+          reify(id, child, subject, predicate, new_subject, ec) if id
+          annotate(annotation, child, subject, predicate, new_subject, ec) if annotation
+          annotate(annotationNodeID, child, subject, predicate, new_subject, ec) if annotationNodeID
         elsif attrs.empty? && parseType.nil? && element_nodes.size == 0 && text_nodes.size > 0
           # Production literalPropertyElt
           add_debug(child, "literalPropertyElt")
@@ -460,6 +472,8 @@ module RDF::RDFXML
           literal = RDF::Literal.new(child.inner_text, **literal_opts)
           add_triple(child, subject, predicate, literal)
           reify(id, child, subject, predicate, literal, ec) if id
+          annotate(annotation, child, subject, predicate, literal, ec) if annotation
+          annotate(annotationNodeID, child, subject, predicate, literal, ec) if annotationNodeID
         elsif parseType == 'Resource'
           # Production parseTypeResourcePropertyElt
           add_debug(child, "parseTypeResourcePropertyElt")
@@ -474,7 +488,9 @@ module RDF::RDFXML
 
           # Reification
           reify(id, child, subject, predicate, n, child_ec) if id
-          
+          annotate(annotation, child, subject, predicate, n, child_ec) if annotation
+          annotate(annotationNodeID, child, subject, predicate, n, child_ec) if annotationNodeID
+
           # If the element content c is not empty, then use event n to create a new sequence of events as follows:
           #
           # start-element(URI := rdf:Description,
@@ -506,7 +522,9 @@ module RDF::RDFXML
           n = s.first || RDF["nil"]
           add_triple(child, subject, predicate, n)
           reify(id, child, subject, predicate, n, child_ec) if id
-          
+          annotate(annotation, child, subject, predicate, n, child_ec) if annotation
+          annotate(annotationNodeID, child, subject, predicate, n, child_ec) if annotationNodeID
+
           # Add first/rest entries for all list elements
           s.each_index do |i|
             n = s[i]
@@ -591,6 +609,8 @@ module RDF::RDFXML
             
             # Reification
             reify(id, child, subject, predicate, literal, child_ec) if id
+            annotate(annotation, child, subject, predicate, literal, child_ec) if annotation
+            annotate(annotationNodeID, child, subject, predicate, literal, child_ec) if annotationNodeID
           else
             resource = if resourceAttr
               uri(ec.base, resourceAttr)
@@ -619,6 +639,8 @@ module RDF::RDFXML
             
             # Reification
             reify(id, child, subject, predicate, resource, child_ec) if id
+            annotate(annotation, child, subject, predicate, resource, child_ec) if annotation
+            annotate(annotationNodeID, child, subject, predicate, resource, child_ec) if annotationNodeID
           end
         end
       end
@@ -636,6 +658,12 @@ module RDF::RDFXML
       add_triple(el, rsubject, RDF.predicate, predicate)
       add_triple(el, rsubject, RDF.object, object)
       add_triple(el, rsubject, RDF.type, RDF["Statement"])
+    end
+
+    # Annotate the triple term formed by subjec, predicate, and object referenced by id given the EvaluationContext (ec) and current XMl element (el).
+    def annotate(id, el, subject, predicate, object, ec)
+      add_debug(el, "annotate, id: #{id}")
+      add_triple(el, id, RDF.reifies, RDF::Statement.new(subject, predicate, object, tripleTerm: true))
     end
 
     # Figure out the subject from the element.
